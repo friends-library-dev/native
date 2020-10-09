@@ -23,15 +23,22 @@ module.exports = async function () {
   Player.addEventListener(`remote-jump-backward`, () => Player.seekRelative(-30));
   Player.addEventListener(`remote-seek`, ({ position }) => Player.seekTo(position));
 
-  Player.addEventListener(`remote-duck`, ({ paused }) => {
-    if (paused) {
-      Player.pause();
-      Player.dispatch(setPlaybackState(`PAUSED`));
-    } else {
-      Player.resume();
-      Player.dispatch(setPlaybackState(`PLAYING`));
-    }
-  });
+  Player.addEventListener(
+    `remote-duck`,
+    (event: { paused?: boolean; permanent?: boolean }) => {
+      const { paused, permanent } = event;
+      if (paused) {
+        Player.pause();
+        Player.dispatch(setPlaybackState(`PAUSED`));
+      } else if (permanent) {
+        Player.stop();
+        Player.dispatch(setPlaybackState(`STOPPED`));
+      } else {
+        Player.resume();
+        Player.dispatch(setPlaybackState(`PLAYING`));
+      }
+    },
+  );
 
   Player.addEventListener(
     `playback-track-changed`,
