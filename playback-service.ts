@@ -79,7 +79,7 @@ module.exports = async function () {
   for (const event of events) {
     if (debugEvents) {
       // @ts-ignore
-      Player.addEventListener(event, (...args) => console.log(event, args));
+      Player.addEventListener(event, (...args) => console.log(event, args)); // eslint-disable-line
     }
   }
 };

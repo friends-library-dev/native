@@ -1,4 +1,4 @@
-import { isNotNull } from '@friends-library/types';
+import { isNotNull } from 'x-ts-utils';
 import { State } from './';
 import FS from '../lib/fs';
 import * as keys from '../lib/keys';

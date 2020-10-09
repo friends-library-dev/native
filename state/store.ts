@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { configureStore, getDefaultMiddleware, Store, AnyAction } from '@reduxjs/toolkit';
 import SplashScreen from 'react-native-splash-screen';
-import throttle from 'lodash/throttle';
+import throttle from 'lodash.throttle';
 import rootReducer from './rootReducer';
 import FS from '../lib/fs';
 import Player from '../lib/player';
@@ -32,6 +32,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
     devTools: Platform.OS === `ios`,
   });
 
+  // eslint-disable-next-line require-atomic-updates
   Player.dispatch = store.dispatch;
 
   store.dispatch(

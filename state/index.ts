@@ -32,7 +32,7 @@ export type Dispatch = ThunkDispatch<any, null, AnyAction> &
 export type Thunk = ThunkAction<void, State, unknown, Action<string>>;
 export const useSelector: TypedUseSelectorHook<State> = RDXUseSelector;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line
 export const useDispatch = () => RDXUseDispatch<Dispatch>();
 
 export type PropSelector<OwnProps, Props> = (

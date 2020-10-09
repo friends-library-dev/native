@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Lang } from '@friends-library/types';
-import { MAROON_HEX, GOLD_HEX } from '@friends-library/color';
+import { MAROON_HEX, GOLD_HEX } from '@friends-library/theme';
 import exec from './exec';
 import { BUILD_SEMVER_STRING, BUILD_NUM } from './build-constants';
 

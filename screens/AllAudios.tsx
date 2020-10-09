@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { isDefined } from '@friends-library/types';
+import { isDefined } from 'x-ts-utils';
 import { StackParamList, AudioResource } from '../types';
 import AudioListItem from '../components/AudioListItem';
 import { useSelector } from '../state';
