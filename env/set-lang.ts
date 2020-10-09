@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import exec from 'x-exec';
 import { Lang } from '@friends-library/types';
 import { MAROON_HEX, GOLD_HEX } from '@friends-library/theme';
-import exec from './exec';
 import { BUILD_SEMVER_STRING, BUILD_NUM } from './build-constants';
 
 const LANG: Lang = process.argv[2] === `es` ? `es` : `en`;
@@ -23,6 +23,7 @@ function main(): void {
   exec.exit(`cat ${ENV_DIR}/build-constants.ts >> ${ENV}`);
   exec.exit(`echo "export const PRIMARY_COLOR_HEX = '${PRIMARY_COLOR_HEX}';" >> ${ENV}`);
   exec.exit(`echo "export const APP_NAME = '${APP_NAME}';" >> ${ENV}`);
+  exec.exit(`npm run lint:fix`);
 
   copyFileWithEnv(`android/build.gradle`, `android/app/build.gradle`);
   copyFileWithEnv(`android/colors.xml`, `android/app/src/main/res/values/colors.xml`);
