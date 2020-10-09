@@ -18,6 +18,10 @@ class Player extends EventEmitter {
     return RNTrackPlayer.play();
   }
 
+  public stop(): Promise<void> {
+    return RNTrackPlayer.stop();
+  }
+
   public pause(): Promise<void> {
     return RNTrackPlayer.pause();
   }
