@@ -38,7 +38,7 @@
     "@friends-library/dev": "^4.1.10",
     "@friends-library/locale": "^1.0.0",
     "@friends-library/theme": "^1.1.0",
-    "@friends-library/types": "^1.1.2",
+    "@friends-library/types": "^2.0.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.5",
     "@react-navigation/native": "^5.7.2",
