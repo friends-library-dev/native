@@ -28,6 +28,7 @@
     "open-android-build-dir": "open ./android/app/build/outputs/apk/release",
     "storybook": "cp -f ./index.storybook.js ./index.js && react-native start",
     "test": "true",
+    "compile": "true",
     "lint": "fldev lint",
     "lint:fix": "fldev lint:fix",
     "ts:check": "fldev ts:check",
