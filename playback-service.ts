@@ -1,4 +1,5 @@
 import Player from './lib/player';
+import { Platform } from 'react-native';
 import { setCurrentTrackPosition } from './state/track-position';
 import { maybeDownloadNextQueuedTrack } from './state/filesystem';
 import { setState as setPlaybackState, maybeAdvanceQueue } from './state/playback';
@@ -25,15 +26,19 @@ module.exports = async function () {
 
   Player.addEventListener(
     `remote-duck`,
-    (event: { paused?: boolean; permanent?: boolean }) => {
+    async (event: { paused?: boolean; permanent?: boolean }) => {
       const { paused, permanent } = event;
+      const playerState = await Player.getState();
+      const notAndroid = Platform.OS !== `android`;
       if (paused) {
-        Player.pause();
-        Player.dispatch(setPlaybackState(`PAUSED`));
+        if (playerState === `PLAYING` || notAndroid) {
+          Player.duck();
+          Player.dispatch(setPlaybackState(`DUCKED`));
+        }
       } else if (permanent) {
         Player.stop();
         Player.dispatch(setPlaybackState(`STOPPED`));
-      } else {
+      } else if (playerState === `DUCKED` || notAndroid) {
         Player.resume();
         Player.dispatch(setPlaybackState(`PLAYING`));
       }
