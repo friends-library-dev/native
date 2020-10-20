@@ -1,9 +1,11 @@
 import { EventEmitter } from 'events';
 import RNTrackPlayer from 'react-native-track-player';
-import { TrackData } from '../types';
+import { TrackData, PlayerState } from '../types';
 import { Dispatch } from '../state';
 
 class Player extends EventEmitter {
+  private ducked = false;
+
   public dispatch: Dispatch = (): any => {};
 
   public skipNext(): Promise<void> {
@@ -15,11 +17,17 @@ class Player extends EventEmitter {
   }
 
   public resume(): Promise<void> {
+    this.ducked = false;
     return RNTrackPlayer.play();
   }
 
   public stop(): Promise<void> {
     return RNTrackPlayer.stop();
+  }
+
+  public duck(): Promise<void> {
+    this.ducked = true;
+    return RNTrackPlayer.pause();
   }
 
   public pause(): Promise<void> {
@@ -39,20 +47,21 @@ class Player extends EventEmitter {
     this.seekTo(currentPosition + delta);
   }
 
-  public async getState(): Promise<'PLAYING' | 'PAUSED' | 'STOPPED'> {
+  public async getState(): Promise<PlayerState> {
     const RNState = await RNTrackPlayer.getState();
     switch (RNState) {
       case RNTrackPlayer.STATE_PLAYING:
       case RNTrackPlayer.STATE_BUFFERING:
         return `PLAYING`;
       case RNTrackPlayer.STATE_PAUSED:
-        return `PAUSED`;
+        return this.ducked ? `DUCKED` : `PAUSED`;
       default:
         return `STOPPED`;
     }
   }
 
   public async playPart(trackId: string, tracks: TrackData[]): Promise<void> {
+    this.ducked = false;
     await RNTrackPlayer.reset();
     RNTrackPlayer.add(
       tracks.map((track) => ({

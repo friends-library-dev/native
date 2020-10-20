@@ -6,13 +6,13 @@ import { downloadAudio, isDownloaded } from './filesystem';
 import { set as setActivePart } from './active-part';
 import * as select from './selectors';
 import { seekTo } from './track-position';
-import { AudioPart } from '../types';
+import { AudioPart, PlayerState } from '../types';
 import { canDownloadNow } from '../state/network';
 import * as keys from '../lib/keys';
 
 export interface PlaybackState {
   audioId: string | null;
-  state: 'STOPPED' | 'PLAYING' | 'PAUSED';
+  state: PlayerState;
 }
 
 export const initialState: PlaybackState = {

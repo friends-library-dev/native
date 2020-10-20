@@ -1,3 +1,5 @@
+export type PlayerState = 'STOPPED' | 'PLAYING' | 'PAUSED' | 'DUCKED';
+
 export interface AudioPart {
   audioId: string;
   index: number;
