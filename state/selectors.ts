@@ -1,10 +1,11 @@
 import { isNotNull } from 'x-ts-utils';
+import { utf8ShortTitle } from '@friends-library/adoc-convert';
 import { State } from './';
 import FS from '../lib/fs';
 import * as keys from '../lib/keys';
 import { TrackData, AudioResource, AudioPart } from '../types';
 import { FileState } from './filesystem';
-import { backgroundPartTitle, shortTitle } from '../lib/utils';
+import { backgroundPartTitle } from '../lib/utils';
 
 export function isAudioPartPlaying(
   audioId: string,
@@ -148,7 +149,7 @@ export function trackData(
     return null;
   }
   const part = audio.parts[partIndex];
-  const title = shortTitle(audio.title);
+  const title = utf8ShortTitle(audio.title);
   return {
     id: keys.part(audioId, partIndex),
     filepath: `file://${FS.abspath(audioPath)}`,
