@@ -4,13 +4,14 @@ import { AudioResource, StackParamList } from '../types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { t } from '@friends-library/locale';
+import { utf8ShortTitle } from '@friends-library/adoc-convert';
 import { Serif, Sans } from '../components/Text';
 import IconButton from '../components/IconButton';
 import Artwork from '../components/Artwork';
 import AudioControls from '../components/AudioControls';
 import DownloadablePart from '../components/DownloadablePart';
 import tw from '../lib/tailwind';
-import { shortTitle, humansize } from '../lib/utils';
+import { humansize } from '../lib/utils';
 import { useSelector, useDispatch, PropSelector } from '../state';
 import {
   isDownloading,
@@ -81,7 +82,7 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
         )}
       </View>
       <Serif size={30} style={tw(`text-center py-4 px-8`)}>
-        {shortTitle(audio.title)}
+        {utf8ShortTitle(audio.title)}
       </Serif>
       {!audio.title.includes(audio.friend) && !audio.friend.startsWith(`Compila`) && (
         <Serif size={22} style={tw(`text-center italic text-gray-700 mb-6 -mt-2`)}>

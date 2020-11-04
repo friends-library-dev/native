@@ -35,11 +35,10 @@
     "format": "fldev format"
   },
   "dependencies": {
-    "@friends-library/adoc-convert": "^1.1.2",
-    "@friends-library/dev": "^4.1.10",
+    "@friends-library/adoc-convert": "^1.2.0",
     "@friends-library/locale": "^1.0.0",
     "@friends-library/theme": "^1.1.0",
-    "@friends-library/types": "^2.0.0",
+    "@friends-library/types": "^3.0.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.5",
     "@react-navigation/native": "^5.7.2",
@@ -72,6 +71,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
+    "@friends-library/dev": "^4.1.12",
     "@react-native-community/eslint-config": "^1.1.0",
     "@storybook/addon-actions": "^6.0.16",
     "@storybook/addon-essentials": "^6.0.16",
