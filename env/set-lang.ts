@@ -13,7 +13,7 @@ const APP_NAME = LANG === `en` ? `Friends Library` : `Biblioteca de los Amigos`;
 const PRIMARY_COLOR_HEX = LANG === `en` ? MAROON_HEX : GOLD_HEX;
 
 const BUILD_TYPE: `release` | `beta` =
-  exec.exit(`git branch --show-current`) === `master` ? `release` : `beta`;
+  exec.exit(`git branch --show-current`).trim() === `master` ? `release` : `beta`;
 
 const APP_IDENTIFIER = getAppIdentifier();
 
