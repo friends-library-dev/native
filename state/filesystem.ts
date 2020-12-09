@@ -233,8 +233,10 @@ function execDownloadAudio(
   const quality = state.preferences.audioQuality;
   const audio = state.audioResources[audioId];
   if (!audio) return Promise.resolve();
+  const part = audio.parts[partIndex];
+  if (!part) return Promise.resolve();
   const path = keys.audioFilePath(audioId, partIndex, quality);
-  const url = audio.parts[partIndex][quality === `HQ` ? `url` : `urlLq`];
+  const url = part[quality === `HQ` ? `url` : `urlLq`];
   return FS.eventedDownload(
     path,
     url,
