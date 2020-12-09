@@ -86,7 +86,7 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
       </Serif>
       {!audio.title.includes(audio.friend) && !audio.friend.startsWith(`Compila`) && (
         <Serif size={22} style={tw(`text-center italic text-gray-700 mb-6 -mt-2`)}>
-          by {audio.friend}
+          {t`by`} {audio.friend}
         </Serif>
       )}
       {showDownloadAll && (
