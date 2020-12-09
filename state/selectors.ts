@@ -100,7 +100,8 @@ export function audioPartFile(
   const audio = state.audioResources[audioId];
   let fallbackSize = 10000;
   if (audio && audio.parts[partIndex]) {
-    fallbackSize = audio.parts[partIndex][quality === `HQ` ? `size` : `sizeLq`];
+    fallbackSize =
+      audio.parts[partIndex]?.[quality === `HQ` ? `size` : `sizeLq`] ?? fallbackSize;
   }
   return (
     state.filesystem[audioPath] || {
@@ -145,10 +146,9 @@ export function trackData(
   const audioPath = keys.audioFilePath(audioId, partIndex, prefs.audioQuality);
   const audio = audioResources[audioId];
   const artworkData = artwork(audioId, state);
-  if (!audio || !artworkData) {
-    return null;
-  }
+  if (!audio || !artworkData) return null;
   const part = audio.parts[partIndex];
+  if (!part) return null;
   const title = utf8ShortTitle(audio.title);
   return {
     id: keys.part(audioId, partIndex),

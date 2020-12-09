@@ -24,7 +24,7 @@ class FileSystem {
 
   public download(relPath: string, networkUrl: string): Promise<number | null> {
     if (this.downloads[relPath]) {
-      return this.downloads[relPath];
+      return this.downloads[relPath] || Promise.resolve(null);
     }
 
     const { promise } = RNFS.downloadFile({
@@ -42,7 +42,7 @@ class FileSystem {
       })
       .catch(() => null);
 
-    return this.downloads[relPath];
+    return this.downloads[relPath] || Promise.resolve(null);
   }
 
   public hasFile(relPath: string): boolean {

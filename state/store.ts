@@ -38,7 +38,13 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   store.dispatch(
     batchSetFilesystem(
       Object.keys(FS.manifest).reduce((acc, path) => {
-        acc[path] = { totalBytes: FS.manifest[path], bytesOnDisk: FS.manifest[path] };
+        const storedBytes = FS.manifest[path];
+        if (typeof storedBytes === `number`) {
+          acc[path] = {
+            totalBytes: storedBytes,
+            bytesOnDisk: storedBytes,
+          };
+        }
         return acc;
       }, {} as State['filesystem']),
     ),

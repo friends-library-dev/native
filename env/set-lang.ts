@@ -67,7 +67,7 @@ function copyDir(src: string, dest: string): void {
 function copyFileWithEnv(src: string, dest: string): void {
   let code = fs.readFileSync(`${ENV_DIR}/files/${src}`, `utf8`);
 
-  const replacements = [
+  const replacements: [string, string][] = [
     [`{LANG}`, LANG],
     [`{APP_NAME}`, APP_NAME],
     [`{BUILD_NUM}`, String(BUILD_NUM)],
@@ -76,9 +76,10 @@ function copyFileWithEnv(src: string, dest: string): void {
     [`{PRIMARY_COLOR_HEX}`, PRIMARY_COLOR_HEX],
     [`{ALLOW_INSECURE_LOCALHOST}`, ALLOW_INSECURE_LOCALHOST],
   ];
-  replacements.forEach(([pattern, value]) => {
+
+  for (const [pattern, value] of replacements) {
     code = code.replace(new RegExp(pattern, `g`), value);
-  });
+  }
 
   let generatedComment = ``;
   if (src.endsWith(`.xml`) || src.endsWith(`.plist`)) {
