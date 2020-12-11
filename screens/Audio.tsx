@@ -178,7 +178,11 @@ const propSelector: PropSelector<{ audioId: string }, Props> = (
   const size = quality === `HQ` ? `size` : `sizeLq`;
   return {
     audio,
-    duration: Audio.humanDuration(audio.parts.map((p) => p.duration)),
+    duration: Audio.humanDuration(
+      audio.parts.map((p) => p.duration),
+      `abbrev`,
+      LANG,
+    ),
     controlsProps,
     downloadablePartProps: audio.parts
       .map((part, partIndex) =>
