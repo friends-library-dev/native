@@ -12,18 +12,37 @@ storiesOf(`AudioListItem`, module).add(`default`, () => (
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={0}
+      duration="41 min"
     />
     <AudioListItem
       id="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={33}
+      duration="41 min"
+      isNew
     />
     <AudioListItem
       id="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={98}
+      duration="41 min"
+    />
+    <AudioListItem
+      id="penington"
+      title="The Writings of Isaac Penington — Vol. I"
+      friend="Isaac Penington"
+      progress={0}
+      duration="12 hr 13 min"
+    />
+    <AudioListItem
+      id="penington"
+      title="The Writings of Isaac Penington — Vol. I"
+      friend="Isaac Penington"
+      progress={0}
+      duration="12 hr 13 min"
+      isNew
     />
   </View>
 ));
