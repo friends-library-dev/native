@@ -29,7 +29,7 @@ type PartState =
   | 'playing'
   | 'not_downloaded';
 
-type Props =
+export type Props =
   | (CommonProps & { state: Exclude<PartState, 'downloading'> })
   | (CommonProps & { state: 'downloading'; progress: number });
 
