@@ -10,7 +10,7 @@ import { togglePlayback, skipNext, skipBack } from '../state/playback';
 import { downloadProgress, isDownloading } from '../state/filesystem';
 import { seekRelative, seekTo } from '../state/track-position';
 
-interface Props {
+export interface Props {
   skipNext?: () => any;
   skipBack?: () => any;
   seekForward: () => any;

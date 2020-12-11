@@ -8,8 +8,16 @@ import { utf8ShortTitle } from '@friends-library/adoc-convert';
 import { Serif, Sans } from '../components/Text';
 import IconButton from '../components/IconButton';
 import Artwork from '../components/Artwork';
-import AudioControls from '../components/AudioControls';
-import DownloadablePart from '../components/DownloadablePart';
+import {
+  AudioControls,
+  Props as AudioControlsProps,
+  propSelector as audioControlsPropSelector,
+} from '../components/AudioControls';
+import {
+  DownloadablePart,
+  Props as DownloadablePartProps,
+  propSelector as downloadablePartPropSelector,
+} from '../components/DownloadablePart';
 import tw from '../lib/tailwind';
 import { humansize } from '../lib/utils';
 import { useSelector, useDispatch, PropSelector } from '../state';
@@ -22,17 +30,40 @@ import {
 } from '../state/filesystem';
 import * as select from '../state/selectors';
 import { LANG } from '../env';
+import { isNotNull } from 'x-ts-utils';
+import { Audio } from '@friends-library/friends';
 
 interface Props {
-  navigation: StackNavigationProp<StackParamList, 'Listen'>;
-  route: RouteProp<StackParamList, 'Listen'>;
+  audio: AudioResource;
+  duration: string;
+  unDownloaded: number;
+  downloaded: number;
+  downloadingActivePart: boolean;
+  activePartIndex: number;
+  notDownloading: boolean;
+  showDownloadAll: boolean;
+  showNetworkFail: boolean;
+  deleteAllParts: () => unknown;
+  downloadAllParts: () => unknown;
+  controlsProps: AudioControlsProps;
+  downloadablePartProps: DownloadablePartProps[];
 }
 
-const AudioScreen: React.FC<Props> = ({ route }) => {
-  const dispatch = useDispatch();
-  const selection = useSelector(selector({ audioId: route.params.audioId }, dispatch));
-  const showNetworkFail = selection && selection.showNetworkFail === true;
-
+export const AudioScreen: React.FC<Props> = ({
+  audio,
+  downloaded,
+  unDownloaded,
+  showDownloadAll,
+  activePartIndex,
+  downloadingActivePart,
+  notDownloading,
+  showNetworkFail,
+  deleteAllParts,
+  downloadAllParts,
+  controlsProps,
+  downloadablePartProps,
+  duration,
+}) => {
   useEffect(() => {
     if (showNetworkFail) {
       Alert.alert(t`No internet`, `${t`Unable to download at this time`}.`, [
@@ -41,17 +72,6 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
     }
   }, [showNetworkFail]);
 
-  if (!selection) return null;
-
-  const {
-    audio,
-    downloaded,
-    unDownloaded,
-    showDownloadAll,
-    activePartIndex,
-    downloadingActivePart,
-    notDownloading,
-  } = selection;
   const isMultipart = audio.parts.length > 1;
 
   return (
@@ -70,7 +90,7 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
         }}
       />
       <View style={tw(`flex-grow py-4 px-8 justify-center`)}>
-        <AudioControls audioId={audio.id} />
+        <AudioControls {...controlsProps} />
         {isMultipart && !downloadingActivePart && (
           <View style={tw(`flex-row justify-center -mt-4`)}>
             <Sans size={13} style={tw(`text-gray-600`)}>
@@ -91,11 +111,20 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
       )}
       {showDownloadAll && (
         <IconButton
-          onPress={() => dispatch(downloadAllAudios(audio.id))}
+          onPress={downloadAllParts}
           icon="cloud-download"
           text={isMultipart ? t`Download all` : t`Download`}
           secondaryText={`(${humansize(unDownloaded)})`}
         />
+      )}
+      {isMultipart && (
+        <View style={tw(`flex-row items-center justify-center`)}>
+          <Sans style={tw(`text-center text-gray-700 py-3`)}>
+            {audio.parts.length} parts
+          </Sans>
+          <Sans style={tw(`mx-3 text-blue-300`)}>|</Sans>
+          <Sans style={tw(`text-center text-gray-700 py-3`)}>{duration}</Sans>
+        </View>
       )}
       <Serif
         style={tw(`px-6 pt-2 pb-4 text-justify text-gray-800`, {
@@ -107,18 +136,14 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
       </Serif>
       {isMultipart && (
         <View style={tw(`mb-16`)}>
-          {audio.parts.map((part) => (
-            <DownloadablePart
-              key={`${audio.id}--${part.index}`}
-              audioId={audio.id}
-              partIndex={part.index}
-            />
+          {downloadablePartProps.map((props, idx) => (
+            <DownloadablePart key={`${audio.id}--${idx}`} {...props} />
           ))}
         </View>
       )}
       {downloaded > 0 && notDownloading && (
         <IconButton
-          onPress={() => dispatch(deleteAllAudioParts(audio.id))}
+          onPress={deleteAllParts}
           icon="trash"
           text={isMultipart ? t`Delete all` : t`Delete`}
           secondaryText={`(${humansize(downloaded)})`}
@@ -131,33 +156,38 @@ const AudioScreen: React.FC<Props> = ({ route }) => {
   );
 };
 
-export default AudioScreen;
-
 const ARTWORK_WIDTH = Dimensions.get(`window`).width * 0.8;
 
-const selector: PropSelector<
-  { audioId: string },
-  {
-    audio: AudioResource;
-    unDownloaded: number;
-    downloaded: number;
-    downloadingActivePart: boolean;
-    activePartIndex: number;
-    notDownloading: boolean;
-    showDownloadAll: boolean;
-    showNetworkFail: boolean;
-  }
-> = ({ audioId }) => (state) => {
+interface OwnProps {
+  navigation: StackNavigationProp<StackParamList, 'Listen'>;
+  route: RouteProp<StackParamList, 'Listen'>;
+}
+
+const propSelector: PropSelector<{ audioId: string }, Props> = (
+  { audioId },
+  dispatch,
+) => (state) => {
   const quality = state.preferences.audioQuality;
   const audioPart = select.activeAudioPart(audioId, state);
   const files = select.audioFiles(audioId, state);
   if (!audioPart || !files) return null;
   const [part, audio] = audioPart;
+  const controlsProps = audioControlsPropSelector({ audioId: audio.id }, dispatch)(state);
+  if (!controlsProps) return null;
   const activeFile = select.audioPartFile(audio.id, part.index, state);
   const size = quality === `HQ` ? `size` : `sizeLq`;
   return {
     audio,
+    duration: Audio.humanDuration(audio.parts.map((p) => p.duration)),
+    controlsProps,
+    downloadablePartProps: audio.parts
+      .map((part, partIndex) =>
+        downloadablePartPropSelector({ audioId: audio.id, partIndex }, dispatch)(state),
+      )
+      .filter(isNotNull),
     showNetworkFail: state.network.recentFailedAttempt,
+    deleteAllParts: () => dispatch(deleteAllAudioParts(audio.id)),
+    downloadAllParts: () => dispatch(downloadAllAudios(audio.id)),
     unDownloaded: audio.parts.reduce((acc, part, idx) => {
       const file = files[idx];
       if (file && !isDownloaded(file)) {
@@ -180,3 +210,12 @@ const selector: PropSelector<
       0,
   };
 };
+
+const AudioScreenContainer: React.FC<OwnProps> = ({ route }) => {
+  const dispatch = useDispatch();
+  const props = useSelector(propSelector({ audioId: route.params.audioId }, dispatch));
+  if (!props) return null;
+  return <AudioScreen {...props} />;
+};
+
+export default AudioScreenContainer;
