@@ -17,6 +17,7 @@
     "android:es": "npm run env:es && react-native run-android",
     "ios:en": "npm run env:en && react-native run-ios",
     "ios:es": "npm run env:es && react-native run-ios",
+    "start:clear-cache": "react-native start --reset-cache",
     "start": "cp -f ./index.app.js ./index.js && react-native start",
     "start:en": "npm run env:en && npm run start",
     "start:es": "npm run env:es && npm run start",
