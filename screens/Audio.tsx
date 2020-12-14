@@ -120,7 +120,7 @@ export const AudioScreen: React.FC<Props> = ({
       {isMultipart && (
         <View style={tw(`flex-row items-center justify-center`)}>
           <Sans style={tw(`text-center text-gray-700 py-3`)}>
-            {audio.parts.length} parts
+            {audio.parts.length} {LANG === `en` ? `parts` : `partes`}
           </Sans>
           <Sans style={tw(`mx-3 text-blue-300`)}>|</Sans>
           <Sans style={tw(`text-center text-gray-700 py-3`)}>{duration}</Sans>
