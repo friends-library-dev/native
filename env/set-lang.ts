@@ -96,9 +96,6 @@ function copyFileWithEnv(src: string, dest: string): void {
 
 function getAppIdentifier(): string {
   const base = `com.friendslibrary.FriendsLibrary`;
-  if (LANG === `en` && BUILD_TYPE === `beta`) {
-    return base; // legacy initial testflight english id
-  }
   return `${base}.${LANG}.${BUILD_TYPE}`;
 }
 
