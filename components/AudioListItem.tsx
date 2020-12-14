@@ -5,6 +5,7 @@ import { utf8ShortTitle } from '@friends-library/adoc-convert';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
 import Artwork from './Artwork';
+import { LANG } from '../env';
 
 interface Props {
   id: string;
@@ -48,11 +49,12 @@ const AudioListItem: React.FC<Props> = ({
         {isNew && (
           <View
             style={tw(
-              `w-10 mt-px mb-0 h-4 rounded-full bg-green-500 text-center items-center justify-center`,
+              LANG === `es` ? `w-12` : `w-10`,
+              `mt-px mb-0 h-4 rounded-full bg-green-500 text-center items-center justify-center`,
             )}
           >
             <Sans style={tw(`uppercase text-white text-center font-bold`)} size={9.5}>
-              New
+              {LANG === `es` ? `Nuevo` : `New`}
             </Sans>
           </View>
         )}
