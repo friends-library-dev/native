@@ -21,7 +21,9 @@ interface Props {
 const AllAudio: React.FC<Props> = ({ navigation }) => {
   const audios = useSelector((state) => {
     const query = state.preferences.searchQuery.toLowerCase().trim();
+    const sort = state.preferences.sortAudiosBy;
     return Object.values(state.audioResources)
+      .slice() /* make a copy for sorting */
       .filter(isDefined)
       .filter((audio) => {
         if (query.length < 1) {
@@ -31,6 +33,18 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
           audio.friend.toLowerCase().includes(query) ||
           audio.title.toLowerCase().includes(query)
         );
+      })
+      .sort((a, b) => {
+        switch (sort) {
+          case `alphabetical`:
+            return sortable(a.title) < sortable(b.title) ? -1 : 1;
+          case `length`:
+            return totalDuration(a) > totalDuration(b) ? -1 : 1;
+          case `length_reverse`:
+            return totalDuration(a) < totalDuration(b) ? -1 : 1;
+          default:
+            return Number(new Date(a.date)) > Number(new Date(b.date)) ? -1 : 1;
+        }
       })
       .map((audio) => {
         const progress = select.progress(audio.id, state);
@@ -64,7 +78,7 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
 
   return (
     <FlatList
-      contentOffset={{ x: 0, y: 60 }}
+      contentOffset={{ x: 0, y: 107 }}
       data={audios}
       ListEmptyComponent={() => (
         <Sans size={16} style={tw(`text-center p-4 italic`)}>
@@ -89,3 +103,11 @@ function isNew(audio: AudioResource, progress: number): boolean {
 
 // 60 days
 const NEW_MS = 1000 * 60 * 60 * 24 * 60;
+
+function sortable(str: string): string {
+  return str.replace(/^(A|The) /, ``);
+}
+
+function totalDuration(audio: AudioResource): number {
+  return audio.parts.reduce((acc, part) => acc + part.duration, 0);
+}

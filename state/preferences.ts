@@ -1,9 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AudioQuality } from '@friends-library/types';
 
+export type AudioSortCriteria =
+  | 'length'
+  | 'length_reverse'
+  | 'published'
+  | 'alphabetical';
+
 export interface PreferencesState {
   audioQuality: AudioQuality;
-  sortAudiosBy: 'length' | 'length_reverse' | 'published' | 'alphabetical';
+  sortAudiosBy: AudioSortCriteria;
   searchQuery: string;
 }
 
