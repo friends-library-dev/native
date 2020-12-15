@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import { configureStore, getDefaultMiddleware, Store, AnyAction } from '@reduxjs/toolkit';
 import SplashScreen from 'react-native-splash-screen';
 import throttle from 'lodash.throttle';
+import merge from 'lodash.merge';
 import rootReducer from './rootReducer';
 import FS from '../lib/fs';
 import Player from '../lib/player';
@@ -20,10 +21,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
 
   const store = configureStore({
     reducer: rootReducer,
-    preloadedState: {
-      ...INITIAL_STATE,
-      ...savedState,
-    },
+    preloadedState: merge({}, INITIAL_STATE, savedState),
     middleware: getDefaultMiddleware({
       serializableCheck:
         Platform.OS === `ios` ? { warnAfter: 100, ignoredPaths: [`audios`] } : false,
@@ -58,7 +56,10 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
         const state = store.getState();
         const saveState: State = {
           audioResources: state.audioResources,
-          preferences: state.preferences,
+          preferences: {
+            ...state.preferences,
+            searchQuery: ``,
+          },
           trackPosition: state.trackPosition,
           network: INITIAL_STATE.network,
           filesystem: {},
