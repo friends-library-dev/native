@@ -1,5 +1,5 @@
 import tailwind from 'tailwind-rn';
-import { ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle, Platform } from 'react-native';
 
 type Arg =
   | string
@@ -19,7 +19,7 @@ export default function tw(...args: Arg[]): ViewStyle | TextStyle {
   let styles: ViewStyle | TextStyle = {};
   args.forEach((arg) => {
     if (typeof arg === `string`) {
-      classNames.push(arg);
+      classNames = [...classNames, ...arg.trim().split(/ +/)];
     } else if (Array.isArray(arg)) {
       classNames = [...classNames, ...arg.map((str) => String(str).trim())];
     } else if (typeof arg === `object` && arg !== null) {
@@ -40,9 +40,18 @@ export default function tw(...args: Arg[]): ViewStyle | TextStyle {
     ...tailwind(
       classNames
         .map((c) => c.trim())
+        .map(platformPrefix)
         .filter(Boolean)
         .join(` `),
     ),
     ...styles,
   };
+}
+
+function platformPrefix(className: string): string {
+  console.log(`className`, className);
+  return className.replace(/^(ios|android):(.*)/, (_, os, cx) => {
+    console.log({ _, os, cx });
+    return Platform.OS === os ? cx : ``;
+  });
 }

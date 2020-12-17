@@ -53,7 +53,10 @@ const AudioListItem: React.FC<Props> = ({
               `mt-px mb-0 h-4 rounded-full bg-green-500 text-center items-center justify-center`,
             )}
           >
-            <Sans style={tw(`uppercase text-white text-center font-bold`)} size={9.5}>
+            <Sans
+              style={tw(`uppercase text-white text-center font-bold android:-mt-px`)}
+              size={9.5}
+            >
               {LANG === `es` ? `Nuevo` : `New`}
             </Sans>
           </View>
