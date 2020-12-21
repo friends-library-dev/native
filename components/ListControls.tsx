@@ -10,6 +10,7 @@ import {
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
 import Search from './Search';
+import { LANG } from '../env';
 
 interface Props {
   query: string;
@@ -34,22 +35,22 @@ export const ListControls: React.FC<Props> = ({
       <SortButton
         active={sort === `published`}
         onPress={() => setSort(`published`)}
-        label="Newest"
+        label={LANG === `en` ? `Newest` : `Nuevo`}
       />
       <SortButton
         active={sort === `duration`}
         onPress={() => setSort(`duration`)}
-        label="Length"
+        label={LANG === `en` ? `Length` : `Duración`}
       />
       <SortButton
         active={sort === `title`}
         onPress={() => setSort(`title`)}
-        label="Title"
+        label={LANG === `en` ? `Title` : `Título`}
       />
       <SortButton
         active={sort === `author`}
         onPress={() => setSort(`author`)}
-        label="Author"
+        label={LANG === `en` ? `Author` : `Autor`}
         last
       />
     </View>

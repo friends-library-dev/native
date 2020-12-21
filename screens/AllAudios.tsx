@@ -98,7 +98,9 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
       data={audios}
       ListEmptyComponent={() => (
         <Sans size={16} style={tw`text-center p-4 italic`}>
-          No audiobooks matched your search.
+          {LANG === `en`
+            ? `No audiobooks matched your search.`
+            : `Ningún audiolibro corresponde a tu búsqueda.`}
         </Sans>
       )}
       ListHeaderComponent={ListControls}
