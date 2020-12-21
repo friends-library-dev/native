@@ -16,6 +16,7 @@ export interface AudioResource {
   date: string;
   title: string;
   friend: string;
+  friendSort: string;
   reader: string;
   artwork: string;
   description: string;
