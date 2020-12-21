@@ -91,11 +91,11 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
 
   return (
     <FlatList
-      contentOffset={{ x: 0, y: 107 }}
+      // contentOffset={{ x: 0, y: 107 }}
       data={audios}
       ListEmptyComponent={() => (
-        <Sans size={16} style={tw(`text-center p-4 italic`)}>
-          No audiobooks matched your search term.
+        <Sans size={16} style={tw`text-center p-4 italic`}>
+          No audiobooks matched your search.
         </Sans>
       )}
       ListHeaderComponent={ListControls}
