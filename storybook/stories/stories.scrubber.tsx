@@ -15,7 +15,7 @@ const TestScrubber: React.FC<Partial<React.ComponentProps<typeof Scrubber>>> = (
 ) => {
   const [pos, setPos] = useState(1111);
   return (
-    <View style={tw(`p-6`)}>
+    <View style={tw`p-6`}>
       <Scrubber
         playing
         downloading={false}

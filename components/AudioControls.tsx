@@ -2,7 +2,6 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Scrubber from './Scrubber';
-import { HEX_BLUE } from '../lib/constants';
 import tw from '../lib/tailwind';
 import { PropSelector, useSelector, useDispatch } from '../state';
 import * as select from '../state/selectors';
@@ -42,7 +41,7 @@ export const AudioControls: React.FC<Props> = ({
   return (
     <>
       <View
-        style={tw(
+        style={tw.style(
           `flex-row items-center px-2`,
           downloading ? `justify-center` : `justify-between`,
         )}
@@ -53,7 +52,7 @@ export const AudioControls: React.FC<Props> = ({
               style={{ opacity: multipart ? (skipBack ? 1 : 0.2) : 0 }}
               name="step-backward"
               size={25}
-              color={HEX_BLUE}
+              color={tw.color(`flblue`)}
             />
           </TouchableOpacity>
         )}
@@ -63,17 +62,17 @@ export const AudioControls: React.FC<Props> = ({
               style={{ transform: [{ scaleX: -1 }] }}
               name="repeat"
               size={25}
-              color={HEX_BLUE}
+              color={tw.color(`flblue`)}
             />
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          style={tw(`items-center justify-center mb-2`)}
+          style={tw`items-center justify-center mb-2`}
           onPress={togglePlayback}
         >
           <Icon
             size={80}
-            color={HEX_BLUE}
+            color={tw.color(`flblue`)}
             style={{ opacity: downloading ? 0.5 : 1 }}
             name={
               downloading ? `cloud-download` : playing ? `pause-circle` : `play-circle`
@@ -82,7 +81,7 @@ export const AudioControls: React.FC<Props> = ({
         </TouchableOpacity>
         {!downloading && (
           <TouchableOpacity onPress={seekForward}>
-            <Icon name="repeat" size={25} color={HEX_BLUE} />
+            <Icon name="repeat" size={25} color={tw.color(`flblue`)} />
           </TouchableOpacity>
         )}
         {!downloading && (
@@ -91,7 +90,7 @@ export const AudioControls: React.FC<Props> = ({
               style={{ opacity: multipart ? (skipNext ? 1 : 0.2) : 0 }}
               name="step-forward"
               size={25}
-              color={HEX_BLUE}
+              color={tw.color(`flblue`)}
             />
           </TouchableOpacity>
         )}

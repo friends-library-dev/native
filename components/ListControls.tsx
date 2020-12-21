@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { BLUE_HEX } from '@friends-library/theme';
 import { PropSelector, useDispatch, useSelector } from '../state';
 import { setSearchQuery, setSortAudiosBy, AudioSortCriteria } from '../state/preferences';
 import tw from '../lib/tailwind';
@@ -15,12 +14,10 @@ interface Props {
 }
 
 export const ListControls: React.FC<Props> = ({ query, setQuery, sort, setSort }) => (
-  <View style={tw(`p-2 pt-4`)}>
+  <View style={tw`p-2 pt-4`}>
     <Search query={query} setQuery={setQuery} />
     <View
-      style={tw(
-        `flex-row justify-center mt-4 -mb-1 pb-2 flex-wrap border-b border-gray-300`,
-      )}
+      style={tw`flex-row justify-center mt-4 -mb-1 pb-2 flex-wrap border-b border-v1-gray-300`}
     >
       <SortButton
         active={sort === `published`}
@@ -55,17 +52,17 @@ const SortButton: React.FC<{
 }> = ({ label, last, active, onPress }) => (
   <TouchableOpacity
     onPress={onPress}
-    style={tw(
+    style={tw.style(
       `py-1 px-4 flex-grow justify-center rounded-md mb-2`,
       !last && `mr-2`,
       { maxWidth: 150 },
       !active && { backgroundColor: `#ddd` },
-      active && { backgroundColor: BLUE_HEX },
+      active && { backgroundColor: tw.color(`flblue`) || `` },
     )}
   >
     <Sans
-      style={tw(`text-center uppercase`, {
-        'text-gray-700': !active,
+      style={tw.style(`text-center uppercase`, {
+        'text-v1-gray-700': !active,
         'text-white font-bold': active,
       })}
       size={10}
