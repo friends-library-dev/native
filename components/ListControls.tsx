@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropSelector, useDispatch, useSelector } from '../state';
-import { setSearchQuery, setSortAudiosBy, AudioSortCriteria } from '../state/preferences';
+import {
+  setSearchQuery,
+  setSortAudiosBy,
+  AudioSortCriteria,
+  setAudioSortHeaderHeight,
+} from '../state/preferences';
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
 import Search from './Search';
@@ -11,10 +16,17 @@ interface Props {
   setQuery: (query: string) => unknown;
   sort: AudioSortCriteria;
   setSort: (criteria: AudioSortCriteria) => unknown;
+  setHeight: (height: number) => unknown;
 }
 
-export const ListControls: React.FC<Props> = ({ query, setQuery, sort, setSort }) => (
-  <View style={tw`p-2 pt-4`}>
+export const ListControls: React.FC<Props> = ({
+  query,
+  setQuery,
+  sort,
+  setSort,
+  setHeight,
+}) => (
+  <View style={tw`p-2 pt-4`} onLayout={(e) => setHeight(e.nativeEvent.layout.height)}>
     <Search query={query} setQuery={setQuery} />
     <View
       style={tw`flex-row justify-center mt-4 -mb-1 pb-2 flex-wrap border-b border-v1-gray-300`}
@@ -79,6 +91,7 @@ export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) 
       sort: state.preferences.sortAudiosBy,
       setQuery: (query) => dispatch(setSearchQuery(query)),
       setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
+      setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
     };
   };
 };

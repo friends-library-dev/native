@@ -19,10 +19,12 @@ interface Props {
 }
 
 const AllAudio: React.FC<Props> = ({ navigation }) => {
-  const audios = useSelector((state) => {
+  const { audios, headerHeight } = useSelector((state) => {
     const query = state.preferences.searchQuery.toLowerCase().trim();
     const sort = state.preferences.sortAudiosBy;
-    return Object.values(state.audioResources)
+    const headerHeight = state.preferences.audioSortHeaderHeight;
+
+    const audios = Object.values(state.audioResources)
       .slice() /* make a copy for sorting */
       .filter(isDefined)
       .filter((audio) => {
@@ -67,6 +69,7 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
               : audio.friend,
         };
       });
+    return { audios, headerHeight };
   });
 
   const renderItem: (props: {
@@ -91,7 +94,7 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
 
   return (
     <FlatList
-      // contentOffset={{ x: 0, y: 107 }}
+      contentOffset={{ x: 0, y: headerHeight }}
       data={audios}
       ListEmptyComponent={() => (
         <Sans size={16} style={tw`text-center p-4 italic`}>
