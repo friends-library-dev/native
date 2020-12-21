@@ -20,7 +20,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
     connected: s.network.connected,
   }));
   return (
-    <View style={tw(`flex-grow items-center justify-center`)}>
+    <View style={tw`flex-grow items-center justify-center`}>
       <HomeButton
         title={`${t`Audiobooks`} (${numAudios})`}
         onPress={() => navigation.navigate(`Audiobooks`)}
@@ -42,10 +42,12 @@ const HomeButton: React.FC<{
   backgroundColor: string;
 }> = ({ onPress, title, backgroundColor }) => (
   <TouchableOpacity
-    style={tw(`self-stretch mx-12 mb-6 px-8 py-4 rounded-full`, { backgroundColor })}
+    style={tw.style(`self-stretch mx-12 mb-6 px-8 py-4 rounded-full`, {
+      backgroundColor,
+    })}
     onPress={onPress}
   >
-    <Sans size={20} style={tw(`text-white text-center`)}>
+    <Sans size={20} style={tw`text-white text-center`}>
       {title}
     </Sans>
   </TouchableOpacity>

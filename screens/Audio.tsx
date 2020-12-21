@@ -89,11 +89,11 @@ export const AudioScreen: React.FC<Props> = ({
           shadowRadius: 5,
         }}
       />
-      <View style={tw(`flex-grow py-4 px-8 justify-center`)}>
+      <View style={tw`flex-grow py-4 px-8 justify-center`}>
         <AudioControls {...controlsProps} />
         {isMultipart && !downloadingActivePart && (
-          <View style={tw(`flex-row justify-center -mt-4`)}>
-            <Sans size={13} style={tw(`text-gray-600`)}>
+          <View style={tw`flex-row justify-center -mt-4`}>
+            <Sans size={13} style={tw`text-v1-gray-600`}>
               Part{LANG === `es` ? `e` : ``} {activePartIndex + 1}
               {` `}
               {LANG === `es` ? `de` : `of`} {audio.parts.length}
@@ -101,11 +101,11 @@ export const AudioScreen: React.FC<Props> = ({
           </View>
         )}
       </View>
-      <Serif size={30} style={tw(`text-center py-4 px-8`)}>
+      <Serif size={30} style={tw`text-center py-4 px-8`}>
         {utf8ShortTitle(audio.title)}
       </Serif>
       {!audio.title.includes(audio.friend) && !audio.friend.startsWith(`Compila`) && (
-        <Serif size={22} style={tw(`text-center italic text-gray-700 mb-6 -mt-2`)}>
+        <Serif size={22} style={tw`text-center italic text-v1-gray-700 mb-6 -mt-2`}>
           {t`by`} {audio.friend}
         </Serif>
       )}
@@ -118,16 +118,16 @@ export const AudioScreen: React.FC<Props> = ({
         />
       )}
       {isMultipart && (
-        <View style={tw(`flex-row items-center justify-center`)}>
-          <Sans style={tw(`text-center text-gray-700 py-3`)}>
+        <View style={tw`flex-row items-center justify-center`}>
+          <Sans style={tw`text-center text-v1-gray-700 py-3`}>
             {audio.parts.length} {LANG === `en` ? `parts` : `partes`}
           </Sans>
-          <Sans style={tw(`mx-3 text-blue-300`)}>|</Sans>
-          <Sans style={tw(`text-center text-gray-700 py-3`)}>{duration}</Sans>
+          <Sans style={tw`mx-3 text-blue-300`}>|</Sans>
+          <Sans style={tw`text-center text-v1-gray-700 py-3`}>{duration}</Sans>
         </View>
       )}
       <Serif
-        style={tw(`px-6 pt-2 pb-4 text-justify text-gray-800`, {
+        style={tw.style(`px-6 pt-2 pb-4 text-justify text-v1-gray-800`, {
           lineHeight: 26,
         })}
         size={18}
@@ -135,7 +135,7 @@ export const AudioScreen: React.FC<Props> = ({
         {audio.shortDescription}
       </Serif>
       {isMultipart && (
-        <View style={tw(`mb-16`)}>
+        <View style={tw`mb-16`}>
           {downloadablePartProps.map((props, idx) => (
             <DownloadablePart key={`${audio.id}--${idx}`} {...props} />
           ))}
@@ -147,7 +147,7 @@ export const AudioScreen: React.FC<Props> = ({
           icon="trash"
           text={isMultipart ? t`Delete all` : t`Delete`}
           secondaryText={`(${humansize(downloaded)})`}
-          textTailwindClass="text-gray-700"
+          textTailwindClass="text-v1-gray-700"
           bgTailwindClass="bg-red-200"
           style={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
         />

@@ -49,7 +49,7 @@ storiesOf(`AudioListItem`, module).add(`default`, () => (
 
 storiesOf(`AudioControls`, module)
   .add(`default`, () => (
-    <View style={tw(`p-6`)}>
+    <View style={tw`p-6`}>
       <AudioControls
         seekForward={() => {}}
         seekBackward={() => {}}
@@ -65,7 +65,7 @@ storiesOf(`AudioControls`, module)
     </View>
   ))
   .add(`with skips`, () => (
-    <View style={tw(`p-6`)}>
+    <View style={tw`p-6`}>
       <AudioControls
         skipNext={() => {}}
         skipBack={() => {}}

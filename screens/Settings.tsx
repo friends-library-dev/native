@@ -32,7 +32,7 @@ const Home: React.FC<Props> = () => {
   return (
     <View>
       <View
-        style={tw(`flex-row justify-between p-4 border-b border-gray-400 items-center`)}
+        style={tw`flex-row justify-between p-4 border-b border-v1-gray-400 items-center`}
       >
         <Sans size={18}>{t`High quality audio`}</Sans>
         <Switch
@@ -44,18 +44,18 @@ const Home: React.FC<Props> = () => {
         />
       </View>
       <View
-        style={tw(`flex-row justify-between p-4 border-b border-gray-400 items-center`)}
+        style={tw`flex-row justify-between p-4 border-b border-v1-gray-400 items-center`}
       >
         <Sans size={18}>
           {t`Downloaded audio`}: {humansize(deletableBytes)}
         </Sans>
         <TouchableOpacity onPress={() => dispatch(deleteAllAudios())}>
-          <Sans size={18} style={tw(`text-red-600`)}>
+          <Sans size={18} style={tw`text-red-600`}>
             {deletableBytes === 0 ? `` : t`Delete`}
           </Sans>
         </TouchableOpacity>
       </View>
-      <Sans size={11} style={tw(`text-center text-black opacity-50 mt-6`)}>
+      <Sans size={11} style={tw`text-center text-black opacity-50 mt-6`}>
         {APP_NAME} v{BUILD_SEMVER_STRING}
       </Sans>
     </View>

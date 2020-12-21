@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import RNScrubber from 'react-native-scrubber';
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
-import { HEX_MAROON } from '../lib/constants';
 
 interface Props {
   playing: boolean;
@@ -28,22 +27,22 @@ const Scrubber: React.FC<Props> = ({
         <RNScrubber
           value={position || 0}
           bufferedValue={0}
-          scrubbedColor={HEX_MAROON}
+          scrubbedColor={tw.color(`flmaroon`)}
           totalDuration={partDuration}
           onSlidingComplete={(newPosition) => seekTo(newPosition)}
         />
       )}
       {downloading && (
         <>
-          <View style={tw(`mt-3 h-2`)}>
-            <View style={tw(`w-full border-b border-2 border-gray-300 absolute`)} />
+          <View style={tw`mt-3 h-2`}>
+            <View style={tw`w-full border-b border-2 border-v1-gray-300 absolute`} />
             <View
-              style={tw(`border-b border-2 border-gray-500 absolute`, {
+              style={tw.style(`border-b border-2 border-v1-gray-500 absolute`, {
                 width: `${downloadingProgress}%`,
               })}
             />
           </View>
-          <View style={tw(`flex-row justify-center`)}>
+          <View style={tw`flex-row justify-center`}>
             <Sans size={13}>Downloading...</Sans>
           </View>
         </>
