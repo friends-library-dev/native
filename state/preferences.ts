@@ -1,11 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AudioQuality } from '@friends-library/types';
 
-export type AudioSortCriteria =
-  | 'length'
-  | 'length_reverse'
-  | 'published'
-  | 'alphabetical';
+export type AudioSortCriteria = 'duration' | 'published' | 'author' | 'title';
 
 export interface PreferencesState {
   audioQuality: AudioQuality;

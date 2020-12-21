@@ -25,19 +25,19 @@ export const ListControls: React.FC<Props> = ({ query, setQuery, sort, setSort }
         label="Newest"
       />
       <SortButton
-        active={sort === `length_reverse`}
-        onPress={() => setSort(`length_reverse`)}
-        label="Short"
+        active={sort === `duration`}
+        onPress={() => setSort(`duration`)}
+        label="Length"
       />
       <SortButton
-        active={sort === `length`}
-        onPress={() => setSort(`length`)}
-        label="Long"
-      />
-      <SortButton
-        active={sort === `alphabetical`}
-        onPress={() => setSort(`alphabetical`)}
+        active={sort === `title`}
+        onPress={() => setSort(`title`)}
         label="Title"
+      />
+      <SortButton
+        active={sort === `author`}
+        onPress={() => setSort(`author`)}
+        label="Author"
         last
       />
     </View>

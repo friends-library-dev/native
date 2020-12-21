@@ -36,11 +36,15 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
       })
       .sort((a, b) => {
         switch (sort) {
-          case `alphabetical`:
+          case `author`: {
+            const aName = a.friendSort ?? a.friend;
+            const bName = b.friendSort ?? b.friend;
+            if (aName === bName) return 0;
+            return aName > bName ? 1 : -1;
+          }
+          case `title`:
             return sortable(a.title) < sortable(b.title) ? -1 : 1;
-          case `length`:
-            return totalDuration(a) > totalDuration(b) ? -1 : 1;
-          case `length_reverse`:
+          case `duration`:
             return totalDuration(a) < totalDuration(b) ? -1 : 1;
           default:
             return Number(new Date(a.date)) > Number(new Date(b.date)) ? -1 : 1;
@@ -57,18 +61,27 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
           ),
           progress,
           isNew: isNew(audio, progress),
+          nameDisplay:
+            sort === `author`
+              ? (audio.friendSort ?? audio.friend).replace(/, *$/, ``)
+              : audio.friend,
         };
       });
   });
 
   const renderItem: (props: {
-    item: AudioResource & { isNew: boolean; progress: number; duration: string };
+    item: AudioResource & {
+      isNew: boolean;
+      progress: number;
+      duration: string;
+      nameDisplay: string;
+    };
   }) => JSX.Element = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate(`Listen`, { audioId: item.id })}>
       <AudioListItem
         id={item.id}
         title={item.title}
-        friend={item.friend}
+        friend={item.nameDisplay}
         duration={item.duration}
         progress={item.progress}
         isNew={item.isNew}
