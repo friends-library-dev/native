@@ -312,8 +312,8 @@ PODS:
     - React
   - RNReanimated (1.13.1):
     - React
-  - RNScreens (2.11.0):
-    - React
+  - RNScreens (2.13.0):
+    - React-Core
   - RNVectorIcons (7.1.0):
     - React
   - Yoga (1.14.0)
@@ -498,7 +498,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: e36c1bb6df27ab84aa933679b3f5bbf9d180b18f
   react-native-safe-area-context: 01158a92c300895d79dee447e980672dc3fb85a6
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-track-player: 84552605df7d90e199ff8b5deceddff58d658523
+  react-native-track-player: ba2416753b58f3cdf9db5a07daa65876d659f925
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13
@@ -513,7 +513,7 @@ SPEC CHECKSUMS:
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
-  RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
+  RNScreens: 13f23e5498fb4aa749d19a5eda7f8792fbb9d01f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
