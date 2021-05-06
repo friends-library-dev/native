@@ -4,7 +4,7 @@ import { AudioResource, StackParamList } from '../types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { t } from '@friends-library/locale';
-import { utf8ShortTitle } from '@friends-library/adoc-convert';
+import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import { Serif, Sans } from '../components/Text';
 import IconButton from '../components/IconButton';
 import Artwork from '../components/Artwork';

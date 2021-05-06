@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { utf8ShortTitle } from '@friends-library/adoc-convert';
+import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
 import Artwork from './Artwork';
