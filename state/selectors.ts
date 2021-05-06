@@ -1,5 +1,5 @@
 import { isNotNull } from 'x-ts-utils';
-import { utf8ShortTitle } from '@friends-library/adoc-convert';
+import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import { State } from './';
 import FS from '../lib/fs';
 import * as keys from '../lib/keys';
