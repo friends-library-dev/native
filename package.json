@@ -64,6 +64,7 @@
     "react-native-swift": "^1.2.3",
     "react-native-track-player": "react-native-kit/react-native-track-player#7ce3d08c9915a2d129a65c5f9427f16b264b7691",
     "react-native-vector-icons": "^7.0.0",
+    "react-native-webview": "^11.4.3",
     "react-redux": "7.2.1",
     "redux": "^4.0.5",
     "tailwind-react-native-classnames": "0.0.7",
