@@ -22,6 +22,11 @@ const Home: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={tw`flex-grow items-center justify-center`}>
       <HomeButton
+        title="Ebooks (3)"
+        onPress={() => navigation.navigate(`Ebooks`)}
+        backgroundColor={PRIMARY_COLOR_HEX}
+      />
+      <HomeButton
         title={`${t`Audiobooks`} (${numAudios})`}
         onPress={() => navigation.navigate(`Audiobooks`)}
         backgroundColor={PRIMARY_COLOR_HEX}
@@ -42,7 +47,7 @@ const HomeButton: React.FC<{
   backgroundColor: string;
 }> = ({ onPress, title, backgroundColor }) => (
   <TouchableOpacity
-    style={tw.style(`self-stretch mx-12 mb-6 px-8 py-4 rounded-full`, {
+    style={tw.style(`self-stretch mx-12 mb-5 px-8 py-4 rounded-full`, {
       backgroundColor,
     })}
     onPress={onPress}

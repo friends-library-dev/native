@@ -8,6 +8,8 @@ import Home from '../screens/Home';
 import AllAudios from '../screens/AllAudios';
 import Audio from '../screens/Audio';
 import Settings from '../screens/Settings';
+import Ebooks from '../screens/Ebooks';
+import Read from '../screens/Read';
 import { useDispatch } from '../state';
 import { setConnected } from '../state/network';
 
@@ -25,6 +27,8 @@ const App: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
+        <Stack.Screen name="Ebooks" options={{ title: `Ebooks` }} component={Ebooks} />
+        <Stack.Screen name="Read" options={{ title: `Read` }} component={Read} />
         <Stack.Screen
           name="Audiobooks"
           options={{ title: t`Audiobooks` }}
