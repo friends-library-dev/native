@@ -23,7 +23,7 @@ function main(): void {
   exec.exit(`cat ${ENV_DIR}/build-constants.ts >> ${ENV}`);
   exec.exit(`echo "export const PRIMARY_COLOR_HEX = '${PRIMARY_COLOR_HEX}';" >> ${ENV}`);
   exec.exit(`echo "export const APP_NAME = '${APP_NAME}';" >> ${ENV}`);
-  exec.exit(`npm run lint:fix`, APP_DIR);
+  exec(`npm run lint:fix`, APP_DIR);
 
   copyFileWithEnv(`android/build.gradle`, `android/app/build.gradle`);
   copyFileWithEnv(`android/colors.xml`, `android/app/src/main/res/values/colors.xml`);
