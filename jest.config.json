@@ -1,0 +1,6 @@
+{
+  "transform": {
+    "^.+\\.tsx?$": "esbuild-jest"
+  },
+  "testRegex": "__tests__/.*spec\\.ts$"
+}
