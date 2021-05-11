@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as keys from '../lib/keys';
-import * as select from './selectors';
-import Service from '../lib/service';
-import { Thunk, Dispatch, State } from './';
+import * as keys from '../../lib/keys';
+import * as select from '../selectors';
+import Service from '../../lib/service';
+import { Thunk, Dispatch, State } from '..';
 
 export type TrackPositionState = Record<string, number | undefined>;
 
@@ -31,7 +31,7 @@ export const setCurrentTrackPosition = (position: number): Thunk => async (
   getState,
 ) => {
   const state = getState();
-  const { audioId } = state.playback;
+  const { audioId } = state.audio.playback;
   if (!audioId) return;
   const partIndex = select.audioActivePartIndex(audioId, state);
   dispatch(setTrackPosition({ audioId, partIndex, position }));

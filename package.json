@@ -29,7 +29,7 @@
     "open-apk-dir": "open ./android/app/build/outputs/apk/release",
     "open-aab-dir": "open ./android/app/build/outputs/bundle/release",
     "storybook": "cp -f ./index.storybook.js ./index.js && react-native start",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch -w=1",
     "compile": "true",
     "lint": "fldev lint",

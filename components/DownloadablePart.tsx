@@ -10,7 +10,7 @@ import {
   downloadProgress,
   downloadAudio,
 } from '../state/filesystem';
-import { togglePartPlayback } from '../state/playback';
+import { togglePartPlayback } from '../state/audio/playback';
 import { AudioPart } from '../types';
 import { Sans } from './Text';
 import { isAudioPartPlaying, audioPartFile } from '../state/selectors';
@@ -87,7 +87,7 @@ export const propSelector: (
   dispatch: Dispatch,
 ) => (state: State) => null | Props = ({ audioId, partIndex }, dispatch) => {
   return (state) => {
-    const audio = state.audioResources[audioId];
+    const audio = state.audio.resources[audioId];
     if (!audio) return null;
     const part = audio.parts[partIndex];
     if (!part) return null;

@@ -35,16 +35,16 @@ export function isAudioPartActive(
 }
 
 export function audio(audioId: string, state: State): AudioResource | null {
-  return state.audioResources[audioId] || null;
+  return state.audio.resources[audioId] || null;
 }
 
 export function trackPosition(audioId: string, partIndex: number, state: State): number {
   const key = keys.part(audioId, partIndex);
-  return state.trackPosition[key] ?? 0;
+  return state.audio.trackPosition[key] ?? 0;
 }
 
 export function currentlyPlayingPart(state: State): null | [AudioPart, AudioResource] {
-  const audioId = state.playback.audioId;
+  const audioId = state.audio.playback.audioId;
   if (!audioId) return null;
   return activeAudioPart(audioId, state);
 }
@@ -69,19 +69,19 @@ export function activeAudioPart(
 }
 
 export function isAudioPaused(audioId: string, state: State): boolean {
-  return isAudioSelected(audioId, state) && state.playback.state === `PAUSED`;
+  return isAudioSelected(audioId, state) && state.audio.playback.state === `PAUSED`;
 }
 
 export function isAudioPlaying(audioId: string, state: State): boolean {
-  return isAudioSelected(audioId, state) && state.playback.state === `PLAYING`;
+  return isAudioSelected(audioId, state) && state.audio.playback.state === `PLAYING`;
 }
 
 export function isAudioSelected(audioId: string, state: State): boolean {
-  return state.playback.audioId === audioId;
+  return state.audio.playback.audioId === audioId;
 }
 
 export function audioActivePartIndex(audioId: string, state: State): number {
-  return state.activePart[audioId] ?? 0;
+  return state.audio.activePart[audioId] ?? 0;
 }
 
 export function audioFiles(audioId: string, state: State): null | FileState[] {
@@ -97,7 +97,7 @@ export function audioPartFile(
 ): FileState {
   const quality = state.preferences.audioQuality;
   const audioPath = keys.audioFilePath(audioId, partIndex, quality);
-  const audio = state.audioResources[audioId];
+  const audio = state.audio.resources[audioId];
   let fallbackSize = 10000;
   if (audio && audio.parts[partIndex]) {
     fallbackSize =
@@ -113,10 +113,10 @@ export function audioPartFile(
 
 export function artwork(
   audioId: string,
-  { filesystem, audioResources }: State,
+  { filesystem, audio: { resources } }: State,
 ): { path: string; uri: string; networkUrl: string; downloaded: boolean } | null {
   const path = keys.artworkFilePath(audioId);
-  const audio = audioResources[audioId];
+  const audio = resources[audioId];
   if (!audio) return null;
   const networkUrl = audio.artwork;
   let uri = networkUrl;
@@ -142,9 +142,12 @@ export function trackData(
   partIndex: number,
   state: State,
 ): TrackData | null {
-  const { audioResources, preferences: prefs } = state;
+  const {
+    audio: { resources },
+    preferences: prefs,
+  } = state;
   const audioPath = keys.audioFilePath(audioId, partIndex, prefs.audioQuality);
-  const audio = audioResources[audioId];
+  const audio = resources[audioId];
   const artworkData = artwork(audioId, state);
   if (!audio || !artworkData) return null;
   const part = audio.parts[partIndex];

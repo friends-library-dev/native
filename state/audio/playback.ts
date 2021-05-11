@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Platform } from 'react-native';
-import Service from '../lib/service';
-import { State, Dispatch, Thunk } from './';
-import { downloadAudio, isDownloaded } from './filesystem';
+import Service from '../../lib/service';
+import { State, Dispatch, Thunk } from '..';
+import { downloadAudio, isDownloaded } from '../filesystem';
 import { set as setActivePart } from './active-part';
-import * as select from './selectors';
+import * as select from '../selectors';
 import { seekTo } from './track-position';
-import { AudioPart, PlayerState } from '../types';
-import { canDownloadNow } from '../state/network';
-import * as keys from '../lib/keys';
+import { AudioPart, PlayerState } from '../../types';
+import { canDownloadNow } from '../network';
+import * as keys from '../../lib/keys';
 
 export interface PlaybackState {
   audioId: string | null;

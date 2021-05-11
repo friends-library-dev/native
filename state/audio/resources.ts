@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AudioQuality } from '@friends-library/types';
-import { AudioResource } from '../types';
-import Service from '../lib/service';
-import { setUndownloadedAudios } from './filesystem';
-import { Thunk, Dispatch } from '.';
+import { AudioResource } from '../../types';
+import Service from '../../lib/service';
+import { setUndownloadedAudios } from '../filesystem';
+import { Thunk, Dispatch } from '..';
 
 type AudioResourcesState = Record<string, AudioResource | undefined>;
 
@@ -27,7 +27,7 @@ export default audioResourcesSlice.reducer;
 
 export const loadAudios = (): Thunk => async (dispatch, getState) => {
   const audios = await Service.fsLoadAudios();
-  if (audios && Object.keys(getState().audioResources).length === 0) {
+  if (audios && Object.keys(getState().audio.resources).length === 0) {
     dispatch(replace(audios));
     setAllUndownloadedAudios(dispatch, audios);
   }

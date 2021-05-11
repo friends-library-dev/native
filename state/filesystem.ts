@@ -231,7 +231,7 @@ function execDownloadAudio(
   state: State,
 ): Promise<void> {
   const quality = state.preferences.audioQuality;
-  const audio = state.audioResources[audioId];
+  const audio = state.audio.resources[audioId];
   if (!audio) return Promise.resolve();
   const part = audio.parts[partIndex];
   if (!part) return Promise.resolve();

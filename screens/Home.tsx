@@ -16,7 +16,7 @@ interface Props {
 
 const Home: React.FC<Props> = ({ navigation }) => {
   const { numAudios, connected } = useSelector((s) => ({
-    numAudios: Object.keys(s.audioResources).length,
+    numAudios: Object.keys(s.audio.resources).length,
     connected: s.network.connected,
   }));
   return (

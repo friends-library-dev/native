@@ -24,7 +24,7 @@ const AllAudio: React.FC<Props> = ({ navigation }) => {
     const sort = state.preferences.sortAudiosBy;
     const headerHeight = state.preferences.audioSortHeaderHeight;
 
-    const audios = Object.values(state.audioResources)
+    const audios = Object.values(state.audio.resources)
       .slice() /* make a copy for sorting */
       .filter(isDefined)
       .filter((audio) => {
