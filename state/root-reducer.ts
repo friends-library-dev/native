@@ -5,6 +5,7 @@ import preferences from './preferences';
 import network from './network';
 
 const rootReducer = combineReducers({
+  version: (): number => 2,
   audio,
   filesystem,
   preferences,

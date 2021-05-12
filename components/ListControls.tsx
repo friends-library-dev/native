@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropSelector, useDispatch, useSelector } from '../state';
 import {
-  setSearchQuery,
+  setAudioSearchQuery,
   setSortAudiosBy,
   AudioSortCriteria,
   setAudioSortHeaderHeight,
@@ -88,9 +88,9 @@ const SortButton: React.FC<{
 export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) => {
   return (state) => {
     return {
-      query: state.preferences.searchQuery,
+      query: state.preferences.audioSearchQuery,
       sort: state.preferences.sortAudiosBy,
-      setQuery: (query) => dispatch(setSearchQuery(query)),
+      setQuery: (query) => dispatch(setAudioSearchQuery(query)),
       setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
       setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
     };

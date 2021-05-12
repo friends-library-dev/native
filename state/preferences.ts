@@ -6,14 +6,14 @@ export type AudioSortCriteria = 'duration' | 'published' | 'author' | 'title';
 export interface PreferencesState {
   audioQuality: AudioQuality;
   sortAudiosBy: AudioSortCriteria;
-  searchQuery: string;
+  audioSearchQuery: string;
   audioSortHeaderHeight: number;
 }
 
 export const initialState: PreferencesState = {
   audioQuality: `HQ`,
   sortAudiosBy: `published`,
-  searchQuery: ``,
+  audioSearchQuery: ``,
 
   // maybe not technically a "preference", but is in essence
   // derived at runtime from their font-size, which sort of is a pref.
@@ -30,8 +30,8 @@ const preferences = createSlice({
     setSortAudiosBy: (state, action: PayloadAction<AudioSortCriteria>) => {
       state.sortAudiosBy = action.payload;
     },
-    setSearchQuery: (state, action: PayloadAction<string>) => {
-      state.searchQuery = action.payload;
+    setAudioSearchQuery: (state, action: PayloadAction<string>) => {
+      state.audioSearchQuery = action.payload;
     },
     setQuality: (state, action: PayloadAction<AudioQuality>) => {
       state.audioQuality = action.payload;
@@ -45,7 +45,7 @@ const preferences = createSlice({
 export const {
   setQuality,
   toggleQuality,
-  setSearchQuery,
+  setAudioSearchQuery,
   setSortAudiosBy,
   setAudioSortHeaderHeight,
 } = preferences.actions;

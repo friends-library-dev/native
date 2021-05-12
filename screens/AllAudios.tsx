@@ -20,7 +20,7 @@ interface Props {
 
 const AllAudio: React.FC<Props> = ({ navigation }) => {
   const { audios, headerHeight } = useSelector((state) => {
-    const query = state.preferences.searchQuery.toLowerCase().trim();
+    const query = state.preferences.audioSearchQuery.toLowerCase().trim();
     const sort = state.preferences.sortAudiosBy;
     const headerHeight = state.preferences.audioSortHeaderHeight;
 

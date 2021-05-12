@@ -5,7 +5,7 @@ interface Window {
   };
 }
 
-export function injectIntoWebView(window: Window) {
+export function injectIntoWebView(window: Window): void {
   // window.scrollTo(0, ${TEST});
 
   let lastScroll = 0;

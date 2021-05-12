@@ -9,6 +9,7 @@ import Player from '../lib/player';
 import { INITIAL_STATE, State } from './';
 import { batchSet as batchSetFilesystem } from './filesystem';
 import { fetchAudios } from './audio/resources';
+import migrate from './migrate/migrate';
 
 export default async function getStore(): Promise<Store<any, AnyAction>> {
   Player.init();
@@ -17,6 +18,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   let savedState: Partial<State> = {};
   if (FS.hasFile(`data/state.json`)) {
     savedState = await FS.readJson(`data/state.json`);
+    savedState = migrate(savedState);
   }
 
   const store = configureStore({
@@ -55,6 +57,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
       () => {
         const state = store.getState();
         const saveState: State = {
+          version: state.version,
           audio: {
             ...state.audio,
             playback: {
@@ -64,7 +67,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
           },
           preferences: {
             ...state.preferences,
-            searchQuery: ``,
+            audioSearchQuery: ``,
           },
           network: INITIAL_STATE.network,
           filesystem: {},

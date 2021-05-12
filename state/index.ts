@@ -12,6 +12,7 @@ import { initialState as prefsInitialState } from './preferences';
 import { initialState as networkInitialState } from './network';
 
 export const INITIAL_STATE: State = {
+  version: 2,
   audio: audioInitialState,
   preferences: prefsInitialState,
   filesystem: fsInitialState,
