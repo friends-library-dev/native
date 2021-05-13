@@ -20,6 +20,6 @@ export function audioFilePath(
   return `audio/${partWithQuality(audioId, partIndex, quality)}.mp3`;
 }
 
-export function artworkFilePath(audioId: string): string {
-  return `artwork/${audioId}.png`;
+export function artworkFilePath(resourceId: string): string {
+  return `artwork/${resourceId}.png`;
 }

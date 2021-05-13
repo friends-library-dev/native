@@ -28,7 +28,7 @@ import {
   downloadAllAudios,
   deleteAllAudioParts,
 } from '../state/filesystem';
-import * as select from '../state/selectors';
+import * as select from '../state/selectors/selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
 import { Audio } from '@friends-library/friends';
@@ -217,7 +217,7 @@ const propSelector: PropSelector<{ audioId: string }, Props> = (
 
 const AudioScreenContainer: React.FC<OwnProps> = ({ route }) => {
   const dispatch = useDispatch();
-  const props = useSelector(propSelector({ audioId: route.params.audioId }, dispatch));
+  const props = useSelector(propSelector({ audioId: route.params.resourceId }, dispatch));
   if (!props) return null;
   return <AudioScreen {...props} />;
 };

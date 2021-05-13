@@ -5,7 +5,7 @@ import * as keys from '../lib/keys';
 import { Thunk, Dispatch, State } from '.';
 import Service from '../lib/service';
 import FS from '../lib/fs';
-import * as select from '../state/selectors';
+import * as select from './selectors/selectors';
 import { canDownloadNow } from '../state/network';
 
 export interface FileState {

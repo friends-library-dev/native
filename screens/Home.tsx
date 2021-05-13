@@ -15,20 +15,22 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-  const { numAudios, connected } = useSelector((s) => ({
+  const { numAudios, numEditions, connected } = useSelector((s) => ({
+    numEditions: Object.values(s.editions.resources).filter((e) => e?.isMostModernized)
+      .length,
     numAudios: Object.keys(s.audio.resources).length,
     connected: s.network.connected,
   }));
   return (
     <View style={tw`flex-grow items-center justify-center`}>
       <HomeButton
-        title="Ebooks (3)"
-        onPress={() => navigation.navigate(`Ebooks`)}
+        title={`Ebooks (${numEditions})`}
+        onPress={() => navigation.navigate(`EBookList`, { resourceType: `edition` })}
         backgroundColor={PRIMARY_COLOR_HEX}
       />
       <HomeButton
         title={`${t`Audiobooks`} (${numAudios})`}
-        onPress={() => navigation.navigate(`Audiobooks`)}
+        onPress={() => navigation.navigate(`AudioBookList`, { resourceType: `audio` })}
         backgroundColor={PRIMARY_COLOR_HEX}
       />
       <HomeButton

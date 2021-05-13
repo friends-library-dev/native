@@ -1,22 +1,25 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropSelector, useDispatch, useSelector } from '../state';
-import {
-  setAudioSearchQuery,
-  setSortAudiosBy,
-  AudioSortCriteria,
-  setAudioSortHeaderHeight,
-} from '../state/preferences';
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
 import Search from './Search';
 import { LANG } from '../env';
+import { BookSortMethod, ResourceType } from '../types';
+import {
+  setAudioSearchQuery,
+  setSortAudiosBy,
+  setAudioSortHeaderHeight,
+  setEditionSearchQuery,
+  setEditionSortHeaderHeight,
+  setSortEditionsBy,
+} from '../state/preferences';
 
 interface Props {
   query: string;
   setQuery: (query: string) => unknown;
-  sort: AudioSortCriteria;
-  setSort: (criteria: AudioSortCriteria) => unknown;
+  sort: BookSortMethod;
+  setSort: (criteria: BookSortMethod) => unknown;
   setHeight: (height: number) => unknown;
 }
 
@@ -87,21 +90,32 @@ const SortButton: React.FC<{
 
 export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) => {
   return (state) => {
+    if (ownProps.resourceType === `audio`) {
+      return {
+        query: state.preferences.audioSearchQuery,
+        sort: state.preferences.sortAudiosBy,
+        setQuery: (query) => dispatch(setAudioSearchQuery(query)),
+        setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
+        setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
+      };
+    }
     return {
-      query: state.preferences.audioSearchQuery,
-      sort: state.preferences.sortAudiosBy,
-      setQuery: (query) => dispatch(setAudioSearchQuery(query)),
-      setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
-      setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
+      query: state.preferences.editionSearchQuery,
+      sort: state.preferences.sortEditionsBy,
+      setQuery: (query) => dispatch(setEditionSearchQuery(query)),
+      setSort: (criteria) => dispatch(setSortEditionsBy(criteria)),
+      setHeight: (height) => dispatch(setEditionSortHeaderHeight(height)),
     };
   };
 };
 
-type OwnProps = Record<string, never>;
+type OwnProps = {
+  resourceType: ResourceType;
+};
 
-const ListControlsContainer: React.FC<OwnProps> = () => {
+const ListControlsContainer: React.FC<OwnProps> = (ownProps) => {
   const dispatch = useDispatch();
-  const props = useSelector(propSelector({}, dispatch));
+  const props = useSelector(propSelector(ownProps, dispatch));
   if (!props) return null;
   return <ListControls {...props} />;
 };

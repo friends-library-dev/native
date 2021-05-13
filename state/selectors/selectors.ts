@@ -1,11 +1,11 @@
 import { isNotNull } from 'x-ts-utils';
 import { utf8ShortTitle } from '@friends-library/adoc-utils';
-import { State } from './';
-import FS from '../lib/fs';
-import * as keys from '../lib/keys';
-import { TrackData, AudioResource, AudioPart } from '../types';
-import { FileState } from './filesystem';
-import { backgroundPartTitle } from '../lib/utils';
+import { State } from '..';
+import FS from '../../lib/fs';
+import * as keys from '../../lib/keys';
+import { TrackData, AudioResource, AudioPart } from '../../types';
+import { FileState } from '../filesystem';
+import { backgroundPartTitle } from '../../lib/utils';
 
 export function isAudioPartPlaying(
   audioId: string,
@@ -112,13 +112,27 @@ export function audioPartFile(
 }
 
 export function artwork(
-  audioId: string,
-  { filesystem, audio: { resources } }: State,
-): { path: string; uri: string; networkUrl: string; downloaded: boolean } | null {
-  const path = keys.artworkFilePath(audioId);
-  const audio = resources[audioId];
-  if (!audio) return null;
-  const networkUrl = audio.artwork;
+  resourceId: string,
+  {
+    filesystem,
+    audio: { resources: audioResources },
+    editions: { resources: editionResources },
+  }: State,
+): {
+  path: string;
+  uri: string;
+  networkUrl: string;
+  downloaded: boolean;
+} | null {
+  const path = keys.artworkFilePath(resourceId);
+  const audio = audioResources[resourceId];
+  let networkUrl: string | null = null;
+  if (audio) {
+    networkUrl = audio.artwork;
+  } else if (editionResources[resourceId]) {
+    networkUrl = editionResources[resourceId]?.squareCoverImageUrl ?? null;
+  }
+  if (!networkUrl) return null;
   let uri = networkUrl;
   let downloaded = false;
   if (path in filesystem) {

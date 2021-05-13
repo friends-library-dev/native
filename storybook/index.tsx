@@ -12,7 +12,10 @@ import './rn-addons';
 const store = createStore(() => {
   const state: State = {
     ...INITIAL_STATE,
-    audioResources,
+    audio: {
+      ...INITIAL_STATE.audio,
+      resources: audioResources,
+    },
   };
   return state;
 }, applyMiddleware(thunk));

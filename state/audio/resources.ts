@@ -25,14 +25,6 @@ const audioResourcesSlice = createSlice({
 export const { replace } = audioResourcesSlice.actions;
 export default audioResourcesSlice.reducer;
 
-export const loadAudios = (): Thunk => async (dispatch, getState) => {
-  const audios = await Service.fsLoadAudios();
-  if (audios && Object.keys(getState().audio.resources).length === 0) {
-    dispatch(replace(audios));
-    setAllUndownloadedAudios(dispatch, audios);
-  }
-};
-
 export const fetchAudios = (): Thunk => async (dispatch) => {
   const audios = await Service.networkFetchAudios();
   if (audios) {

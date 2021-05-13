@@ -1,43 +1,43 @@
 import React from 'react';
 import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
-import AudioListItem from '../../components/AudioListItem';
+import BookListItem from '../../components/BookListItem';
 import { AudioControls } from '../../components/AudioControls';
 import tw from '../../lib/tailwind';
 
 storiesOf(`AudioListItem`, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      artworkId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={0}
       duration="41 min"
     />
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      artworkId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={33}
       duration="41 min"
       isNew
     />
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      artworkId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={98}
       duration="41 min"
     />
-    <AudioListItem
-      id="penington"
+    <BookListItem
+      artworkId="penington"
       title="The Writings of Isaac Penington — Vol. I"
       friend="Isaac Penington"
       progress={0}
       duration="12 hr 13 min"
     />
-    <AudioListItem
-      id="penington"
+    <BookListItem
+      artworkId="penington"
       title="The Writings of Isaac Penington — Vol. I"
       friend="Isaac Penington"
       progress={0}

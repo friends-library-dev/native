@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as keys from '../../lib/keys';
-import * as select from '../selectors';
+import * as select from '../selectors/selectors';
 import Service from '../../lib/service';
 import { Thunk, Dispatch, State } from '..';
 

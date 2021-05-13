@@ -1,9 +1,9 @@
 import omit from 'lodash.omit';
-import { State, INITIAL_STATE } from '../';
+import { State, INITIAL_STATE as INIT } from '../';
 
 export default function migrate(input: unknown): State {
   if (!input || typeof input !== `object` || Array.isArray(input)) {
-    return { ...INITIAL_STATE };
+    return { ...INIT };
   }
 
   const obj = input as Record<string, any>;
@@ -36,6 +36,13 @@ function migrate1to2(v1: Record<string, any>): State {
     preferences: {
       ...omit(v1.preferences ?? {}, [`searchQuery`]),
       audioSearchQuery: v1.preferences?.searchQuery ?? ``,
+      sortEditionsBy: INIT.preferences.sortEditionsBy,
+      editionSearchQuery: INIT.preferences.editionSearchQuery,
+      editionSortHeaderHeight: INIT.preferences.editionSortHeaderHeight,
+    },
+
+    editions: {
+      ...INIT.editions,
     },
 
     ...omit(v1, [

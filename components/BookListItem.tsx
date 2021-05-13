@@ -8,7 +8,7 @@ import Artwork from './Artwork';
 import { LANG } from '../env';
 
 interface Props {
-  id: string;
+  artworkId: string;
   title: string;
   friend: string;
   progress: number;
@@ -16,8 +16,8 @@ interface Props {
   isNew?: boolean;
 }
 
-const AudioListItem: React.FC<Props> = ({
-  id,
+const BookListItem: React.FC<Props> = ({
+  artworkId,
   title,
   friend,
   progress,
@@ -27,7 +27,7 @@ const AudioListItem: React.FC<Props> = ({
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <Artwork id={id} size={90} />
+        <Artwork id={artworkId} size={90} />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>
@@ -69,7 +69,7 @@ const AudioListItem: React.FC<Props> = ({
   );
 };
 
-export default AudioListItem;
+export default BookListItem;
 
 const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
   <View style={tw.style(`absolute bottom-0 rounded-full m-2`, { width: 75, height: 4 })}>

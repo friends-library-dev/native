@@ -48,4 +48,24 @@ describe(`migrate()`, () => {
     const migrated = migrate(v1);
     expect(migrated.audio.activePart).toMatchObject(v1.activePart);
   });
+
+  it(`adds new .editions state slice`, () => {
+    const v1 = getV1State();
+    const migrated = migrate(v1);
+    expect(migrated.editions).toMatchObject(INITIAL_STATE.editions);
+  });
+
+  it(`adds new edition* prefs`, () => {
+    const v1 = getV1State();
+    const migrated = migrate(v1);
+    expect(migrated.preferences.sortEditionsBy).toBe(
+      INITIAL_STATE.preferences.sortEditionsBy,
+    );
+    expect(migrated.preferences.editionSearchQuery).toBe(
+      INITIAL_STATE.preferences.editionSearchQuery,
+    );
+    expect(migrated.preferences.editionSortHeaderHeight).toBe(
+      INITIAL_STATE.preferences.editionSortHeaderHeight,
+    );
+  });
 });

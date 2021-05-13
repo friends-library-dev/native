@@ -32,7 +32,7 @@ const Read: React.FC<Props> = ({ route }) => {
   const [theme, setTheme] = useState<Theme>(`white`);
   const [scroll, setScroll] = useState(0);
   const [counter, setCounter] = useState(0);
-  const editionId = route.params.editionId;
+  const editionId = route.params.resourceId;
   const webViewRef = useRef<{ injectJavaScript: (js: string) => void }>(null);
 
   return (

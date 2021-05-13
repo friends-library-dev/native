@@ -1,4 +1,4 @@
-import { AudioResource, TrackData } from '../types';
+import { AudioResource, EditionResource, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
 import { LANG } from '../env';
@@ -36,8 +36,12 @@ export default class Service {
     return FS.batchDelete(paths);
   }
 
+  public static fsSaveEditionResources(resources: EditionResource[]): Promise<void> {
+    return FS.writeFile(FS.paths.editionResources, JSON.stringify(resources));
+  }
+
   public static fsSaveAudioResources(resources: AudioResource[]): Promise<void> {
-    return FS.writeFile(`audio/resources.json`, JSON.stringify(resources));
+    return FS.writeFile(FS.paths.audioResources, JSON.stringify(resources));
   }
 
   public static async fsDownloadFile(
@@ -47,10 +51,11 @@ export default class Service {
     return FS.download(relPath, networkUrl);
   }
 
-  public static async fsLoadAudios(): Promise<AudioResource[] | null> {
+  public static async networkFetchAudios(): Promise<AudioResource[] | null> {
     try {
-      const resources = await FS.readJson(`audio/resources.json`);
-      if (resourcesValid(resources)) {
+      const res = await fetch(`https://api.friendslibrary.com/app-audios/v1/${LANG}`);
+      const resources = await res.json();
+      if (audioResourcesValid(resources)) {
         return resources;
       }
     } catch (err) {
@@ -59,11 +64,11 @@ export default class Service {
     return null;
   }
 
-  public static async networkFetchAudios(): Promise<AudioResource[] | null> {
+  public static async networkFetchEditions(): Promise<EditionResource[] | null> {
     try {
-      const res = await fetch(`https://api.friendslibrary.com/app-audios?lang=${LANG}`);
+      const res = await fetch(`http://10.0.1.251:8888/app-editions/v1/${LANG}`);
       const resources = await res.json();
-      if (resourcesValid(resources)) {
+      if (editionResourcesValid(resources)) {
         return resources;
       }
     } catch (err) {
@@ -73,11 +78,24 @@ export default class Service {
   }
 }
 
-function resourcesValid(resources: any): resources is AudioResource[] {
+function audioResourcesValid(resources: any): resources is AudioResource[] {
   return (
     Array.isArray(resources) &&
     resources.every((r) => {
       return typeof r.artwork === `string` && Array.isArray(r.parts);
+    })
+  );
+}
+
+function editionResourcesValid(resources: any): resources is EditionResource[] {
+  return (
+    Array.isArray(resources) &&
+    resources.every((r) => {
+      return (
+        typeof r.squareCoverImageUrl === `string` &&
+        Array.isArray(r.chapters) &&
+        r.chapters.every((ch: any) => typeof ch?.shortTitle === `string`)
+      );
     })
   );
 }

@@ -9,6 +9,7 @@ import Player from '../lib/player';
 import { INITIAL_STATE, State } from './';
 import { batchSet as batchSetFilesystem } from './filesystem';
 import { fetchAudios } from './audio/resources';
+import { fetchEditions } from './editions/resources';
 import migrate from './migrate/migrate';
 
 export default async function getStore(): Promise<Store<any, AnyAction>> {
@@ -16,8 +17,8 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   await FS.init();
 
   let savedState: Partial<State> = {};
-  if (FS.hasFile(`data/state.json`)) {
-    savedState = await FS.readJson(`data/state.json`);
+  if (FS.hasFile(FS.paths.state)) {
+    savedState = await FS.readJson(FS.paths.state);
     savedState = migrate(savedState);
   }
 
@@ -51,6 +52,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   );
 
   store.dispatch(fetchAudios());
+  store.dispatch(fetchEditions());
 
   store.subscribe(
     throttle(
@@ -65,6 +67,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
               state: `STOPPED`,
             },
           },
+          editions: state.editions,
           preferences: {
             ...state.preferences,
             audioSearchQuery: ``,
@@ -72,7 +75,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
           network: INITIAL_STATE.network,
           filesystem: {},
         };
-        FS.writeFile(`data/state.json`, JSON.stringify(saveState));
+        FS.writeFile(FS.paths.state, JSON.stringify(saveState));
       },
       5000,
       { leading: false, trailing: true },

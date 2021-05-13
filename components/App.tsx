@@ -5,10 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { t } from '@friends-library/locale';
 import { StackParamList } from '../types';
 import Home from '../screens/Home';
-import AllAudios from '../screens/AllAudios';
+import BookList from '../screens/BookList';
 import Audio from '../screens/Audio';
 import Settings from '../screens/Settings';
-import Ebooks from '../screens/Ebooks';
 import Read from '../screens/Read';
 import { useDispatch } from '../state';
 import { setConnected } from '../state/network';
@@ -27,12 +26,18 @@ const App: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
-        <Stack.Screen name="Ebooks" options={{ title: `Ebooks` }} component={Ebooks} />
+        <Stack.Screen
+          name="EBookList"
+          options={{ title: t`Ebooks` }}
+          component={BookList}
+          initialParams={{ resourceType: `edition` }}
+        />
         <Stack.Screen name="Read" options={{ title: `Read` }} component={Read} />
         <Stack.Screen
-          name="Audiobooks"
+          name="AudioBookList"
           options={{ title: t`Audiobooks` }}
-          component={AllAudios}
+          component={BookList}
+          initialParams={{ resourceType: `audio` }}
         />
         <Stack.Screen name="Listen" options={{ title: t`Listen` }} component={Audio} />
         <Stack.Screen

@@ -1,4 +1,10 @@
+import { AppAudioResourceV1, AppEditionResourceV1 } from '@friends-library/api';
+
 export type PlayerState = 'STOPPED' | 'PLAYING' | 'PAUSED' | 'DUCKED';
+
+export type BookSortMethod = 'duration' | 'published' | 'author' | 'title';
+
+export type ResourceType = 'audio' | 'edition';
 
 export interface AudioPart {
   audioId: string;
@@ -11,27 +17,29 @@ export interface AudioPart {
   urlLq: string;
 }
 
-export interface AudioResource {
-  id: string;
-  date: string;
-  title: string;
-  friend: string;
-  friendSort: string;
-  reader: string;
-  artwork: string;
-  description: string;
-  shortDescription: string;
-  parts: AudioPart[];
-}
+export type AudioResource = AppAudioResourceV1;
+export type EditionResource = AppEditionResourceV1;
 
 export type StackParamList = {
   Home: undefined;
-  Audiobooks: undefined;
-  Ebooks: undefined;
-  Read: { editionId: string };
-  Listen: { audioId: string };
+  Read: { resourceId: string };
+  Listen: { resourceId: string };
   Settings: undefined;
+  AudioBookList: { resourceType: 'audio' };
+  EBookList: { resourceType: 'edition' };
 };
+
+export interface BookListItem {
+  navigateTo: keyof StackParamList;
+  resourceId: string;
+  isNew: boolean;
+  progress: number;
+  duration: string;
+  nameDisplay: string;
+  artworkId: string;
+  title: string;
+  name: string;
+}
 
 export interface TrackData {
   id: string;

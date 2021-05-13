@@ -4,7 +4,7 @@ import Service from '../../lib/service';
 import { State, Dispatch, Thunk } from '..';
 import { downloadAudio, isDownloaded } from '../filesystem';
 import { set as setActivePart } from './active-part';
-import * as select from '../selectors';
+import * as select from '../selectors/selectors';
 import { seekTo } from './track-position';
 import { AudioPart, PlayerState } from '../../types';
 import { canDownloadNow } from '../network';

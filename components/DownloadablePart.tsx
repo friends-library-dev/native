@@ -13,7 +13,7 @@ import {
 import { togglePartPlayback } from '../state/audio/playback';
 import { AudioPart } from '../types';
 import { Sans } from './Text';
-import { isAudioPartPlaying, audioPartFile } from '../state/selectors';
+import { isAudioPartPlaying, audioPartFile } from '../state/selectors/selectors';
 import { LANG } from '../env';
 
 type CommonProps = {

@@ -1,6 +1,15 @@
 import RNFS from 'react-native-fs';
 
+const paths = {
+  audioResources: `audio/resources.json`,
+  editionResources: `editions/resources.json`,
+  state: `data/state.json`,
+} as const;
+
+type FsPath = typeof paths[keyof typeof paths];
+
 class FileSystem {
+  public paths = paths;
   public manifest: Record<string, number> = {};
   private downloads: Record<string, Promise<number | null>> = {};
 
@@ -9,6 +18,7 @@ class FileSystem {
       RNFS.mkdir(this.abspath()),
       RNFS.mkdir(this.abspath(`artwork/`), { NSURLIsExcludedFromBackupKey: true }),
       RNFS.mkdir(this.abspath(`audio/`), { NSURLIsExcludedFromBackupKey: true }),
+      RNFS.mkdir(this.abspath(`editions/`), { NSURLIsExcludedFromBackupKey: true }),
       RNFS.mkdir(this.abspath(`data/`)),
     ]);
 
@@ -125,7 +135,7 @@ class FileSystem {
     return writePromise;
   }
 
-  public async readJson(path: string): Promise<any> {
+  public async readJson(path: FsPath): Promise<any> {
     const json = await this.readFile(path);
     try {
       return JSON.parse(json);
