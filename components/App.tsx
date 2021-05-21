@@ -65,9 +65,9 @@ const App: React.FC = () => {
   }, [dispatch, networkConnected, fetchedResources, setFetchedResources]);
 
   return (
-    // <SafeAreaProvider>
     <NavigationContainer>
-      <Stack.Navigator headerMode="screen" initialRouteName="Home">
+      <Stack.Navigator headerMode="screen" initialRouteName="Read">
+        {/* <Stack.Navigator headerMode="screen" initialRouteName="Home"> */}
         <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
         <Stack.Screen
           name="EBookList"
@@ -83,6 +83,10 @@ const App: React.FC = () => {
             headerTransparent: true,
           }}
           component={Read}
+          // temp
+          initialParams={{
+            resourceId: `08b94a0b-b96f-4525-bd46-79b0d60c4302--modernized`,
+          }}
         />
         <Stack.Screen
           name="AudioBookList"
@@ -98,7 +102,6 @@ const App: React.FC = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
-    // {/* </SafeAreaProvider> */}
   );
 };
 

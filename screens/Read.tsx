@@ -12,6 +12,7 @@ import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
 import { setEbookPosition } from '../state/editions/ebook-position';
 import { Html } from '@friends-library/types';
+import { setEbookColorScheme } from '../state/preferences';
 
 export type Props =
   | { state: `loading` }
@@ -25,7 +26,6 @@ export type Props =
       colorScheme: EbookColorScheme;
       fontSize: number;
       dispatch: Dispatch;
-      setPosition: typeof setEbookPosition;
     };
 
 class Read extends PureComponent<Props> {
@@ -47,13 +47,13 @@ class Read extends PureComponent<Props> {
       return;
     }
 
-    const { dispatch, setPosition, editionId } = this.props;
+    const { dispatch, editionId } = this.props;
     const message: Message = JSON.parse(event.nativeEvent.data);
 
     switch (message.type) {
       case `update_position`:
         return dispatch(
-          setPosition({ editionId: editionId, position: message.position }),
+          setEbookPosition({ editionId: editionId, position: message.position }),
         );
       case `click`:
         // TODO, hide/show but check out webView `onTap`...
@@ -62,8 +62,6 @@ class Read extends PureComponent<Props> {
   };
 
   render() {
-    console.log(`pure component render`);
-
     if (this.props.state === `loading`) {
       return (
         <View>
@@ -87,6 +85,7 @@ class Read extends PureComponent<Props> {
     return (
       <View style={tw`flex-grow`}>
         <WebView
+          showsVerticalScrollIndicator={false}
           ref={this.webViewRef}
           decelerationRate="normal"
           onMessage={this.handleWebViewMessage}
@@ -100,7 +99,7 @@ class Read extends PureComponent<Props> {
 /**
  * The `html` and `css` props (for rendering the ebook)
  * we have to get _asynchronously_ from the filesystem or network.
- * This type models the props we can get immediately from state.
+ * This type models the rest of the props we can get immediately from state.
  */
 export interface SyncProps {
   resource: Pick<EditionResource, 'url' | 'revision' | 'id'>;
@@ -136,51 +135,58 @@ type ContainerState =
   | { state: `ready`; html: string; css: string; initialPosition: number };
 
 const ReadContainer: React.FC<OwnProps> = (ownProps) => {
-  const [ebook, setEbook] = useState<ContainerState>({ state: `loading` });
+  const [containerState, setContainerState] = useState<ContainerState>({
+    state: `loading`,
+  });
   const dispatch = useDispatch();
-  const selected = useSelector(propSelector(ownProps, dispatch));
-  if (!selected) {
-    return <Read state="error" reason="unknown" />;
-  }
-
-  const { networkConnected, position, fontSize, colorScheme, resource } = selected;
+  const props = useSelector(propSelector(ownProps, dispatch));
 
   useEffect(() => {
-    if (
-      ebook.state === `loading` ||
-      (ebook.state === `error` && ebook.reason === `no_internet` && networkConnected)
-    ) {
+    if (!props) {
+      setContainerState({ state: `error`, reason: `unknown` });
+      return;
+    }
+
+    const shouldNetworkRetry =
+      containerState.state === `error` &&
+      containerState.reason === `no_internet` &&
+      props.networkConnected === true;
+
+    if (containerState.state === `loading` || shouldNetworkRetry) {
       (async () => {
-        const result = await readScreenProps(resource, networkConnected);
+        const result = await readScreenProps(props.resource, props.networkConnected);
         if (result.success) {
-          setEbook({ state: `ready`, ...result.value, initialPosition: position });
+          setContainerState({
+            state: `ready`,
+            initialPosition: props.position,
+            ...result.value,
+          });
         } else {
-          setEbook({ state: `error`, reason: result.error });
+          setContainerState({ state: `error`, reason: result.error });
         }
       })();
     }
   }, [
-    ebook.state,
-    ebook.state === `error` ? ebook.reason : null,
-    networkConnected,
-    setEbook,
-    resource.id,
-    resource.url,
-    resource.revision,
+    containerState.state,
+    containerState.state === `error` ? containerState.reason : null,
+    props?.networkConnected,
+    setContainerState,
+    props?.resource.id,
+    props?.resource.url,
+    props?.resource.revision,
   ]);
 
-  if (ebook.state !== `ready`) {
-    return <Read {...ebook} />;
+  if (containerState.state !== `ready`) {
+    return <Read {...containerState} />;
   }
 
   return (
     <Read
-      {...ebook}
-      editionId={resource.id}
-      position={ebook.initialPosition}
-      colorScheme={colorScheme}
-      fontSize={fontSize}
-      setPosition={setEbookPosition}
+      {...containerState}
+      editionId={props!.resource.id}
+      position={containerState.initialPosition}
+      colorScheme={props!.colorScheme}
+      fontSize={props!.fontSize}
       dispatch={dispatch}
     />
   );
