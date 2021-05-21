@@ -5,7 +5,7 @@ import * as keys from '../lib/keys';
 import { Thunk, Dispatch, State } from '.';
 import Service from '../lib/service';
 import FS from '../lib/fs';
-import * as select from './selectors/selectors';
+import * as select from './selectors/audio-selectors';
 import { canDownloadNow } from '../state/network';
 
 export interface FileState {
@@ -34,7 +34,7 @@ const filesystem = createSlice({
       >,
     ) => {
       action.payload.forEach(({ audioId, partIndex, quality, numBytes }) => {
-        const path = keys.audioFilePath(audioId, partIndex, quality);
+        const path = keys.audioFilepath(audioId, partIndex, quality);
         if (!state[path]) {
           state[path] = { totalBytes: numBytes, bytesOnDisk: 0 };
         }
@@ -141,7 +141,7 @@ export const deleteAllAudioParts = (audioId: string): Thunk => async (
   const deletedFiles: FilesystemState = {};
   audio.parts.forEach((part, idx) => {
     ([`HQ`, `LQ`] as const).forEach((quality) => {
-      const path = keys.audioFilePath(audioId, idx, quality);
+      const path = keys.audioFilepath(audioId, idx, quality);
       const file = filesystem[path];
       deletedFiles[path] = {
         totalBytes: file ? file.totalBytes : ERROR_FALLBACK_SIZE,
@@ -173,7 +173,7 @@ export const downloadAllAudios = (audioId: string): Thunk => async (
     .map(({ partIndex }) => partIndex);
 
   downloadIndexes.forEach((partIndex) => {
-    const path = keys.audioFilePath(audioId, partIndex, quality);
+    const path = keys.audioFilepath(audioId, partIndex, quality);
     dispatch(setQueued({ path, queued: true }));
   });
 
@@ -235,7 +235,7 @@ function execDownloadAudio(
   if (!audio) return Promise.resolve();
   const part = audio.parts[partIndex];
   if (!part) return Promise.resolve();
-  const path = keys.audioFilePath(audioId, partIndex, quality);
+  const path = keys.audioFilepath(audioId, partIndex, quality);
   const url = part[quality === `HQ` ? `url` : `urlLq`];
   return FS.eventedDownload(
     path,

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AudioQuality } from '@friends-library/types';
-import { BookSortMethod } from '../types';
+import { BookSortMethod, EbookColorScheme } from '../types';
 
 export interface PreferencesState {
   audioQuality: AudioQuality;
@@ -10,19 +10,23 @@ export interface PreferencesState {
   sortEditionsBy: BookSortMethod;
   editionSearchQuery: string;
   editionSortHeaderHeight: number;
+  ebookColorScheme: EbookColorScheme;
+  ebookFontSize: number;
 }
 
 export const initialState: PreferencesState = {
+  // audio prefs
   audioQuality: `HQ`,
   sortAudiosBy: `published`,
+  audioSortHeaderHeight: 113.5,
   audioSearchQuery: ``,
+
+  // edition/ebook prefs
   sortEditionsBy: `published`,
   editionSearchQuery: ``,
-
-  // maybe not technically a "preference", but these are in essence
-  // derived at runtime from their font-size, which sort of is a pref.
-  audioSortHeaderHeight: 113.5,
   editionSortHeaderHeight: 113.5,
+  ebookColorScheme: `white`,
+  ebookFontSize: 5,
 };
 
 const preferences = createSlice({
@@ -53,6 +57,12 @@ const preferences = createSlice({
     toggleQuality: (state) => {
       state.audioQuality = state.audioQuality === `HQ` ? `LQ` : `HQ`;
     },
+    setEbookColorScheme: (state, action: PayloadAction<EbookColorScheme>) => {
+      state.ebookColorScheme = action.payload;
+    },
+    setEbookFontSize: (state, action: PayloadAction<number>) => {
+      state.ebookFontSize = action.payload;
+    },
   },
 });
 
@@ -65,6 +75,8 @@ export const {
   setEditionSortHeaderHeight,
   setSortEditionsBy,
   setEditionSearchQuery,
+  setEbookColorScheme,
+  setEbookFontSize,
 } = preferences.actions;
 
 export default preferences.reducer;

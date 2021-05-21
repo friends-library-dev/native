@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, ViewStyle } from 'react-native';
 import { useSelector, useDispatch } from '../state';
 import { downloadFile } from '../state/filesystem';
-import * as select from '../state/selectors/selectors';
+import * as select from '../state/selectors/audio-selectors';
 
 interface Props {
   id: string;

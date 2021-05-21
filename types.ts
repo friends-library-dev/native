@@ -1,10 +1,13 @@
 import { AppAudioResourceV1, AppEditionResourceV1 } from '@friends-library/api';
+import { Html, Sha } from '@friends-library/types';
 
 export type PlayerState = 'STOPPED' | 'PLAYING' | 'PAUSED' | 'DUCKED';
 
 export type BookSortMethod = 'duration' | 'published' | 'author' | 'title';
 
 export type ResourceType = 'audio' | 'edition';
+
+export type EbookColorScheme = 'white' | 'black' | 'sepia';
 
 export interface AudioPart {
   audioId: string;
@@ -19,6 +22,11 @@ export interface AudioPart {
 
 export type AudioResource = AppAudioResourceV1;
 export type EditionResource = AppEditionResourceV1;
+
+export interface EbookData {
+  sha: Sha;
+  innerHtml: Html;
+}
 
 export type StackParamList = {
   Home: undefined;

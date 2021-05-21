@@ -39,7 +39,7 @@ export function audio(audioId: string, state: State): AudioResource | null {
 }
 
 export function trackPosition(audioId: string, partIndex: number, state: State): number {
-  const key = keys.part(audioId, partIndex);
+  const key = keys.audioPart(audioId, partIndex);
   return state.audio.trackPosition[key] ?? 0;
 }
 
@@ -96,7 +96,7 @@ export function audioPartFile(
   state: State,
 ): FileState {
   const quality = state.preferences.audioQuality;
-  const audioPath = keys.audioFilePath(audioId, partIndex, quality);
+  const audioPath = keys.audioFilepath(audioId, partIndex, quality);
   const audio = state.audio.resources[audioId];
   let fallbackSize = 10000;
   if (audio && audio.parts[partIndex]) {
@@ -124,7 +124,7 @@ export function artwork(
   networkUrl: string;
   downloaded: boolean;
 } | null {
-  const path = keys.artworkFilePath(resourceId);
+  const path = keys.artworkFilepath(resourceId);
   const audio = audioResources[resourceId];
   let networkUrl: string | null = null;
   if (audio) {
@@ -160,7 +160,7 @@ export function trackData(
     audio: { resources },
     preferences: prefs,
   } = state;
-  const audioPath = keys.audioFilePath(audioId, partIndex, prefs.audioQuality);
+  const audioPath = keys.audioFilepath(audioId, partIndex, prefs.audioQuality);
   const audio = resources[audioId];
   const artworkData = artwork(audioId, state);
   if (!audio || !artworkData) return null;
@@ -168,7 +168,7 @@ export function trackData(
   if (!part) return null;
   const title = utf8ShortTitle(audio.title);
   return {
-    id: keys.part(audioId, partIndex),
+    id: keys.audioPart(audioId, partIndex),
     filepath: `file://${FS.abspath(audioPath)}`,
     title: backgroundPartTitle(part.title, title),
     artist: audio.friend.startsWith(`Compila`) ? title : audio.friend,

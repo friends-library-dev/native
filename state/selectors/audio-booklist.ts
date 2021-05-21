@@ -2,7 +2,7 @@
 import { Audio } from '@friends-library/friends';
 import { State } from '../';
 import { BookListItem, AudioResource } from '../../types';
-import * as select from './selectors';
+import * as select from './audio-selectors';
 import { LANG } from '../../env';
 
 export default function selectAudioBooklist(

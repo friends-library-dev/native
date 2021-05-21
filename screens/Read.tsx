@@ -1,77 +1,189 @@
-import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { StackParamList } from '../types';
+import React, { PureComponent, useEffect, useState } from 'react';
+import { View, StatusBar } from 'react-native';
+import { WebView, WebViewMessageEvent } from 'react-native-webview';
+import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { Sans } from '../components/Text';
 import tw from '../lib/tailwind';
+import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
+import * as select from '../state/selectors/edition';
+import { readScreenProps } from './read-helpers';
+import { wrapHtml, Message } from '../lib/ebook-code';
+import { setEbookPosition } from '../state/editions/ebook-position';
+import { Html } from '@friends-library/types';
 
-interface Props {
+export type Props =
+  | { state: `loading` }
+  | { state: `error`; reason: 'no_internet' | 'unknown' }
+  | {
+      state: `ready`;
+      position: number;
+      editionId: string;
+      html: string;
+      css: string;
+      colorScheme: EbookColorScheme;
+      fontSize: number;
+      dispatch: Dispatch;
+      setPosition: typeof setEbookPosition;
+    };
+
+class Read extends PureComponent<Props> {
+  private htmlRef: React.MutableRefObject<Html | null>;
+  private webViewRef: React.RefObject<WebView>;
+
+  public constructor(props: Props) {
+    super(props);
+    this.webViewRef = React.createRef();
+    this.htmlRef = React.createRef();
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    // TODO - forward font-size, color-scheme changes into webview js
+  }
+
+  public handleWebViewMessage = (event: WebViewMessageEvent) => {
+    if (this.props.state !== `ready`) {
+      return;
+    }
+
+    const { dispatch, setPosition, editionId } = this.props;
+    const message: Message = JSON.parse(event.nativeEvent.data);
+
+    switch (message.type) {
+      case `update_position`:
+        return dispatch(
+          setPosition({ editionId: editionId, position: message.position }),
+        );
+      case `click`:
+        // TODO, hide/show but check out webView `onTap`...
+        break;
+    }
+  };
+
+  render() {
+    console.log(`pure component render`);
+
+    if (this.props.state === `loading`) {
+      return (
+        <View>
+          <Sans>Loading</Sans>
+        </View>
+      );
+    }
+
+    if (this.props.state === `error`) {
+      return (
+        <View>
+          <Sans>Error: {this.props.reason}</Sans>
+        </View>
+      );
+    }
+
+    const { html, css, colorScheme, fontSize, position } = this.props;
+    if (this.htmlRef.current === null) {
+      this.htmlRef.current = wrapHtml(html, css, colorScheme, fontSize, position);
+    }
+    return (
+      <View style={tw`flex-grow`}>
+        <WebView
+          ref={this.webViewRef}
+          decelerationRate="normal"
+          onMessage={this.handleWebViewMessage}
+          source={{ html: this.htmlRef.current }}
+        />
+      </View>
+    );
+  }
+}
+
+/**
+ * The `html` and `css` props (for rendering the ebook)
+ * we have to get _asynchronously_ from the filesystem or network.
+ * This type models the props we can get immediately from state.
+ */
+export interface SyncProps {
+  resource: Pick<EditionResource, 'url' | 'revision' | 'id'>;
+  networkConnected: boolean;
+  position: number;
+  fontSize: number;
+  colorScheme: EbookColorScheme;
+}
+
+interface OwnProps {
   navigation: StackNavigationProp<StackParamList, 'Read'>;
   route: RouteProp<StackParamList, 'Read'>;
 }
 
-type Theme = 'white' | 'black' | 'sepia';
+const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps, dispatch) => (
+  state,
+) => {
+  const editionId = ownProps.route.params.resourceId;
+  const resource = select.editionResource(editionId, state);
+  if (!resource) return null;
+  return {
+    resource,
+    colorScheme: state.preferences.ebookColorScheme,
+    fontSize: state.preferences.ebookFontSize,
+    position: select.ebookPosition(editionId, state),
+    networkConnected: state.network.connected,
+  };
+};
 
-const TEST = 3026; // contraries
+type ContainerState =
+  | { state: `loading` }
+  | { state: `error`; reason: 'no_internet' | 'unknown' }
+  | { state: `ready`; html: string; css: string; initialPosition: number };
 
-const initJs = `
-  // window.scrollTo(0, ${TEST});
-  let lastScroll = 0;
-  setInterval(() => {
-    const newScroll = window.scrollY;
-    if (newScroll !== lastScroll) {
-      window.ReactNativeWebView.postMessage(String(window.scrollY));
+const ReadContainer: React.FC<OwnProps> = (ownProps) => {
+  const [ebook, setEbook] = useState<ContainerState>({ state: `loading` });
+  const dispatch = useDispatch();
+  const selected = useSelector(propSelector(ownProps, dispatch));
+  if (!selected) {
+    return <Read state="error" reason="unknown" />;
+  }
+
+  const { networkConnected, position, fontSize, colorScheme, resource } = selected;
+
+  useEffect(() => {
+    if (
+      ebook.state === `loading` ||
+      (ebook.state === `error` && ebook.reason === `no_internet` && networkConnected)
+    ) {
+      (async () => {
+        const result = await readScreenProps(resource, networkConnected);
+        if (result.success) {
+          setEbook({ state: `ready`, ...result.value, initialPosition: position });
+        } else {
+          setEbook({ state: `error`, reason: result.error });
+        }
+      })();
     }
-    lastScroll = newScroll;
-  }, 1000);
-`;
+  }, [
+    ebook.state,
+    ebook.state === `error` ? ebook.reason : null,
+    networkConnected,
+    setEbook,
+    resource.id,
+    resource.url,
+    resource.revision,
+  ]);
 
-const Read: React.FC<Props> = ({ route }) => {
-  const [theme, setTheme] = useState<Theme>(`white`);
-  const [scroll, setScroll] = useState(0);
-  const [counter, setCounter] = useState(0);
-  const editionId = route.params.resourceId;
-  const webViewRef = useRef<{ injectJavaScript: (js: string) => void }>(null);
+  if (ebook.state !== `ready`) {
+    return <Read {...ebook} />;
+  }
 
   return (
-    <View style={tw`bg-red-100 flex-grow`}>
-      <TouchableOpacity
-        style={tw`p-3 bg-blue-100 border-b`}
-        onPress={() => {
-          const nextTheme: Theme = ({
-            white: `black`,
-            black: `sepia`,
-            sepia: `white`,
-          } as const)[theme];
-          setTheme(nextTheme);
-          webViewRef.current?.injectJavaScript(`true;`);
-        }}
-      >
-        <Sans size={13}>
-          {editionId} {scroll} {counter}
-        </Sans>
-      </TouchableOpacity>
-      <View style={tw`bg-green-100 flex-grow`}>
-        <WebView
-          /* @ts-ignore */
-          ref={webViewRef}
-          decelerationRate="normal"
-          // injectedJavaScript="document.body.classList.add('theme--sepia'); true;"
-          // injectedJavaScriptBeforeContentLoaded="document.body.classList.remove('theme--white');document.body.classList.add('theme--sepia');"
-          onMessage={(e) => {
-            setScroll(Number(e.nativeEvent.data));
-            setCounter(counter + 1);
-          }}
-          injectedJavaScript={initJs}
-          source={{
-            uri: `https://flp-assets.nyc3.digitaloceanspaces.com/en/catherine-payton/letter-to-brother/modernized/web/chapter-1.html#fn-call__2`,
-          }}
-        />
-      </View>
-    </View>
+    <Read
+      {...ebook}
+      editionId={resource.id}
+      position={ebook.initialPosition}
+      colorScheme={colorScheme}
+      fontSize={fontSize}
+      setPosition={setEbookPosition}
+      dispatch={dispatch}
+    />
   );
 };
 
-export default Read;
+export default ReadContainer;

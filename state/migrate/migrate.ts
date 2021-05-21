@@ -39,6 +39,8 @@ function migrate1to2(v1: Record<string, any>): State {
       sortEditionsBy: INIT.preferences.sortEditionsBy,
       editionSearchQuery: INIT.preferences.editionSearchQuery,
       editionSortHeaderHeight: INIT.preferences.editionSortHeaderHeight,
+      ebookColorScheme: INIT.preferences.ebookColorScheme,
+      ebookFontSize: INIT.preferences.ebookFontSize,
     },
 
     editions: {

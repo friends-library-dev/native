@@ -4,7 +4,7 @@ import Service from '../../lib/service';
 import { State, Dispatch, Thunk } from '..';
 import { downloadAudio, isDownloaded } from '../filesystem';
 import { set as setActivePart } from './active-part';
-import * as select from '../selectors/selectors';
+import * as select from '../selectors/audio-selectors';
 import { seekTo } from './track-position';
 import { AudioPart, PlayerState } from '../../types';
 import { canDownloadNow } from '../network';
@@ -79,7 +79,7 @@ export const play = (audioId: string, partIndex: number): Thunk => async (
   if (queue) {
     dispatch(setActivePart({ audioId, partIndex }));
     dispatch(set({ audioId, state: `PLAYING` }));
-    return Service.audioPlayTrack(keys.part(audioId, partIndex), queue);
+    return Service.audioPlayTrack(keys.audioPart(audioId, partIndex), queue);
   }
   return Promise.resolve();
 };
@@ -156,7 +156,7 @@ export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
   const current = select.currentlyPlayingPart(state);
   if (!current) return;
   const [part, audio] = current;
-  const currentPartId = keys.part(audio.id, part.index);
+  const currentPartId = keys.audioPart(audio.id, part.index);
   if (currentPartId === nextTrackId) {
     // we already know we're playing this track
     return;
@@ -164,7 +164,7 @@ export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
 
   const nextIndex = part.index + 1;
   if (!audio.parts[nextIndex]) return;
-  const nextPartId = keys.part(audio.id, nextIndex);
+  const nextPartId = keys.audioPart(audio.id, nextIndex);
   if (nextPartId !== nextTrackId) {
     return;
   }

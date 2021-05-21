@@ -8,8 +8,6 @@ import FS from '../lib/fs';
 import Player from '../lib/player';
 import { INITIAL_STATE, State } from './';
 import { batchSet as batchSetFilesystem } from './filesystem';
-import { fetchAudios } from './audio/resources';
-import { fetchEditions } from './editions/resources';
 import migrate from './migrate/migrate';
 
 export default async function getStore(): Promise<Store<any, AnyAction>> {
@@ -28,31 +26,13 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
     middleware: getDefaultMiddleware({
       serializableCheck:
         Platform.OS === `ios` ? { warnAfter: 100, ignoredPaths: [`audios`] } : false,
-      immutableCheck: Platform.OS === `ios` ? { warnAfter: 100 } : false,
+      immutableCheck: Platform.OS === `ios` ? { warnAfter: 200 } : false,
     }),
     devTools: Platform.OS === `ios`,
   });
 
   // eslint-disable-next-line require-atomic-updates
   Player.dispatch = store.dispatch;
-
-  store.dispatch(
-    batchSetFilesystem(
-      Object.keys(FS.manifest).reduce((acc, path) => {
-        const storedBytes = FS.manifest[path];
-        if (typeof storedBytes === `number`) {
-          acc[path] = {
-            totalBytes: storedBytes,
-            bytesOnDisk: storedBytes,
-          };
-        }
-        return acc;
-      }, {} as State['filesystem']),
-    ),
-  );
-
-  store.dispatch(fetchAudios());
-  store.dispatch(fetchEditions());
 
   store.subscribe(
     throttle(

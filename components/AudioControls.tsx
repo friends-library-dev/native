@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Scrubber from './Scrubber';
 import tw from '../lib/tailwind';
 import { PropSelector, useSelector, useDispatch } from '../state';
-import * as select from '../state/selectors/selectors';
+import * as select from '../state/selectors/audio-selectors';
 import { togglePlayback, skipNext, skipBack } from '../state/audio/playback';
 import { downloadProgress, isDownloading } from '../state/filesystem';
 import { seekRelative, seekTo } from '../state/audio/track-position';

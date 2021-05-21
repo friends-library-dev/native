@@ -22,7 +22,7 @@ class FileSystem {
       RNFS.mkdir(this.abspath(`data/`)),
     ]);
 
-    for (const dir of [`artwork`, `audio`, `data`]) {
+    for (const dir of [`artwork`, `audio`, `data`, `editions`]) {
       const files = await RNFS.readDir(this.abspath(`${dir}/`));
       files
         .filter((f) => f.isFile())
@@ -34,29 +34,45 @@ class FileSystem {
 
   public download(relPath: string, networkUrl: string): Promise<number | null> {
     if (this.downloads[relPath]) {
-      return this.downloads[relPath] || Promise.resolve(null);
+      return this.downloads[relPath]!;
     }
 
-    const { promise } = RNFS.downloadFile({
-      fromUrl: networkUrl,
-      toFile: this.abspath(relPath),
-      progressInterval: 100000,
-      progressDivider: 100,
-    });
+    try {
+      const { promise } = RNFS.downloadFile({
+        fromUrl: networkUrl,
+        toFile: this.abspath(relPath),
+        progressInterval: 100000,
+        progressDivider: 100,
+      });
 
-    this.downloads[relPath] = promise
-      .then(({ bytesWritten }) => {
-        this.manifest[relPath] = bytesWritten;
-        delete this.downloads[relPath];
-        return bytesWritten;
-      })
-      .catch(() => null);
+      this.downloads[relPath] = promise
+        .then(({ bytesWritten }) => {
+          this.manifest[relPath] = bytesWritten;
+          delete this.downloads[relPath];
+          return bytesWritten;
+        })
+        .catch(() => null);
 
-    return this.downloads[relPath] || Promise.resolve(null);
+      return this.downloads[relPath] || Promise.resolve(null);
+    } catch {
+      return Promise.resolve(null);
+    }
   }
 
   public hasFile(relPath: string): boolean {
     return relPath in this.manifest;
+  }
+
+  public filesWithPrefix(
+    prefix: string,
+  ): Array<{ abspath: string; filename: string; relPath: string }> {
+    return Object.keys(this.manifest)
+      .filter((relPath) => relPath.startsWith(prefix))
+      .map((relPath) => ({
+        abspath: this.abspath(relPath),
+        filename: basename(relPath),
+        relPath,
+      }));
   }
 
   public async eventedDownload(
@@ -104,21 +120,39 @@ class FileSystem {
 
   public async deleteAllAudios(): Promise<void> {
     const promises = Object.keys(this.manifest).map((path) => {
-      return path.endsWith(`.mp3`) ? this.delete(path) : Promise.resolve();
+      return path.endsWith(`.mp3`) ? this.delete(path) : Promise.resolve(true);
     });
     await Promise.all(promises);
   }
 
-  public delete(path: string): Promise<void> {
+  public async delete(path: string): Promise<boolean> {
     delete this.manifest[path];
-    return RNFS.unlink(this.abspath(path));
+    try {
+      await RNFS.unlink(this.abspath(path));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  public async deleteMany(paths: string[]): Promise<boolean> {
+    return Promise.all(paths.map((p) => this.delete(p))).then((results) =>
+      results.every((res) => res === true),
+    );
   }
 
   public readFile(
     path: string,
     encoding: 'utf8' | 'ascii' | 'binary' | 'base64' = `utf8`,
-  ): Promise<string> {
-    return RNFS.readFile(this.abspath(path), encoding === `binary` ? `base64` : encoding);
+  ): Promise<string | null> {
+    try {
+      return RNFS.readFile(
+        this.abspath(path),
+        encoding === `binary` ? `base64` : encoding,
+      );
+    } catch {
+      return Promise.resolve(null);
+    }
   }
 
   public writeFile(
@@ -137,10 +171,23 @@ class FileSystem {
 
   public async readJson(path: FsPath): Promise<any> {
     const json = await this.readFile(path);
+    if (json === null) {
+      return null;
+    }
     try {
       return JSON.parse(json);
     } catch {
       return null;
+    }
+  }
+
+  public async moveFile(srcRelPath: string, destRelPath: string): Promise<boolean> {
+    try {
+      await RNFS.moveFile(this.abspath(srcRelPath), this.abspath(destRelPath), {});
+      return true;
+    } catch (err) {
+      console.error(err.message);
+      return false;
     }
   }
 

@@ -28,7 +28,7 @@ import {
   downloadAllAudios,
   deleteAllAudioParts,
 } from '../state/filesystem';
-import * as select from '../state/selectors/selectors';
+import * as select from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
 import { Audio } from '@friends-library/friends';

@@ -67,5 +67,11 @@ describe(`migrate()`, () => {
     expect(migrated.preferences.editionSortHeaderHeight).toBe(
       INITIAL_STATE.preferences.editionSortHeaderHeight,
     );
+    expect(migrated.preferences.ebookColorScheme).toBe(
+      INITIAL_STATE.preferences.ebookColorScheme,
+    );
+    expect(migrated.preferences.ebookFontSize).toBe(
+      INITIAL_STATE.preferences.ebookFontSize,
+    );
   });
 });

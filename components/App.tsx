@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { t } from '@friends-library/locale';
 import { StackParamList } from '../types';
 import Home from '../screens/Home';
@@ -9,22 +10,64 @@ import BookList from '../screens/BookList';
 import Audio from '../screens/Audio';
 import Settings from '../screens/Settings';
 import Read from '../screens/Read';
-import { useDispatch } from '../state';
+import { useDispatch, useSelector, State } from '../state';
 import { setConnected } from '../state/network';
+import { fetchAudios } from '../state/audio/resources';
+import { fetchEditions } from '../state/editions/resources';
+import { batchSet as batchSetFilesystem } from '../state/filesystem';
+import Service from '../lib/service';
+import FS from '../lib/fs';
+import { View } from 'react-native';
+import { Sans } from './Text';
+import ReadHeader from './ReadHeader';
+import tw from '../lib/tailwind';
 
 const Stack = createStackNavigator<StackParamList>();
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const networkConnected = useSelector((state) => state.network.connected);
+  const [fetchedResources, setFetchedResources] = useState(false);
+
+  // set up filesystem state one time
+  useEffect(() => {
+    dispatch(
+      batchSetFilesystem(
+        Object.keys(FS.manifest).reduce<State['filesystem']>((acc, path) => {
+          const storedBytes = FS.manifest[path];
+          if (typeof storedBytes === `number`) {
+            acc[path] = {
+              totalBytes: storedBytes,
+              bytesOnDisk: storedBytes,
+            };
+          }
+          return acc;
+        }, {}),
+      ),
+    );
+  }, [dispatch]);
+
+  // add a listener for network connectivity events one time
   useEffect(() => {
     return NetInfo.addEventListener((state) => {
       dispatch(setConnected(state.isConnected));
     });
   }, [dispatch]);
 
+  // as soon as we know we're connected to the internet, fetch resources
+  useEffect(() => {
+    if (networkConnected && !fetchedResources) {
+      dispatch(fetchAudios());
+      dispatch(fetchEditions());
+      Service.downloadLatestEbookCss();
+      setFetchedResources(true);
+    }
+  }, [dispatch, networkConnected, fetchedResources, setFetchedResources]);
+
   return (
+    // <SafeAreaProvider>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator headerMode="screen" initialRouteName="Home">
         <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
         <Stack.Screen
           name="EBookList"
@@ -32,7 +75,15 @@ const App: React.FC = () => {
           component={BookList}
           initialParams={{ resourceType: `edition` }}
         />
-        <Stack.Screen name="Read" options={{ title: `Read` }} component={Read} />
+        <Stack.Screen
+          name="Read"
+          options={{
+            title: `The Diary of Alexander Jaffray is Really Long`,
+            header: ReadHeader,
+            headerTransparent: true,
+          }}
+          component={Read}
+        />
         <Stack.Screen
           name="AudioBookList"
           options={{ title: t`Audiobooks` }}
@@ -47,6 +98,7 @@ const App: React.FC = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    // {/* </SafeAreaProvider> */}
   );
 };
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as keys from '../../lib/keys';
-import * as select from '../selectors/selectors';
+import * as select from '../selectors/audio-selectors';
 import Service from '../../lib/service';
 import { Thunk, Dispatch, State } from '..';
 
@@ -17,7 +17,7 @@ const trackPosition = createSlice({
       action: PayloadAction<{ audioId: string; partIndex: number; position: number }>,
     ) => {
       const { audioId, partIndex, position } = action.payload;
-      const key = keys.part(audioId, partIndex);
+      const key = keys.audioPart(audioId, partIndex);
       state[key] = position;
     },
   },
