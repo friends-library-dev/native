@@ -53,6 +53,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
             audioSearchQuery: ``,
           },
           network: INITIAL_STATE.network,
+          ephemeral: INITIAL_STATE.ephemeral,
           filesystem: {},
         };
         FS.writeFile(FS.paths.state, JSON.stringify(saveState));

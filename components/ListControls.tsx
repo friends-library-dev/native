@@ -7,11 +7,13 @@ import Search from './Search';
 import { LANG } from '../env';
 import { BookSortMethod, ResourceType } from '../types';
 import {
+  setAudioSortHeaderHeight,
+  setEditionSortHeaderHeight,
+} from '../state/dimensions';
+import {
   setAudioSearchQuery,
   setSortAudiosBy,
-  setAudioSortHeaderHeight,
   setEditionSearchQuery,
-  setEditionSortHeaderHeight,
   setSortEditionsBy,
 } from '../state/preferences';
 

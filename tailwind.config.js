@@ -4,7 +4,7 @@ const { getTailwindConfig } = require(`@friends-library/theme`);
 const config = { ...getTailwindConfig(`en`) };
 
 config.theme.extend.colors[`ebook-colorscheme`] = {
-  'black-bg': `black`,
+  'black-bg': `rgb(0, 0, 0)`,
   'black-fg': `rgb(169, 169, 169)`,
   'white-bg': `rgb(253, 253, 253)`,
   'white-fg': `rgb(3, 3, 3)`,

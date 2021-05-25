@@ -1,4 +1,4 @@
-import { test, it, describe, expect } from '@jest/globals';
+import { it, describe, expect } from '@jest/globals';
 import { EbookData, EditionResource } from '../../../types';
 import { INITIAL_STATE, State } from '../../';
 import { editionResource, ebookData, ebookPosition } from '../edition';

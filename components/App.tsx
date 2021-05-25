@@ -25,9 +25,12 @@ import tw from '../lib/tailwind';
 const Stack = createStackNavigator<StackParamList>();
 
 const App: React.FC = () => {
-  const dispatch = useDispatch();
-  const networkConnected = useSelector((state) => state.network.connected);
   const [fetchedResources, setFetchedResources] = useState(false);
+  const dispatch = useDispatch();
+  const { networkConnected, showingEbookHeader } = useSelector((state) => ({
+    networkConnected: state.network.connected,
+    showingEbookHeader: state.ephemeral.showingEbookHeader,
+  }));
 
   // set up filesystem state one time
   useEffect(() => {
@@ -66,8 +69,8 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator headerMode="screen" initialRouteName="Read">
-        {/* <Stack.Navigator headerMode="screen" initialRouteName="Home"> */}
+      {/* <Stack.Navigator headerMode="screen" initialRouteName="Read"> */}
+      <Stack.Navigator headerMode="screen" initialRouteName="Home">
         <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
         <Stack.Screen
           name="EBookList"
@@ -81,12 +84,13 @@ const App: React.FC = () => {
             title: `The Diary of Alexander Jaffray is Really Long`,
             header: ReadHeader,
             headerTransparent: true,
+            headerShown: showingEbookHeader,
           }}
           component={Read}
           // temp
-          initialParams={{
-            resourceId: `08b94a0b-b96f-4525-bd46-79b0d60c4302--modernized`,
-          }}
+          // initialParams={{
+          //   resourceId: `08b94a0b-b96f-4525-bd46-79b0d60c4302--modernized`,
+          // }}
         />
         <Stack.Screen
           name="AudioBookList"

@@ -12,7 +12,9 @@ import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
 import { setEbookPosition } from '../state/editions/ebook-position';
 import { Html } from '@friends-library/types';
-import { setEbookColorScheme } from '../state/preferences';
+import Popover, { PopoverMode } from 'react-native-popover-view';
+import EbookSettings from '../components/EbookSettings';
+import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 
 export type Props =
   | { state: `loading` }
@@ -26,6 +28,8 @@ export type Props =
       colorScheme: EbookColorScheme;
       fontSize: number;
       dispatch: Dispatch;
+      showingSettings: boolean;
+      showingHeader: boolean;
     };
 
 class Read extends PureComponent<Props> {
@@ -38,8 +42,22 @@ class Read extends PureComponent<Props> {
     this.htmlRef = React.createRef();
   }
 
-  public componentDidUpdate(prevProps: Props) {
-    // TODO - forward font-size, color-scheme changes into webview js
+  public componentDidUpdate(prev: Props) {
+    if (this.props.state !== `ready` || prev.state !== `ready`) {
+      return;
+    }
+
+    const { colorScheme, fontSize } = this.props;
+
+    if (colorScheme !== prev.colorScheme) {
+      this.webViewRef.current?.injectJavaScript(
+        `window.setColorScheme("${colorScheme}")`,
+      );
+    }
+
+    if (fontSize !== prev.fontSize) {
+      this.webViewRef.current?.injectJavaScript(`window.setFontSize("${fontSize}")`);
+    }
   }
 
   public handleWebViewMessage = (event: WebViewMessageEvent) => {
@@ -56,9 +74,16 @@ class Read extends PureComponent<Props> {
           setEbookPosition({ editionId: editionId, position: message.position }),
         );
       case `click`:
-        // TODO, hide/show but check out webView `onTap`...
-        break;
+        return dispatch(toggleShowingEbookHeader());
     }
+  };
+
+  public closeSettingsPopover = () => {
+    console.log(`handle the touch start`);
+    if (this.props.state !== `ready` || !this.props.showingSettings) {
+      return;
+    }
+    this.props.dispatch(toggleShowingEbookSettings());
   };
 
   render() {
@@ -78,19 +103,50 @@ class Read extends PureComponent<Props> {
       );
     }
 
-    const { html, css, colorScheme, fontSize, position } = this.props;
+    const {
+      showingSettings,
+      showingHeader,
+      html,
+      css,
+      colorScheme,
+      fontSize,
+      position,
+    } = this.props;
+
     if (this.htmlRef.current === null) {
-      this.htmlRef.current = wrapHtml(html, css, colorScheme, fontSize, position);
+      this.htmlRef.current = wrapHtml(
+        html,
+        css,
+        colorScheme,
+        fontSize,
+        position,
+        showingHeader,
+      );
     }
     return (
-      <View style={tw`flex-grow`}>
+      <View style={tw`flex-grow bg-ebook-colorscheme-${colorScheme}-bg`}>
+        <StatusBar
+          hidden={!showingHeader}
+          barStyle={colorScheme === `black` ? `light-content` : `dark-content`}
+        />
         <WebView
+          style={tw`bg-transparent`}
           showsVerticalScrollIndicator={false}
           ref={this.webViewRef}
           decelerationRate="normal"
           onMessage={this.handleWebViewMessage}
           source={{ html: this.htmlRef.current }}
         />
+        <Popover
+          mode={PopoverMode.JS_MODAL}
+          onRequestClose={this.closeSettingsPopover}
+          isVisible={showingSettings}
+          animationConfig={{ duration: 0, delay: 0 }}
+          popoverStyle={tw`p-4 bg-transparent`}
+          backgroundStyle={tw`bg-transparent`}
+        >
+          <EbookSettings />
+        </Popover>
       </View>
     );
   }
@@ -107,6 +163,8 @@ export interface SyncProps {
   position: number;
   fontSize: number;
   colorScheme: EbookColorScheme;
+  showingSettings: boolean;
+  showingHeader: boolean;
 }
 
 interface OwnProps {
@@ -126,6 +184,8 @@ const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps, dispatch) => 
     fontSize: state.preferences.ebookFontSize,
     position: select.ebookPosition(editionId, state),
     networkConnected: state.network.connected,
+    showingSettings: state.ephemeral.showingEbookSettings,
+    showingHeader: state.ephemeral.showingEbookHeader,
   };
 };
 
@@ -187,6 +247,8 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
       position={containerState.initialPosition}
       colorScheme={props!.colorScheme}
       fontSize={props!.fontSize}
+      showingSettings={props!.showingSettings}
+      showingHeader={props!.showingHeader}
       dispatch={dispatch}
     />
   );

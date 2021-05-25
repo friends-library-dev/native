@@ -7,6 +7,8 @@ import { initialState as editionsInitialState } from './editions/editions-root-r
 import { initialState as fsInitialState } from './filesystem';
 import { initialState as prefsInitialState } from './preferences';
 import { initialState as networkInitialState } from './network';
+import { initialState as ephemeralInitialState } from './ephemeral';
+import { initialState as dimensionsInitialState } from './dimensions';
 
 export const INITIAL_STATE: State = {
   version: 2,
@@ -15,6 +17,8 @@ export const INITIAL_STATE: State = {
   preferences: prefsInitialState,
   filesystem: fsInitialState,
   network: networkInitialState,
+  ephemeral: ephemeralInitialState,
+  dimensions: dimensionsInitialState,
 };
 
 export type { State };

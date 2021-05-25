@@ -31,6 +31,7 @@ addDecorator((Story: any) => (
 // import stories
 configure(() => {
   require(`./stories`);
+  require(`./stories/stories.ebook-settings`);
   require(`./stories/stories.audio-screen`);
   require(`./stories/stories.scrubber`);
   require(`./stories/stories.downloadable-part`);

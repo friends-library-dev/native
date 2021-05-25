@@ -55,6 +55,12 @@ describe(`migrate()`, () => {
     expect(migrated.editions).toMatchObject(INITIAL_STATE.editions);
   });
 
+  it(`adds new .ephemeral state slice`, () => {
+    const v1 = getV1State();
+    const migrated = migrate(v1);
+    expect(migrated.ephemeral).toMatchObject({ ...INITIAL_STATE.ephemeral });
+  });
+
   it(`adds new edition* prefs`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
@@ -64,14 +70,24 @@ describe(`migrate()`, () => {
     expect(migrated.preferences.editionSearchQuery).toBe(
       INITIAL_STATE.preferences.editionSearchQuery,
     );
-    expect(migrated.preferences.editionSortHeaderHeight).toBe(
-      INITIAL_STATE.preferences.editionSortHeaderHeight,
-    );
     expect(migrated.preferences.ebookColorScheme).toBe(
       INITIAL_STATE.preferences.ebookColorScheme,
     );
     expect(migrated.preferences.ebookFontSize).toBe(
       INITIAL_STATE.preferences.ebookFontSize,
+    );
+  });
+
+  it(`adds new dimensions state, migrating old prefs`, () => {
+    const v1 = getV1State();
+    v1.preferences.audioSortHeaderHeight = 999;
+    const migrated: any = migrate(v1);
+    expect(migrated.dimensions.audioSortHeaderHeight).toBe(999);
+    expect(migrated.dimensions.editionSortHeaderHeight).toBe(
+      INITIAL_STATE.dimensions.editionSortHeaderHeight,
+    );
+    expect(migrated.dimensions.ebookHeaderHeight).toBe(
+      INITIAL_STATE.dimensions.ebookHeaderHeight,
     );
   });
 });

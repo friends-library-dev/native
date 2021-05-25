@@ -6,10 +6,8 @@ export interface PreferencesState {
   audioQuality: AudioQuality;
   sortAudiosBy: BookSortMethod;
   audioSearchQuery: string;
-  audioSortHeaderHeight: number;
   sortEditionsBy: BookSortMethod;
   editionSearchQuery: string;
-  editionSortHeaderHeight: number;
   ebookColorScheme: EbookColorScheme;
   ebookFontSize: number;
 }
@@ -18,13 +16,11 @@ export const initialState: PreferencesState = {
   // audio prefs
   audioQuality: `HQ`,
   sortAudiosBy: `published`,
-  audioSortHeaderHeight: 113.5,
   audioSearchQuery: ``,
 
   // edition/ebook prefs
   sortEditionsBy: `published`,
   editionSearchQuery: ``,
-  editionSortHeaderHeight: 113.5,
   ebookColorScheme: `white`,
   ebookFontSize: 5,
 };
@@ -33,17 +29,11 @@ const preferences = createSlice({
   name: `preferences`,
   initialState,
   reducers: {
-    setEditionSortHeaderHeight: (state, action: PayloadAction<number>) => {
-      state.editionSortHeaderHeight = action.payload;
-    },
     setSortEditionsBy: (state, action: PayloadAction<BookSortMethod>) => {
       state.sortEditionsBy = action.payload;
     },
     setEditionSearchQuery: (state, action: PayloadAction<string>) => {
       state.editionSearchQuery = action.payload;
-    },
-    setAudioSortHeaderHeight: (state, action: PayloadAction<number>) => {
-      state.audioSortHeaderHeight = action.payload;
     },
     setSortAudiosBy: (state, action: PayloadAction<BookSortMethod>) => {
       state.sortAudiosBy = action.payload;
@@ -71,8 +61,6 @@ export const {
   toggleQuality,
   setAudioSearchQuery,
   setSortAudiosBy,
-  setAudioSortHeaderHeight,
-  setEditionSortHeaderHeight,
   setSortEditionsBy,
   setEditionSearchQuery,
   setEbookColorScheme,
