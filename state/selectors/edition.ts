@@ -19,7 +19,7 @@ export async function ebookData(
     return null;
   }
 
-  let fsData = await Service.fsEbookData(editionId);
+  const fsData = await Service.fsEbookData(editionId);
   if (fsData && fsData.sha === resource.revision) {
     return fsData;
   }

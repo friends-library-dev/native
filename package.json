@@ -59,6 +59,7 @@
     "react-native": "0.63.2",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.7.0",
+    "react-native-home-indicator": "^0.2.6",
     "react-native-popover-view": "^4.0.1",
     "react-native-reanimated": "^1.10.1",
     "react-native-safe-area-context": "^3.1.1",

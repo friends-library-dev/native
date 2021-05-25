@@ -17,6 +17,9 @@ import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+// @ts-ignore
+import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
+
 export type Props =
   | { state: `loading` }
   | { state: `error`; reason: 'no_internet' | 'unknown' }
@@ -144,6 +147,7 @@ class Read extends PureComponent<Props> {
     }
     return (
       <View style={tw`flex-grow bg-ebook-colorscheme-${colorScheme}-bg`}>
+        <PrefersHomeIndicatorAutoHidden />
         <StatusBar
           hidden={!showingHeader}
           barStyle={colorScheme === `black` ? `light-content` : `dark-content`}

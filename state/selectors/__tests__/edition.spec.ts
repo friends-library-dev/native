@@ -12,21 +12,21 @@ let resource: EditionResource;
 describe(`edition selectors`, () => {
   beforeEach(() => {
     resource = {
-      id: '123abc--updated',
-      documentId: '08b94a0b-b96f-4525-bd46-79b0d60c4302',
-      type: 'modernized',
-      publishedDate: '2018-09-03T20:49:44.000Z',
-      documentTitle: 'Letter to a Backslidden Brother',
-      friendName: 'Catherine Payton',
-      friendNameSort: 'Payton, Catherine',
+      id: `123abc--updated`,
+      documentId: `08b94a0b-b96f-4525-bd46-79b0d60c4302`,
+      type: `modernized`,
+      publishedDate: `2018-09-03T20:49:44.000Z`,
+      documentTitle: `Letter to a Backslidden Brother`,
+      friendName: `Catherine Payton`,
+      friendNameSort: `Payton, Catherine`,
       url: `/`,
-      squareCoverImageUrl: '/Letter_to_Backslidden_Brother--modernized--audio.png',
-      documentDescription: 'doc desc',
-      documentShortDescription: 'short desc',
+      squareCoverImageUrl: `/Letter_to_Backslidden_Brother--modernized--audio.png`,
+      documentDescription: `doc desc`,
+      documentShortDescription: `short desc`,
       numTotalPaperbackPages: 12,
       isMostModernized: true,
-      chapters: [{ shortTitle: 'Letter to a Backslidden Brother' }],
-      revision: '9a460a2',
+      chapters: [{ shortTitle: `Letter to a Backslidden Brother` }],
+      revision: `9a460a2`,
     };
     state = JSON.parse(JSON.stringify(INITIAL_STATE));
     state.editions.resources = { '123abc--updated': resource };

@@ -108,9 +108,9 @@ const ColorButton: React.FC<{
     <TouchableOpacity onPress={onPress}>
       <View
         style={tw.style(`bg-ebook-colorscheme-${bg}`, `w-8 h-8 rounded-full`, {
-          'border border-gray-400': colorScheme === 'white' && active !== 'black',
+          'border border-gray-400': colorScheme === `white` && active !== `black`,
           'border border-ebook-colorscheme-black-fg':
-            colorScheme === 'black' && active === 'black',
+            colorScheme === `black` && active === `black`,
         })}
       ></View>
       <View
