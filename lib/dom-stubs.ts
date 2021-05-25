@@ -8,11 +8,13 @@ export interface Window {
     postMessage: (event: string) => unknown;
   };
   setFontSize(fontSize: number): unknown;
+  setHeaderHeight(headerHeight: number): unknown;
+  setShowingHeader(showingHeader: boolean): unknown;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
   htmlClassList(
     colorScheme: EbookColorScheme,
-    fontSize: number,
     showingHeader: boolean,
+    fontSize: number,
     showingFootnote: boolean,
   ): string;
 }
@@ -26,14 +28,13 @@ export interface ClassList {
 export interface Node {
   innerHTML: string;
   classList: ClassList;
+  style: Record<string, string | number>;
 }
 
-export class Element {
-  innerHTML!: string;
+export interface Element {
+  innerHTML: string;
   nextElementSibling?: Element;
-  matches(selector: string): boolean {
-    return false;
-  }
+  matches(selector: string): boolean;
 }
 
 export interface Document {

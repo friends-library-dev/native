@@ -10,7 +10,6 @@ import { toggleShowingEbookSettings } from '../state/ephemeral';
 import { setEbookHeaderHeight } from '../state/dimensions';
 
 const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation }) => {
-  console.log(`[render] <ReadHeader />`);
   const dispatch = useDispatch();
   const { colorScheme } = useSelector((state) => {
     return { colorScheme: state.preferences.ebookColorScheme };

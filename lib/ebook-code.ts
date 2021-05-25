@@ -10,6 +10,20 @@ export type Message =
     }
   | { type: 'click' };
 
+const htmlClassList: Window['htmlClassList'] = (
+  colorScheme,
+  showingHeader,
+  fontSize,
+  showingFootnote,
+) => {
+  return [
+    `colorscheme--${colorScheme}`,
+    `font-size--${fontSize}`,
+    `footnote--${showingFootnote ? `visible` : `hidden`}`,
+    `header--${showingHeader ? `visible` : `hidden`}`,
+  ].join(` `);
+};
+
 function injectIntoWebView(
   window: Window,
   document: Document,
@@ -17,6 +31,8 @@ function injectIntoWebView(
   initialFontSize: number,
   initialColorScheme: EbookColorScheme,
   initialShowingHeader: boolean,
+  initialHeaderHeight: number,
+  safeAreaVerticalOffset: number,
 ): void {
   const INTERVAL = 2000;
   if (position > 0) {
@@ -26,26 +42,39 @@ function injectIntoWebView(
   let colorScheme = initialColorScheme;
   let showingHeader = initialShowingHeader;
   let fontSize = initialFontSize;
+  let headerHeight = initialHeaderHeight;
   let showingFootnote = false;
-
-  window.htmlClassList = (colorScheme, fontSize, showingHeader, showingFootnote) => {
-    return [
-      `colorscheme--${colorScheme}`,
-      `font-size--${fontSize}`,
-      `footnote--${showingFootnote ? `visible` : `hidden`}`,
-      `header--${showingHeader ? `visible` : `hidden`}`,
-    ].join(` `);
-  };
 
   function setHtmlClassList() {
     document.documentElement.classList.value = window.htmlClassList(
       colorScheme,
-      fontSize,
       showingHeader,
+      fontSize,
       showingFootnote,
     );
-    // alert(document.documentElement.classList.value);
   }
+
+  const fnOverlay = document.getElementById(`fn-overlay`);
+
+  function setFootnotePadding(): void {
+    if (!fnOverlay) {
+      return;
+    }
+    fnOverlay.style.paddingTop = `${
+      showingHeader ? headerHeight : safeAreaVerticalOffset
+    }px`;
+  }
+  setFootnotePadding();
+
+  window.setHeaderHeight = (newHeight) => {
+    headerHeight = newHeight;
+    setFootnotePadding();
+  };
+
+  window.setShowingHeader = (nextState) => {
+    showingHeader = nextState;
+    setFootnotePadding();
+  };
 
   window.setFontSize = (newFontSize: number) => {
     fontSize = newFontSize;
@@ -74,7 +103,10 @@ function injectIntoWebView(
     let innerHtml = node.innerHTML;
     innerHtml = `
         <sup class="footnote-marker">[${index + 1}]</sup>
-        <span class="footnote-content">${innerHtml}</span>
+        <span class="footnote-content">
+          ${innerHtml}
+          <a class="fn-close fn-close-back">⏎</a>
+        </span>
       `;
     node.innerHTML = innerHtml;
     node.classList.add(`prepared`);
@@ -104,7 +136,7 @@ function injectIntoWebView(
       return;
     }
 
-    if (target.matches(`#fn-close`)) {
+    if (target.matches(`.fn-close`)) {
       showingFootnote = false;
       setHtmlClassList();
       if (beforeFootnoteShowScroll) {
@@ -121,7 +153,7 @@ function injectIntoWebView(
 const devCss = css`
   html {
     font-size: 20px;
-    padding: 1.75em;
+    padding: 1.6em;
   }
 
   html.font-size--1 {
@@ -142,7 +174,7 @@ const devCss = css`
 
   html.font-size--5 {
     font-size: 20px;
-    padding: 1.6em;
+    padding: 1.5em;
   }
 
   html.font-size--6 {
@@ -170,8 +202,12 @@ const devCss = css`
     padding: 1em;
   }
 
+  dd {
+    text-align: left;
+  }
+
   .chapter-1 {
-    margin-top: 5rem;
+    margin-top: 6rem;
   }
 
   .chapter + .chapter {
@@ -187,10 +223,28 @@ const devCss = css`
     display: inline;
   }
 
-  .footnote-marker {
+  .fn-close {
+    font-weight: 700;
+  }
+
+  .colorscheme--white .fn-close,
+  .colorscheme--white .footnote-marker {
     color: blue;
+  }
+
+  .colorscheme--black .fn-close,
+  .colorscheme--black .footnote-marker {
+    color: rgba(110, 141, 234, 1);
+  }
+
+  .colorscheme--sepia .fn-close,
+  .colorscheme--sepia .footnote-marker {
+    color: var(--ebook-colorscheme-sepia-accent);
+  }
+
+  .footnote-marker {
     font-size: 1em;
-    margin-left: -0.1rem;
+    margin-left: -0.15rem;
     display: inline-block;
     transform: translateY(-0.4rem);
     vertical-align: baseline;
@@ -205,7 +259,6 @@ const devCss = css`
     position: fixed;
     display: none;
     top: 0;
-    /* padding-top: 86px; */
     left: 0;
     bottom: 0;
     right: 0;
@@ -247,14 +300,24 @@ const devCss = css`
 
   #fn-close {
     position: absolute;
-    top: 5%;
-    left: 5%;
+    top: -6px;
+    left: 4px;
+    padding: 5px 1em 1em 1em;
+    font-size: 22px !important;
+  }
+
+  .fn-close-back {
+    display: inline-block;
+    transform: scale(1.3);
+    padding-left: 0.4em;
   }
 
   #fn-content {
+    position: relative;
     overflow: scroll;
     max-height: 100vh;
-    padding: 1.75rem 2rem 1rem 3.25rem;
+    padding: 0 30px 1rem 60px;
+    margin-top: 15px;
   }
 
   #fn-content-inner {
@@ -289,6 +352,10 @@ const devCss = css`
     color: var(--ebook-colorscheme-sepia-fg, rgb(50, 50, 50));
     /* Accent: var(--ebook-colorscheme-sepia-accent, rgb(201, 154, 61)); */
   }
+
+  .header--hidden #fn-overlay {
+    /* padding-top: 0 !important; */
+  }
 `;
 
 const cssVars = css`
@@ -310,9 +377,11 @@ export function wrapHtml(
   fontSize: number,
   position: number,
   showingHeader: boolean,
+  headerHeight: number,
+  safeAreaVerticalOffset: number,
 ): string {
   return `
-  <html class="colorscheme--${colorScheme} font-size--${fontSize} header--visible footnote--hidden"> 
+  <html class="${htmlClassList(colorScheme, showingHeader, fontSize, false)}"> 
     <head>
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars}</style>
@@ -324,11 +393,12 @@ export function wrapHtml(
         <div id="fn-content">
           <div id="fn-content-inner">
           </div>
+          <a id="fn-close" class="fn-close">&#x2715;</a>
         </div>
-        <a id="fn-close">&#x2715;</a>
       </div>
       ${html}
       <script>
+        window.htmlClassList = ${htmlClassList.toString()}
         ${injectIntoWebView.toString()}
         ${injectIntoWebView.name}(
           window,
@@ -336,7 +406,9 @@ export function wrapHtml(
           ${position},
           ${fontSize},
           "${colorScheme}",
-          ${showingHeader}
+          ${showingHeader},
+          ${headerHeight},
+          ${safeAreaVerticalOffset}
          );
       </script>
     </body>

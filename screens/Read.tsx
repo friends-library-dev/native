@@ -15,6 +15,7 @@ import { Html } from '@friends-library/types';
 import Popover, { PopoverMode } from 'react-native-popover-view';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export type Props =
   | { state: `loading` }
@@ -25,11 +26,13 @@ export type Props =
       editionId: string;
       html: string;
       css: string;
+      headerHeight: number;
       colorScheme: EbookColorScheme;
       fontSize: number;
       dispatch: Dispatch;
       showingSettings: boolean;
       showingHeader: boolean;
+      safeAreaVerticalOffset: number;
     };
 
 class Read extends PureComponent<Props> {
@@ -47,11 +50,23 @@ class Read extends PureComponent<Props> {
       return;
     }
 
-    const { colorScheme, fontSize } = this.props;
+    const { colorScheme, fontSize, headerHeight, showingHeader } = this.props;
 
     if (colorScheme !== prev.colorScheme) {
       this.webViewRef.current?.injectJavaScript(
         `window.setColorScheme("${colorScheme}")`,
+      );
+    }
+
+    if (headerHeight !== prev.headerHeight) {
+      this.webViewRef.current?.injectJavaScript(
+        `window.setHeaderHeight(${headerHeight})`,
+      );
+    }
+
+    if (showingHeader !== prev.showingHeader) {
+      this.webViewRef.current?.injectJavaScript(
+        `window.setShowingHeader(${showingHeader})`,
       );
     }
 
@@ -106,11 +121,13 @@ class Read extends PureComponent<Props> {
     const {
       showingSettings,
       showingHeader,
+      headerHeight,
       html,
       css,
       colorScheme,
       fontSize,
       position,
+      safeAreaVerticalOffset,
     } = this.props;
 
     if (this.htmlRef.current === null) {
@@ -121,6 +138,8 @@ class Read extends PureComponent<Props> {
         fontSize,
         position,
         showingHeader,
+        headerHeight,
+        safeAreaVerticalOffset,
       );
     }
     return (
@@ -165,6 +184,7 @@ export interface SyncProps {
   colorScheme: EbookColorScheme;
   showingSettings: boolean;
   showingHeader: boolean;
+  headerHeight: number;
 }
 
 interface OwnProps {
@@ -186,6 +206,7 @@ const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps, dispatch) => 
     networkConnected: state.network.connected,
     showingSettings: state.ephemeral.showingEbookSettings,
     showingHeader: state.ephemeral.showingEbookHeader,
+    headerHeight: state.dimensions.ebookHeaderHeight,
   };
 };
 
@@ -195,6 +216,7 @@ type ContainerState =
   | { state: `ready`; html: string; css: string; initialPosition: number };
 
 const ReadContainer: React.FC<OwnProps> = (ownProps) => {
+  const insets = useSafeAreaInsets();
   const [containerState, setContainerState] = useState<ContainerState>({
     state: `loading`,
   });
@@ -249,7 +271,9 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
       fontSize={props!.fontSize}
       showingSettings={props!.showingSettings}
       showingHeader={props!.showingHeader}
+      headerHeight={props!.headerHeight}
       dispatch={dispatch}
+      safeAreaVerticalOffset={insets.top}
     />
   );
 };
