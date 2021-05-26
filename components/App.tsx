@@ -82,7 +82,6 @@ const App: React.FC = () => {
           <Stack.Screen
             name="Read"
             options={{
-              title: `The Diary of Alexander Jaffray is Really Long`,
               header: ReadHeader,
               headerTransparent: true,
               headerShown: showingEbookHeader,

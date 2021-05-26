@@ -7,6 +7,8 @@ export interface Window {
   ReactNativeWebView: {
     postMessage: (event: string) => unknown;
   };
+  setInterval(callback: () => unknown, delay: number): number;
+  clearInterval(interval: number): void;
   setFontSize(fontSize: number): unknown;
   setHeaderHeight(headerHeight: number): unknown;
   setShowingHeader(showingHeader: boolean): unknown;

@@ -1,10 +1,12 @@
 import React, { PureComponent, useEffect, useState } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, GestureResponderEvent } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { Sans } from '../components/Text';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import EbookLoading from '../components/EbookLoading';
+import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
 import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
 import * as select from '../state/selectors/edition';
@@ -15,14 +17,21 @@ import { Html } from '@friends-library/types';
 import Popover, { PopoverMode } from 'react-native-popover-view';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
+import { AnyAction } from 'redux';
 
 export type Props =
-  | { state: `loading` }
-  | { state: `error`; reason: 'no_internet' | 'unknown' }
+  | {
+      state: `loading`;
+      colorScheme: EbookColorScheme;
+    }
+  | {
+      state: `error`;
+      colorScheme: EbookColorScheme;
+      reason: 'no_internet' | 'unknown';
+    }
   | {
       state: `ready`;
       position: number;
@@ -38,9 +47,17 @@ export type Props =
       safeAreaVerticalOffset: number;
     };
 
-class Read extends PureComponent<Props> {
+interface State {
+  showingFootnote: boolean;
+}
+
+class Read extends PureComponent<Props, State> {
   private htmlRef: React.MutableRefObject<Html | null>;
   private webViewRef: React.RefObject<WebView>;
+
+  public state: State = {
+    showingFootnote: false,
+  };
 
   public constructor(props: Props) {
     super(props);
@@ -48,7 +65,22 @@ class Read extends PureComponent<Props> {
     this.htmlRef = React.createRef();
   }
 
-  public componentDidUpdate(prev: Props) {
+  public dispatch(action: AnyAction): void {
+    if (this.props.state !== `ready`) {
+      return;
+    }
+    this.props.dispatch(action);
+  }
+
+  public injectJs(js: string): void {
+    this.webViewRef.current?.injectJavaScript(js);
+  }
+
+  public componentWillUnmount(): void {
+    // this.injectJs(`try { window.unmount() } catch (err) {}; true;`);
+  }
+
+  public componentDidUpdate(prev: Props): void {
     if (this.props.state !== `ready` || prev.state !== `ready`) {
       return;
     }
@@ -56,68 +88,63 @@ class Read extends PureComponent<Props> {
     const { colorScheme, fontSize, headerHeight, showingHeader } = this.props;
 
     if (colorScheme !== prev.colorScheme) {
-      this.webViewRef.current?.injectJavaScript(
-        `window.setColorScheme("${colorScheme}")`,
-      );
+      this.injectJs(`window.setColorScheme("${colorScheme}")`);
     }
 
     if (headerHeight !== prev.headerHeight) {
-      this.webViewRef.current?.injectJavaScript(
-        `window.setHeaderHeight(${headerHeight})`,
-      );
+      this.injectJs(`window.setHeaderHeight(${headerHeight})`);
     }
 
     if (showingHeader !== prev.showingHeader) {
-      this.webViewRef.current?.injectJavaScript(
-        `window.setShowingHeader(${showingHeader})`,
-      );
+      this.injectJs(`window.setShowingHeader(${showingHeader})`);
     }
 
     if (fontSize !== prev.fontSize) {
-      this.webViewRef.current?.injectJavaScript(`window.setFontSize("${fontSize}")`);
+      this.injectJs(`window.setFontSize("${fontSize}")`);
     }
   }
 
-  public handleWebViewMessage = (event: WebViewMessageEvent) => {
+  public handleWebViewMessage: (event: WebViewMessageEvent) => unknown = (event) => {
     if (this.props.state !== `ready`) {
       return;
     }
 
     const { dispatch, editionId } = this.props;
-    const message: Message = JSON.parse(event.nativeEvent.data);
+    const msg: Message = JSON.parse(event.nativeEvent.data);
 
-    switch (message.type) {
+    switch (msg.type) {
       case `update_position`:
-        return dispatch(
-          setEbookPosition({ editionId: editionId, position: message.position }),
-        );
-      case `click`:
+        return dispatch(setEbookPosition({ editionId, position: msg.position }));
+      case `toggle_header_visibility`:
         return dispatch(toggleShowingEbookHeader());
+      case `debug`:
+        return console.log(`WEBVIEW DEBUG: ${msg.value}`);
+      case `set_footnote_visibility`:
+        return this.setState({ showingFootnote: msg.visible });
     }
   };
 
-  public closeSettingsPopover = () => {
-    console.log(`handle the touch start`);
+  public closeSettingsPopover: () => void = () => {
     if (this.props.state !== `ready` || !this.props.showingSettings) {
       return;
     }
     this.props.dispatch(toggleShowingEbookSettings());
   };
 
-  render() {
+  public onWebviewTouchCancel: (e: GestureResponderEvent) => void = () => {
+    if (!this.state.showingFootnote) {
+      this.dispatch(toggleShowingEbookHeader());
+    }
+  };
+
+  render(): JSX.Element {
     if (this.props.state === `loading`) {
-      return (
-        <View>
-          <Sans>Loading</Sans>
-        </View>
-      );
+      return <EbookLoading colorScheme={this.props.colorScheme} />;
     }
 
     if (this.props.state === `error`) {
       return (
-        <View>
-          <Sans>Error: {this.props.reason}</Sans>
-        </View>
+        <EbookError colorScheme={this.props.colorScheme} reason={this.props.reason} />
       );
     }
 
@@ -159,6 +186,9 @@ class Read extends PureComponent<Props> {
           decelerationRate="normal"
           onMessage={this.handleWebViewMessage}
           source={{ html: this.htmlRef.current }}
+          onTouchCancel={this.onWebviewTouchCancel}
+          onRenderProcessGone={() => console.log(`onRenderProcessGone`)}
+          onContentProcessDidTerminate={() => console.log(`onContentProcessDidTerminate`)}
         />
         <Popover
           mode={PopoverMode.JS_MODAL}
@@ -196,9 +226,7 @@ interface OwnProps {
   route: RouteProp<StackParamList, 'Read'>;
 }
 
-const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps, dispatch) => (
-  state,
-) => {
+const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps) => (state) => {
   const editionId = ownProps.route.params.resourceId;
   const resource = select.editionResource(editionId, state);
   if (!resource) return null;
@@ -263,7 +291,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
   ]);
 
   if (containerState.state !== `ready`) {
-    return <Read {...containerState} />;
+    return <Read {...containerState} colorScheme={props?.colorScheme || `white`} />;
   }
 
   return (

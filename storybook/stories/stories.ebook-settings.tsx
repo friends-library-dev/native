@@ -12,6 +12,7 @@ storiesOf(`EbookSettings`, module).add(`default`, () => (
         fontSize={5}
         setFontSize={() => {}}
         setColorScheme={() => {}}
+        onPressClose={() => {}}
       />
     </View>
     <View style={tw`justify-center items-center py-6 bg-blue-200`}>
@@ -20,6 +21,7 @@ storiesOf(`EbookSettings`, module).add(`default`, () => (
         fontSize={5}
         setFontSize={() => {}}
         setColorScheme={() => {}}
+        onPressClose={() => {}}
       />
     </View>
     <View style={tw`justify-center items-center py-6 bg-blue-200`}>
@@ -28,6 +30,7 @@ storiesOf(`EbookSettings`, module).add(`default`, () => (
         fontSize={5}
         setFontSize={() => {}}
         setColorScheme={() => {}}
+        onPressClose={() => {}}
       />
     </View>
   </>

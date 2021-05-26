@@ -8,7 +8,17 @@ export type Message =
       type: 'update_position';
       position: number;
     }
-  | { type: 'click' };
+  | {
+      type: 'debug';
+      value: string;
+    }
+  | {
+      type: 'set_footnote_visibility';
+      visible: boolean;
+    }
+  | {
+      type: 'toggle_header_visibility';
+    };
 
 const htmlClassList: Window['htmlClassList'] = (
   colorScheme,
@@ -34,16 +44,18 @@ function injectIntoWebView(
   initialHeaderHeight: number,
   safeAreaVerticalOffset: number,
 ): void {
-  const INTERVAL = 2000;
   if (position > 0) {
     window.scrollTo(0, position * document.documentElement.scrollHeight);
   }
 
+  const fnOverlay = document.getElementById(`fn-overlay`);
+  const fnHolder = document.getElementById(`fn-content-inner`);
   let colorScheme = initialColorScheme;
   let showingHeader = initialShowingHeader;
   let fontSize = initialFontSize;
   let headerHeight = initialHeaderHeight;
   let showingFootnote = false;
+  let interval = 0;
 
   function setHtmlClassList() {
     document.documentElement.classList.value = window.htmlClassList(
@@ -54,7 +66,9 @@ function injectIntoWebView(
     );
   }
 
-  const fnOverlay = document.getElementById(`fn-overlay`);
+  function sendMsg(msg: Message): void {
+    window.ReactNativeWebView.postMessage(JSON.stringify(msg));
+  }
 
   function setFootnotePadding(): void {
     if (!fnOverlay) {
@@ -76,20 +90,21 @@ function injectIntoWebView(
     setFootnotePadding();
   };
 
-  window.setFontSize = (newFontSize: number) => {
+  window.setFontSize = (newFontSize) => {
     fontSize = newFontSize;
     const before = window.scrollY / document.documentElement.scrollHeight;
     setHtmlClassList();
     window.scrollTo(0, before * document.documentElement.scrollHeight);
   };
 
-  window.setColorScheme = (newColorScheme: EbookColorScheme) => {
+  window.setColorScheme = (newColorScheme) => {
     colorScheme = newColorScheme;
     setHtmlClassList();
   };
 
+  const SCROLL_INTERVAL_DELAY = 2000;
   let lastScroll = window.scrollY;
-  setInterval(() => {
+  interval = window.setInterval(() => {
     const newScroll = window.scrollY;
     if (newScroll !== lastScroll) {
       const percent = newScroll / document.documentElement.scrollHeight;
@@ -97,35 +112,29 @@ function injectIntoWebView(
       window.ReactNativeWebView.postMessage(JSON.stringify(message));
     }
     lastScroll = newScroll;
-  }, INTERVAL);
+  }, SCROLL_INTERVAL_DELAY);
 
   document.querySelectorAll(`span.footnote`).forEach((node, index) => {
     let innerHtml = node.innerHTML;
     innerHtml = `
-        <sup class="footnote-marker">[${index + 1}]</sup>
+        <sup class="footnote-marker increase-clickable">[${index + 1}]</sup>
         <span class="footnote-content">
           ${innerHtml}
-          <a class="fn-close fn-close-back">⏎</a>
+          <a class="fn-close fn-close-back increase-clickable">⏎</a>
         </span>
       `;
     node.innerHTML = innerHtml;
     node.classList.add(`prepared`);
   });
 
-  const fnHolder = document.getElementById(`fn-content-inner`);
-  let beforeFootnoteShowScroll: number | null = null;
-
   document.addEventListener(`click`, (event) => {
-    function sendClick() {
-      const clickMsg: Message = { type: `click` };
-      window.ReactNativeWebView.postMessage(JSON.stringify(clickMsg));
-    }
-
     if (!fnHolder || typeof event.target.matches !== `function`) {
-      return sendClick();
+      return !showingFootnote && sendMsg({ type: `toggle_header_visibility` });
     }
 
+    let beforeFootnoteShowScroll: number | null = null;
     const target = event.target as Element;
+
     if (target.matches(`.footnote-marker`)) {
       const fnContent = target.nextElementSibling;
       if (!fnContent) return;
@@ -133,6 +142,7 @@ function injectIntoWebView(
       fnHolder.innerHTML = fnContent.innerHTML;
       showingFootnote = true;
       setHtmlClassList();
+      sendMsg({ type: `set_footnote_visibility`, visible: true });
       return;
     }
 
@@ -144,9 +154,11 @@ function injectIntoWebView(
         beforeFootnoteShowScroll = null;
       }
       fnHolder.innerHTML = ``;
+      sendMsg({ type: `set_footnote_visibility`, visible: false });
       return;
     }
-    sendClick();
+
+    return !showingFootnote && sendMsg({ type: `toggle_header_visibility` });
   });
 }
 
@@ -250,6 +262,21 @@ const devCss = css`
     vertical-align: baseline;
   }
 
+  .increase-clickable {
+    display: inline-block;
+  }
+
+  .increase-clickable::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 0;
+    top: 0;
+    transform: translate(calc(0.5em - 50%), calc(0.5em - 50%));
+    /* background: rgba(0, 255, 0, 0.3); */
+  }
+
   .footnote--visible .footnote-marker {
     opacity: 0;
     transform: translateX(-1000rem);
@@ -299,11 +326,19 @@ const devCss = css`
   }
 
   #fn-close {
+    z-index: 50;
     position: absolute;
     top: -6px;
     left: 4px;
-    padding: 5px 1em 1em 1em;
+    padding: 20px 1em 1em 1em;
     font-size: 22px !important;
+  }
+
+  #fn-close.increase-clickable::after {
+    left: 15px;
+    top: 0;
+    height: 120px;
+    width: 100px;
   }
 
   .fn-close-back {
@@ -312,12 +347,16 @@ const devCss = css`
     padding-left: 0.4em;
   }
 
+  .fn-close-back.increase-clickable::after {
+    left: 10px;
+  }
+
   #fn-content {
     position: relative;
     overflow: scroll;
     max-height: 100vh;
-    padding: 0 30px 1rem 60px;
-    margin-top: 15px;
+    padding: 15px 30px 1rem 60px;
+    /* margin-top: 15px; */
   }
 
   #fn-content-inner {
@@ -350,11 +389,10 @@ const devCss = css`
   .colorscheme--sepia body {
     background: var(--ebook-colorscheme-sepia-bg, rgb(250, 242, 231));
     color: var(--ebook-colorscheme-sepia-fg, rgb(50, 50, 50));
-    /* Accent: var(--ebook-colorscheme-sepia-accent, rgb(201, 154, 61)); */
   }
 
-  .header--hidden #fn-overlay {
-    /* padding-top: 0 !important; */
+  .embedded-content-document {
+    margin-left: 0;
   }
 `;
 
@@ -393,7 +431,7 @@ export function wrapHtml(
         <div id="fn-content">
           <div id="fn-content-inner">
           </div>
-          <a id="fn-close" class="fn-close">&#x2715;</a>
+          <a id="fn-close" class="fn-close increase-clickable">&#x2715;</a>
         </div>
       </div>
       ${html}

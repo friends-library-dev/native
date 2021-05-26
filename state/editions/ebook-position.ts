@@ -13,7 +13,6 @@ const ebookPosition = createSlice({
       state,
       action: PayloadAction<{ editionId: string; position: number }>,
     ) => {
-      console.log(`got a new position! ${action.payload.position}`);
       const { editionId, position } = action.payload;
       state[editionId] = position;
     },

@@ -2,10 +2,26 @@ import React from 'react';
 import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import BookListItem from '../../components/BookListItem';
+import EbookLoading from '../../components/EbookLoading';
+import EbookError from '../../components/EbookError';
 import { AudioControls } from '../../components/AudioControls';
 import tw from '../../lib/tailwind';
 
-storiesOf(`AudioListItem`, module).add(`default`, () => (
+// prettier-ignore
+storiesOf(EbookError.name, module)
+  .add(`black (unknown)`, () => <EbookError colorScheme="black" reason="unknown" />)
+  .add(`sepia (unknown)`, () => <EbookError colorScheme="sepia" reason="unknown" />)
+  .add(`white (unknown)`, () => <EbookError colorScheme="white" reason="unknown" />)
+  .add(`black (no internet)`, () => <EbookError colorScheme="black" reason="no_internet" />)
+  .add(`sepia (no internet)`, () => <EbookError colorScheme="sepia" reason="no_internet" />)
+  .add(`white (no internet)`, () => <EbookError colorScheme="white" reason="no_internet" />);
+
+storiesOf(EbookLoading.name, module)
+  .add(`black`, () => <EbookLoading colorScheme="black" />)
+  .add(`sepia`, () => <EbookLoading colorScheme="sepia" />)
+  .add(`white`, () => <EbookLoading colorScheme="white" />);
+
+storiesOf(BookListItem.name, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
     <BookListItem
       artworkId="webb"
@@ -47,7 +63,7 @@ storiesOf(`AudioListItem`, module).add(`default`, () => (
   </View>
 ));
 
-storiesOf(`AudioControls`, module)
+storiesOf(AudioControls.name, module)
   .add(`default`, () => (
     <View style={tw`p-6`}>
       <AudioControls

@@ -9,17 +9,22 @@ import { useDispatch, useSelector } from '../state';
 import { toggleShowingEbookSettings } from '../state/ephemeral';
 import { setEbookHeaderHeight } from '../state/dimensions';
 
-const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation }) => {
+const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) => {
   const dispatch = useDispatch();
-  const { colorScheme } = useSelector((state) => {
-    return { colorScheme: state.preferences.ebookColorScheme };
+  const { colorScheme, title = `` } = useSelector((state) => {
+    return {
+      title:
+        // @ts-ignore
+        state.editions.resources[scene.route.params?.resourceId ?? '']?.documentTitle,
+      colorScheme: state.preferences.ebookColorScheme,
+    };
   });
   return (
     <View
       onLayout={(e) => dispatch(setEbookHeaderHeight(e.nativeEvent.layout.height))}
       style={tw.style(
         `bg-ebook-colorscheme-${colorScheme}-bg`,
-        `flex-row justify-between items-center`,
+        `flex-row justify-between items-center shadow-sm`,
         { paddingTop: insets.top + 5, paddingBottom: 5 },
       )}
     >
@@ -37,11 +42,11 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation }) => {
         </TouchableWithoutFeedback>
         <View style={tw.style(`items-center justify-center flex-shrink`)}>
           <Sans
-            style={tw`font-bold text-ebook-colorscheme-${colorScheme}-fg`}
+            style={tw`font-bold text-ebook-colorscheme-${colorScheme}-fg px-6`}
             size={15}
             numberOfLines={1}
           >
-            The Diary of Alexandar Jaffray
+            {title}
           </Sans>
         </View>
         <TouchableWithoutFeedback
