@@ -5,16 +5,15 @@ import { Lang } from '@friends-library/types';
 import { MAROON_HEX, GOLD_HEX } from '@friends-library/theme';
 import { BUILD_SEMVER_STRING, BUILD_NUM } from './build-constants';
 
-const LANG: Lang = process.argv[2] === `es` ? `es` : `en`;
 const ENV_DIR = __dirname;
 const APP_DIR = path.resolve(ENV_DIR, `..`);
 const ENV = `${ENV_DIR}/index.ts`;
+const IS_RELEASE = process.argv.includes(`--release`);
+const LANG: Lang = process.argv[2] === `es` ? `es` : `en`;
 const APP_NAME = LANG === `en` ? `Friends Library` : `Biblioteca de los Amigos`;
 const PRIMARY_COLOR_HEX = LANG === `en` ? MAROON_HEX : GOLD_HEX;
-
-const BUILD_TYPE: `release` | `beta` =
-  exec.exit(`git branch --show-current`).trim() === `master` ? `release` : `beta`;
-
+const GIT_BRANCH = exec.exit(`git branch --show-current`).trim();
+const INSTALL_TYPE = GIT_BRANCH === `master` ? `release` : IS_RELEASE ? `beta` : `dev`;
 const APP_IDENTIFIER = getAppIdentifier();
 
 function main(): void {
@@ -34,7 +33,10 @@ function main(): void {
     `ios/FriendsLibrary/LaunchScreen.storyboard`,
   );
 
-  copyDir(`ios/${LANG}/AppIcon.appiconset`, `ios/FriendsLibrary/Images.xcassets`);
+  copyDir(
+    `ios/${LANG}/${INSTALL_TYPE}/AppIcon.appiconset`,
+    `ios/FriendsLibrary/Images.xcassets`,
+  );
   copyDir(`ios/${LANG}/SplashIcon.imageset`, `ios/FriendsLibrary/Images.xcassets`);
 
   const resDirs = [
@@ -96,10 +98,13 @@ function copyFileWithEnv(src: string, dest: string): void {
 
 function getAppIdentifier(): string {
   const base = `com.friendslibrary.FriendsLibrary`;
-  return `${base}.${LANG}.${BUILD_TYPE}`;
+  if (INSTALL_TYPE === `beta` && LANG === `en`) {
+    return base; // match original bundle id for ios english test flight
+  }
+  return `${base}.${LANG}.${INSTALL_TYPE}`;
 }
 
-const ALLOW_INSECURE_LOCALHOST = process.argv.includes(`--release`)
+const ALLOW_INSECURE_LOCALHOST = IS_RELEASE
   ? `<!-- omit localhost http exception for release -->`
   : `<key>NSExceptionDomains</key>
        <dict>
