@@ -38,14 +38,6 @@ export default class Service {
     return FS.batchDelete(paths);
   }
 
-  public static fsSaveEditionResources(resources: EditionResource[]): Promise<void> {
-    return FS.writeFile(FS.paths.editionResources, JSON.stringify(resources));
-  }
-
-  public static fsSaveAudioResources(resources: AudioResource[]): Promise<void> {
-    return FS.writeFile(FS.paths.audioResources, JSON.stringify(resources));
-  }
-
   public static async fsDownloadFile(
     relPath: string,
     networkUrl: string,
@@ -82,7 +74,6 @@ export default class Service {
   public static async downloadLatestEbookCss(): Promise<void> {
     const destPath = keys.ebookCssFilepath();
     const tempPath = `${destPath}.temp.css`;
-    console.log({ destPath, tempPath });
     if (!(await FS.download(tempPath, Service.EBOOK_CSS_NETWORK_URL))) {
       return;
     }

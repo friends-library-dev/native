@@ -27,7 +27,5 @@ export const fetchEditions = (): Thunk => async (dispatch) => {
   const editions = await Service.networkFetchEditions();
   if (editions) {
     dispatch(replace(editions));
-    // setAllUndownloadedAudios(dispatch, editions);
-    Service.fsSaveEditionResources(editions);
   }
 };

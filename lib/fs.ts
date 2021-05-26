@@ -1,8 +1,7 @@
 import RNFS from 'react-native-fs';
+import { Platform } from 'react-native';
 
 const paths = {
-  audioResources: `audio/resources.json`,
-  editionResources: `editions/resources.json`,
   state: `data/state.json`,
 } as const;
 
@@ -155,11 +154,20 @@ class FileSystem {
     }
   }
 
-  public writeFile(
+  public async writeFile(
     path: string,
     contents: string,
     encoding: 'utf8' | 'ascii' | 'binary' | 'base64' = `utf8`,
   ): Promise<void> {
+    // android 10 doesn't truncate the file on re-write, causing JSON parse issues
+    // when the file is re-written with shorter content
+    // @see https://github.com/itinance/react-native-fs/issues/869
+    // @see https://issuetracker.google.com/issues/180526528?pli=1
+    // @see https://github.com/itinance/react-native-fs/pull/890
+    if (Platform.OS === `android` && this.manifest[path]) {
+      await this.delete(path);
+    }
+
     const writePromise = RNFS.writeFile(
       this.abspath(path),
       contents,
