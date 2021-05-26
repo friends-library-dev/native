@@ -8,6 +8,7 @@ export interface Window {
     postMessage: (event: string) => unknown;
   };
   setInterval(callback: () => unknown, delay: number): number;
+  dismissFootnote(): void;
   clearInterval(interval: number): void;
   setFontSize(fontSize: number): unknown;
   setHeaderHeight(headerHeight: number): unknown;

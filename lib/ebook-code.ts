@@ -50,6 +50,7 @@ function injectIntoWebView(
 
   const fnOverlay = document.getElementById(`fn-overlay`);
   const fnHolder = document.getElementById(`fn-content-inner`);
+  let beforeFootnoteShowScroll: number | null = null;
   let colorScheme = initialColorScheme;
   let showingHeader = initialShowingHeader;
   let fontSize = initialFontSize;
@@ -114,6 +115,17 @@ function injectIntoWebView(
     lastScroll = newScroll;
   }, SCROLL_INTERVAL_DELAY);
 
+  window.dismissFootnote = () => {
+    showingFootnote = false;
+    setHtmlClassList();
+    if (beforeFootnoteShowScroll !== null) {
+      window.scrollTo(0, beforeFootnoteShowScroll);
+      beforeFootnoteShowScroll = null;
+    }
+    if (fnHolder) fnHolder.innerHTML = ``;
+    sendMsg({ type: `set_footnote_visibility`, visible: false });
+  };
+
   document.querySelectorAll(`span.footnote`).forEach((node, index) => {
     let innerHtml = node.innerHTML;
     innerHtml = `
@@ -132,9 +144,7 @@ function injectIntoWebView(
       return !showingFootnote && sendMsg({ type: `toggle_header_visibility` });
     }
 
-    let beforeFootnoteShowScroll: number | null = null;
     const target = event.target as Element;
-
     if (target.matches(`.footnote-marker`)) {
       const fnContent = target.nextElementSibling;
       if (!fnContent) return;
@@ -142,20 +152,11 @@ function injectIntoWebView(
       fnHolder.innerHTML = fnContent.innerHTML;
       showingFootnote = true;
       setHtmlClassList();
-      sendMsg({ type: `set_footnote_visibility`, visible: true });
-      return;
+      return sendMsg({ type: `set_footnote_visibility`, visible: true });
     }
 
     if (target.matches(`.fn-close`)) {
-      showingFootnote = false;
-      setHtmlClassList();
-      if (beforeFootnoteShowScroll) {
-        window.scrollTo(0, beforeFootnoteShowScroll);
-        beforeFootnoteShowScroll = null;
-      }
-      fnHolder.innerHTML = ``;
-      sendMsg({ type: `set_footnote_visibility`, visible: false });
-      return;
+      return window.dismissFootnote();
     }
 
     return !showingFootnote && sendMsg({ type: `toggle_header_visibility` });
@@ -214,7 +215,8 @@ const devCss = css`
     padding: 1em;
   }
 
-  dd {
+  dd,
+  .discourse-part {
     text-align: left;
   }
 

@@ -11,14 +11,22 @@ import { setEbookHeaderHeight } from '../state/dimensions';
 
 const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) => {
   const dispatch = useDispatch();
-  const { colorScheme, title = `` } = useSelector((state) => {
+  const { colorScheme, title } = useSelector((state) => {
+    const params = scene.route.params as { resourceId?: string } | null;
+    const editionId = params?.resourceId ?? ``;
+    let title = state.editions.resources[editionId]?.documentTitle ?? ``;
+    // @TODO, move into API, causing `shouldStartLoading` errors, probably for time?
+    if (title.length > 35) {
+      title = title
+        .replace(/^(The|A) /, ``)
+        .replace(/^Selection from the (.*)/, `$1 (Selection)`);
+    }
     return {
-      title:
-        // @ts-ignore
-        state.editions.resources[scene.route.params?.resourceId ?? '']?.documentTitle,
+      title,
       colorScheme: state.preferences.ebookColorScheme,
     };
   });
+
   return (
     <View
       onLayout={(e) => dispatch(setEbookHeaderHeight(e.nativeEvent.layout.height))}

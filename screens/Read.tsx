@@ -49,6 +49,9 @@ export type Props =
 
 interface State {
   showingFootnote: boolean;
+  touchStartLocationX: number;
+  touchStartLocationY: number;
+  touchStartTimestamp: number;
 }
 
 class Read extends PureComponent<Props, State> {
@@ -57,6 +60,9 @@ class Read extends PureComponent<Props, State> {
 
   public state: State = {
     showingFootnote: false,
+    touchStartLocationX: -999,
+    touchStartLocationY: -999,
+    touchStartTimestamp: -999,
   };
 
   public constructor(props: Props) {
@@ -77,7 +83,9 @@ class Read extends PureComponent<Props, State> {
   }
 
   public componentWillUnmount(): void {
-    // this.injectJs(`try { window.unmount() } catch (err) {}; true;`);
+    if (this.props.state === `ready` && !this.props.showingHeader) {
+      this.dispatch(toggleShowingEbookHeader());
+    }
   }
 
   public componentDidUpdate(prev: Props): void {
@@ -131,8 +139,95 @@ class Read extends PureComponent<Props, State> {
     this.props.dispatch(toggleShowingEbookSettings());
   };
 
-  public onWebviewTouchCancel: (e: GestureResponderEvent) => void = () => {
-    if (!this.state.showingFootnote) {
+  public onWebViewTouchEnd: (e: GestureResponderEvent) => void = (e) => {
+    const { isRightSwipe } = this.analyzeGesture(e);
+    if (this.state.showingFootnote && isRightSwipe) {
+      this.injectJs(`window.dismissFootnote()`);
+    }
+  };
+
+  public onWebViewTouchStart: (e: GestureResponderEvent) => void = (e) => {
+    this.setState({
+      touchStartLocationX: e.nativeEvent.locationX,
+      touchStartLocationY: e.nativeEvent.locationY,
+      touchStartTimestamp: e.nativeEvent.timestamp,
+    });
+  };
+
+  public analyzeGesture(
+    gestureEvent: GestureResponderEvent,
+  ): {
+    isSwipe: boolean;
+    isHorizontalSwipe: boolean;
+    isVerticalSwipe: boolean;
+    isRightSwipe: boolean;
+    isLeftSwipe: boolean;
+    isBackSwipe: boolean;
+    isLong: boolean;
+  } {
+    const { locationX, locationY, timestamp } = gestureEvent.nativeEvent;
+    const {
+      touchStartLocationX: startX,
+      touchStartLocationY: startY,
+      touchStartTimestamp: startTimestamp,
+    } = this.state;
+
+    const gesture = {
+      isSwipe: false,
+      isHorizontalSwipe: false,
+      isVerticalSwipe: false,
+      isRightSwipe: false,
+      isLeftSwipe: false,
+      isBackSwipe: false,
+      isLong: false,
+    };
+
+    const SWIPE_THRESHOLD = 5;
+    const LONG_THRESHOLD_MS = 150;
+    const xDelta = locationX - startX;
+    const yDelta = locationY - startY;
+    const xAbsDelta = Math.abs(xDelta);
+    const yAbsDelta = Math.abs(yDelta);
+
+    if (timestamp - startTimestamp > LONG_THRESHOLD_MS) {
+      gesture.isLong = true;
+    }
+
+    if (xAbsDelta > SWIPE_THRESHOLD || yAbsDelta > SWIPE_THRESHOLD) {
+      gesture.isSwipe = true;
+    }
+
+    if (xAbsDelta / yAbsDelta > 4) {
+      gesture.isHorizontalSwipe = true;
+      const dir = xDelta > 0 ? `isRightSwipe` : `isLeftSwipe`;
+      gesture[dir] = true;
+    }
+
+    if (yAbsDelta / xAbsDelta > 4) {
+      gesture.isVerticalSwipe = true;
+    }
+
+    if (gesture.isRightSwipe && startX < 35) {
+      gesture.isHorizontalSwipe = true;
+      gesture.isRightSwipe = true;
+      gesture.isBackSwipe = true;
+    }
+
+    return gesture;
+  }
+
+  public onWebViewTouchCancel: (e: GestureResponderEvent) => void = (e) => {
+    const { showingFootnote } = this.state;
+    const { isBackSwipe, isRightSwipe, isSwipe, isLong } = this.analyzeGesture(e);
+    if (isBackSwipe) {
+      return;
+    }
+
+    if (showingFootnote && isRightSwipe) {
+      return this.injectJs(`window.dismissFootnote()`);
+    }
+
+    if (!showingFootnote && !isSwipe && !isLong) {
       this.dispatch(toggleShowingEbookHeader());
     }
   };
@@ -184,11 +279,11 @@ class Read extends PureComponent<Props, State> {
           showsVerticalScrollIndicator={false}
           ref={this.webViewRef}
           decelerationRate="normal"
+          onTouchStart={this.onWebViewTouchStart}
+          onTouchEnd={this.onWebViewTouchEnd}
           onMessage={this.handleWebViewMessage}
           source={{ html: this.htmlRef.current }}
-          onTouchCancel={this.onWebviewTouchCancel}
-          onRenderProcessGone={() => console.log(`onRenderProcessGone`)}
-          onContentProcessDidTerminate={() => console.log(`onContentProcessDidTerminate`)}
+          onTouchCancel={this.onWebViewTouchCancel}
         />
         <Popover
           mode={PopoverMode.JS_MODAL}
