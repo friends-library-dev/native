@@ -56,6 +56,7 @@ interface State {
 
 class Read extends PureComponent<Props, State> {
   private htmlRef: React.MutableRefObject<Html | null>;
+  private intervalRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
   private webViewRef: React.RefObject<WebView>;
 
   public state: State = {
@@ -69,6 +70,10 @@ class Read extends PureComponent<Props, State> {
     super(props);
     this.webViewRef = React.createRef();
     this.htmlRef = React.createRef();
+    this.intervalRef = React.createRef();
+    this.intervalRef.current = setInterval(() => {
+      this.injectJs(`window.requestPositionUpdateIfChanged()`);
+    }, 1000);
   }
 
   public dispatch(action: AnyAction): void {
@@ -79,10 +84,13 @@ class Read extends PureComponent<Props, State> {
   }
 
   public injectJs(js: string): void {
-    this.webViewRef.current?.injectJavaScript(js);
+    this.webViewRef.current?.injectJavaScript(`${js}; true;`);
   }
 
   public componentWillUnmount(): void {
+    if (this.intervalRef.current) {
+      clearInterval(this.intervalRef.current);
+    }
     if (this.props.state === `ready` && !this.props.showingHeader) {
       this.dispatch(toggleShowingEbookHeader());
     }

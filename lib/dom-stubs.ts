@@ -3,17 +3,15 @@ import { EbookColorScheme } from '../types';
 export interface Window {
   scrollY: number;
   scrollTo(x: number, y: number): unknown;
-  initialPosition: number;
-  ReactNativeWebView: {
-    postMessage: (event: string) => unknown;
-  };
-  setInterval(callback: () => unknown, delay: number): number;
   dismissFootnote(): void;
-  clearInterval(interval: number): void;
   setFontSize(fontSize: number): unknown;
   setHeaderHeight(headerHeight: number): unknown;
   setShowingHeader(showingHeader: boolean): unknown;
+  requestPositionUpdateIfChanged(): void;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
+  ReactNativeWebView: {
+    postMessage(event: string): unknown;
+  };
   htmlClassList(
     colorScheme: EbookColorScheme,
     showingHeader: boolean,
