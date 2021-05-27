@@ -32,7 +32,7 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
       }
     >
       <BookListItem
-        artworkId={item.artworkId}
+        resourceId={item.resourceId}
         title={item.title}
         friend={item.nameDisplay}
         duration={item.duration}

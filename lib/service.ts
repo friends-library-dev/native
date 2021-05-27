@@ -144,7 +144,8 @@ function editionResourcesValid(resources: any): resources is EditionResource[] {
     Array.isArray(resources) &&
     resources.every((r) => {
       return (
-        typeof r.squareCoverImageUrl === `string` &&
+        Array.isArray(r.images) &&
+        r.images.every((image: any) => typeof image?.url === `string`) &&
         Array.isArray(r.chapters) &&
         r.chapters.every((ch: any) => typeof ch?.shortTitle === `string`)
       );

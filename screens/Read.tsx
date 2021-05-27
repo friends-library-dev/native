@@ -1,5 +1,5 @@
 import React, { PureComponent, useEffect, useState } from 'react';
-import { View, StatusBar, GestureResponderEvent } from 'react-native';
+import { View, StatusBar, GestureResponderEvent, Platform } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -280,7 +280,11 @@ class Read extends PureComponent<Props, State> {
         <PrefersHomeIndicatorAutoHidden />
         <StatusBar
           hidden={!showingHeader}
-          barStyle={colorScheme === `black` ? `light-content` : `dark-content`}
+          barStyle={
+            Platform.OS === `ios` && colorScheme === `black`
+              ? `light-content`
+              : `dark-content`
+          }
         />
         <WebView
           style={tw`bg-transparent`}

@@ -1,33 +1,46 @@
 import RNFS from 'react-native-fs';
 import { Platform } from 'react-native';
+import { ValuesOf } from 'x-ts-utils';
 
-const paths = {
-  state: `data/state.json`,
-} as const;
-
-type FsPath = typeof paths[keyof typeof paths];
-
-class FileSystem {
-  public paths = paths;
+export class FileSystem {
   public manifest: Record<string, number> = {};
   private downloads: Record<string, Promise<number | null>> = {};
 
+  public static readonly paths = {
+    state: `data/state.json`,
+  } as const;
+
+  public static readonly dirs = {
+    images: `images`,
+    audio: `audio`,
+    editions: `editions`,
+    data: `data`,
+  } as const;
+
   public async init(): Promise<void> {
+    const BACKUP_EXCLUDE = { NSURLIsExcludedFromBackupKey: true };
+
     await Promise.all([
       RNFS.mkdir(this.abspath()),
-      RNFS.mkdir(this.abspath(`artwork/`), { NSURLIsExcludedFromBackupKey: true }),
-      RNFS.mkdir(this.abspath(`audio/`), { NSURLIsExcludedFromBackupKey: true }),
-      RNFS.mkdir(this.abspath(`editions/`), { NSURLIsExcludedFromBackupKey: true }),
-      RNFS.mkdir(this.abspath(`data/`)),
+      RNFS.mkdir(this.abspath(`${FileSystem.dirs.images}/`), BACKUP_EXCLUDE),
+      RNFS.mkdir(this.abspath(`${FileSystem.dirs.audio}/`), BACKUP_EXCLUDE),
+      RNFS.mkdir(this.abspath(`${FileSystem.dirs.editions}/`), BACKUP_EXCLUDE),
+      RNFS.mkdir(this.abspath(`${FileSystem.dirs.data}/`)),
     ]);
 
-    for (const dir of [`artwork`, `audio`, `data`, `editions`]) {
+    for (const dir of Object.values(FileSystem.dirs)) {
       const files = await RNFS.readDir(this.abspath(`${dir}/`));
       files
         .filter((f) => f.isFile())
         .forEach((f) => {
           this.manifest[`${dir}/${basename(f.path)}`] = Number(f.size);
         });
+    }
+
+    if (!this.hasFile(V1_MIGRATED_FLAG_FILE)) {
+      await this.removeLegacyV1Artwork();
+    } else {
+      console.log(`already migrated v1 artwork`);
     }
   }
 
@@ -162,8 +175,8 @@ class FileSystem {
     // android 10 doesn't truncate the file on re-write, causing JSON parse issues
     // when the file is re-written with shorter content
     // @see https://github.com/itinance/react-native-fs/issues/869
-    // @see https://issuetracker.google.com/issues/180526528?pli=1
     // @see https://github.com/itinance/react-native-fs/pull/890
+    // @see https://issuetracker.google.com/issues/180526528?pli=1
     if (Platform.OS === `android` && this.manifest[path]) {
       await this.delete(path);
     }
@@ -177,7 +190,7 @@ class FileSystem {
     return writePromise;
   }
 
-  public async readJson(path: FsPath): Promise<any> {
+  public async readJson(path: ValuesOf<typeof FileSystem.paths>): Promise<any> {
     const json = await this.readFile(path);
     if (json === null) {
       return null;
@@ -204,6 +217,20 @@ class FileSystem {
       path ? `/${path.replace(/^\//, ``)}` : ``
     }`;
   }
+
+  public async removeLegacyV1Artwork() {
+    if (await RNFS.exists(this.abspath(`artwork/`))) {
+      console.log(`migrating v1 artwork by deleting all the things`);
+      const legacyArtworkFiles = await RNFS.readDir(this.abspath(`artwork/`));
+      legacyArtworkFiles
+        .filter((file) => file.isFile())
+        .forEach((file) => RNFS.unlink(file.path));
+    } else {
+      console.log(`no v1 artwork to migrate`);
+    }
+    console.log(`add migrated flag file`);
+    await this.writeFile(V1_MIGRATED_FLAG_FILE, `true`);
+  }
 }
 
 export default new FileSystem();
@@ -211,3 +238,5 @@ export default new FileSystem();
 function basename(path: string): string {
   return path.split(`/`).pop() || ``;
 }
+
+const V1_MIGRATED_FLAG_FILE = `data/v1-artwork-migrated.txt`;

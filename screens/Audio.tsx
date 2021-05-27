@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ScrollView, Dimensions, View, Alert } from 'react-native';
+import { ScrollView, Dimensions, View, Alert, PixelRatio } from 'react-native';
 import { AudioResource, StackParamList } from '../types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -77,8 +77,8 @@ export const AudioScreen: React.FC<Props> = ({
   return (
     <ScrollView>
       <Artwork
-        id={audio.id}
-        size={ARTWORK_WIDTH}
+        resourceId={audio.id}
+        layoutSize={ARTWORK_WIDTH}
         style={{
           marginTop: `8%`,
           alignSelf: `center`,

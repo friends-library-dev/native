@@ -44,7 +44,6 @@ export interface BookListItem {
   progress: number;
   duration: string;
   nameDisplay: string;
-  artworkId: string;
   title: string;
   name: string;
 }

@@ -8,7 +8,7 @@ import Artwork from './Artwork';
 import { LANG } from '../env';
 
 interface Props {
-  artworkId: string;
+  resourceId: string;
   title: string;
   friend: string;
   progress: number;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const BookListItem: React.FC<Props> = ({
-  artworkId,
+  resourceId,
   title,
   friend,
   progress,
@@ -27,7 +27,7 @@ const BookListItem: React.FC<Props> = ({
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <Artwork id={artworkId} size={90} />
+        <Artwork resourceId={resourceId} layoutSize={90} />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>

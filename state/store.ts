@@ -4,7 +4,7 @@ import SplashScreen from 'react-native-splash-screen';
 import throttle from 'lodash.throttle';
 import merge from 'lodash.merge';
 import rootReducer from './root-reducer';
-import FS from '../lib/fs';
+import FS, { FileSystem } from '../lib/fs';
 import Player from '../lib/player';
 import { INITIAL_STATE, State } from './';
 import { batchSet as batchSetFilesystem } from './filesystem';
@@ -15,8 +15,8 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   await FS.init();
 
   let savedState: Partial<State> = {};
-  if (FS.hasFile(FS.paths.state)) {
-    savedState = await FS.readJson(FS.paths.state);
+  if (FS.hasFile(FileSystem.paths.state)) {
+    savedState = await FS.readJson(FileSystem.paths.state);
     savedState = migrate(savedState);
   }
 
@@ -48,6 +48,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
             },
           },
           editions: state.editions,
+          dimensions: state.dimensions,
           preferences: {
             ...state.preferences,
             audioSearchQuery: ``,
@@ -56,7 +57,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
           ephemeral: INITIAL_STATE.ephemeral,
           filesystem: {},
         };
-        FS.writeFile(FS.paths.state, JSON.stringify(saveState));
+        FS.writeFile(FileSystem.paths.state, JSON.stringify(saveState));
       },
       5000,
       { leading: false, trailing: true },

@@ -6,6 +6,8 @@ import * as keys from '../../lib/keys';
 import { TrackData, AudioResource, AudioPart } from '../../types';
 import { FileState } from '../filesystem';
 import { backgroundPartTitle } from '../../lib/utils';
+import { AudioPartEntity } from '../../lib/models';
+import { squareCoverImage } from './filesystem-selectors';
 
 export function isAudioPartPlaying(
   audioId: string,
@@ -96,7 +98,7 @@ export function audioPartFile(
   state: State,
 ): FileState {
   const quality = state.preferences.audioQuality;
-  const audioPath = keys.audioFilepath(audioId, partIndex, quality);
+  const audioEntity = new AudioPartEntity(audioId, partIndex, quality);
   const audio = state.audio.resources[audioId];
   let fallbackSize = 10000;
   if (audio && audio.parts[partIndex]) {
@@ -104,42 +106,11 @@ export function audioPartFile(
       audio.parts[partIndex]?.[quality === `HQ` ? `size` : `sizeLq`] ?? fallbackSize;
   }
   return (
-    state.filesystem[audioPath] || {
+    state.filesystem[audioEntity.fsPath] || {
       totalBytes: fallbackSize,
       bytesOnDisk: 0,
     }
   );
-}
-
-export function artwork(
-  resourceId: string,
-  {
-    filesystem,
-    audio: { resources: audioResources },
-    editions: { resources: editionResources },
-  }: State,
-): {
-  path: string;
-  uri: string;
-  networkUrl: string;
-  downloaded: boolean;
-} | null {
-  const path = keys.artworkFilepath(resourceId);
-  const audio = audioResources[resourceId];
-  let networkUrl: string | null = null;
-  if (audio) {
-    networkUrl = audio.artwork;
-  } else if (editionResources[resourceId]) {
-    networkUrl = editionResources[resourceId]?.squareCoverImageUrl ?? null;
-  }
-  if (!networkUrl) return null;
-  let uri = networkUrl;
-  let downloaded = false;
-  if (path in filesystem) {
-    uri = `file://${FS.abspath(path)}`;
-    downloaded = true;
-  }
-  return { path, uri, networkUrl, downloaded };
 }
 
 export function trackQueue(audioId: string, state: State): null | TrackData[] {
@@ -160,10 +131,10 @@ export function trackData(
     audio: { resources },
     preferences: prefs,
   } = state;
-  const audioPath = keys.audioFilepath(audioId, partIndex, prefs.audioQuality);
+  const audioPath = new AudioPartEntity(audioId, partIndex, prefs.audioQuality).fsPath;
   const audio = resources[audioId];
-  const artworkData = artwork(audioId, state);
-  if (!audio || !artworkData) return null;
+  const image = squareCoverImage(audioId, Infinity, state);
+  if (!audio || !image) return null;
   const part = audio.parts[partIndex];
   if (!part) return null;
   const title = utf8ShortTitle(audio.title);
@@ -173,7 +144,7 @@ export function trackData(
     title: backgroundPartTitle(part.title, title),
     artist: audio.friend.startsWith(`Compila`) ? title : audio.friend,
     album: audio.friend.startsWith(`Compila`) ? `Friends Library` : audio.friend,
-    artworkUrl: artworkData.uri,
+    artworkUrl: image.uri,
     duration: part.duration,
   };
 }

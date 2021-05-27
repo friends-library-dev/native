@@ -1,31 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Image, ViewStyle } from 'react-native';
 import { useSelector, useDispatch } from '../state';
 import { downloadFile } from '../state/filesystem';
-import * as select from '../state/selectors/audio-selectors';
+import * as select from '../state/selectors/filesystem-selectors';
 
 interface Props {
-  id: string;
-  size: number;
+  resourceId: string;
+  layoutSize: number;
   style?: ViewStyle;
 }
 
-const Artwork: React.FC<Props> = ({ id, size, style = {} }) => {
+const Artwork: React.FC<Props> = ({ resourceId, layoutSize, style = {} }) => {
+  const uri = useRef<string>();
   const dispatch = useDispatch();
-  const artwork = useSelector((state) => select.artwork(id, state));
+  const image = useSelector((state) =>
+    select.squareCoverImage(resourceId, layoutSize, state),
+  );
 
   useEffect(() => {
-    if (artwork && !artwork.downloaded) {
-      dispatch(downloadFile(artwork.path, artwork.networkUrl));
+    if (image && !image.downloaded) {
+      dispatch(downloadFile(image.entity.fsPath, image.networkUrl));
     }
-    // select.artwork always returns a new object, so we can't include it as a dep
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl]);
 
-  if (!artwork) return null;
+  const dims = { width: layoutSize, height: layoutSize };
+  if (!image) {
+    return <View style={{ ...dims, ...style }} />;
+  }
+
+  // prevent flicker of image resulting from loading it first
+  // with network url, then re-rendering with downloaded uri
+  if (!uri.current) {
+    uri.current = image.uri;
+  }
 
   return (
-    <View style={{ width: size, height: size, ...style }}>
-      <Image source={{ uri: artwork.uri, width: size, height: size }} />
+    <View style={{ ...dims, ...style }}>
+      <Image source={{ uri: uri.current, ...dims }} />
     </View>
   );
 };

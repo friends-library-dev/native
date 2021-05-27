@@ -24,14 +24,14 @@ storiesOf(EbookLoading.name, module)
 storiesOf(BookListItem.name, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
     <BookListItem
-      artworkId="webb"
+      resourceId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={0}
       duration="41 min"
     />
     <BookListItem
-      artworkId="webb"
+      resourceId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={33}
@@ -39,21 +39,21 @@ storiesOf(BookListItem.name, module).add(`default`, () => (
       isNew
     />
     <BookListItem
-      artworkId="webb"
+      resourceId="webb"
       title="A Letter of Elizabeth Webb"
       friend="Elizabeth Webb"
       progress={98}
       duration="41 min"
     />
     <BookListItem
-      artworkId="penington"
+      resourceId="penington"
       title="The Writings of Isaac Penington — Vol. I"
       friend="Isaac Penington"
       progress={0}
       duration="12 hr 13 min"
     />
     <BookListItem
-      artworkId="penington"
+      resourceId="penington"
       title="The Writings of Isaac Penington — Vol. I"
       friend="Isaac Penington"
       progress={0}
