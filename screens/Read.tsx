@@ -72,7 +72,9 @@ class Read extends PureComponent<Props, State> {
     this.htmlRef = React.createRef();
     this.intervalRef = React.createRef();
     this.intervalRef.current = setInterval(() => {
-      this.injectJs(`window.requestPositionUpdateIfChanged()`);
+      this.injectJs(
+        `window.requestPositionUpdateIfChanged && window.requestPositionUpdateIfChanged()`,
+      );
     }, 1000);
   }
 
