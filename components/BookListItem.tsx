@@ -69,7 +69,7 @@ const BookListItem: React.FC<Props> = ({
   );
 };
 
-export default BookListItem;
+export default React.memo(BookListItem);
 
 const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
   <View style={tw.style(`absolute bottom-0 rounded-full m-2`, { width: 75, height: 4 })}>

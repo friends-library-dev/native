@@ -42,6 +42,8 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
+  // if you're trying to optimize the perf of this list
+  // check out ideas here: https://github.com/necolas/react-native-web/issues/1337#issuecomment-720675528
   return (
     <FlatList
       contentOffset={{ x: 0, y: headerHeight }}
