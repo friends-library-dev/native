@@ -17,10 +17,10 @@ import { Html } from '@friends-library/types';
 import Popover, { PopoverMode } from 'react-native-popover-view';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
+import { AnyAction } from 'redux';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
-import { AnyAction } from 'redux';
 
 export type Props =
   | {
@@ -35,6 +35,7 @@ export type Props =
   | {
       state: `ready`;
       position: number;
+      chapterId?: string;
       editionId: string;
       html: string;
       css: string;
@@ -262,6 +263,7 @@ class Read extends PureComponent<Props, State> {
       colorScheme,
       fontSize,
       position,
+      chapterId,
       safeAreaVerticalOffset,
     } = this.props;
 
@@ -272,6 +274,7 @@ class Read extends PureComponent<Props, State> {
         colorScheme,
         fontSize,
         position,
+        chapterId,
         showingHeader,
         headerHeight,
         safeAreaVerticalOffset,
@@ -415,6 +418,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
       headerHeight={props!.headerHeight}
       dispatch={dispatch}
       safeAreaVerticalOffset={insets.top}
+      chapterId={ownProps.route.params.chapterId}
     />
   );
 };

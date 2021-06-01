@@ -6,10 +6,11 @@ import { isNew, sortable } from './audio-booklist';
 export default function selectAudioBooklist({
   preferences,
   editions,
+  dimensions,
 }: State): { headerHeight: number; resources: BookListItem[] } {
   const query = preferences.editionSearchQuery.toLowerCase();
   const sort = preferences.sortEditionsBy;
-  const headerHeight = preferences.editionSortHeaderHeight;
+  const headerHeight = dimensions.editionSortHeaderHeight;
 
   const resources: BookListItem[] = Object.values(editions.resources)
     .filter((edition: EditionResource | undefined) => {
@@ -54,7 +55,7 @@ export default function selectAudioBooklist({
         resourceId: edition!.id,
         artworkId: edition!.id,
         title: edition!.documentTitle,
-        navigateTo: `Read` as const,
+        navigateTo: `Ebook` as const,
         duration: `${edition!.numTotalPaperbackPages} pages`,
         progress: 0, // TODO
         isNew: isNew(edition!.publishedDate, 0), // TODO `0`

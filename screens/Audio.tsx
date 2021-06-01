@@ -7,7 +7,8 @@ import { t } from '@friends-library/locale';
 import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import { Serif, Sans } from '../components/Text';
 import IconButton from '../components/IconButton';
-import Artwork from '../components/Artwork';
+import { ByLine, JustifiedDescription, MainTitle } from '../components/BookParts';
+import CoverImage from '../components/CoverImage';
 import {
   AudioControls,
   Props as AudioControlsProps,
@@ -76,9 +77,10 @@ export const AudioScreen: React.FC<Props> = ({
 
   return (
     <ScrollView>
-      <Artwork
+      <CoverImage
         resourceId={audio.id}
-        layoutSize={ARTWORK_WIDTH}
+        layoutWidth={ARTWORK_WIDTH}
+        type="square"
         style={{
           marginTop: `8%`,
           alignSelf: `center`,
@@ -101,14 +103,8 @@ export const AudioScreen: React.FC<Props> = ({
           </View>
         )}
       </View>
-      <Serif size={30} style={tw`text-center py-4 px-8`}>
-        {utf8ShortTitle(audio.title)}
-      </Serif>
-      {!audio.title.includes(audio.friend) && !audio.friend.startsWith(`Compila`) && (
-        <Serif size={22} style={tw`text-center italic text-v1-gray-700 mb-6 -mt-2`}>
-          {t`by`} {audio.friend}
-        </Serif>
-      )}
+      <MainTitle title={audio.title} />
+      <ByLine title={audio.title} friend={audio.friend} />
       {showDownloadAll && (
         <IconButton
           onPress={downloadAllParts}
@@ -126,14 +122,7 @@ export const AudioScreen: React.FC<Props> = ({
           <Sans style={tw`text-center text-v1-gray-700 py-3`}>{duration}</Sans>
         </View>
       )}
-      <Serif
-        style={tw.style(`px-6 pt-2 pb-4 text-justify text-v1-gray-800`, {
-          lineHeight: 26,
-        })}
-        size={18}
-      >
-        {audio.shortDescription}
-      </Serif>
+      <JustifiedDescription description={audio.shortDescription} />
       {isMultipart && (
         <View style={tw`mb-16`}>
           {downloadablePartProps.map((props, idx) => (

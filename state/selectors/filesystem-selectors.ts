@@ -1,25 +1,33 @@
 import { State } from '../';
-import { CoverImageEntity } from '../../lib/models';
+import { SquareCoverImageEntity, FsPath, ThreeDCoverImageEntity } from '../../lib/models';
 import FS from '../../lib/fs';
 
-export function squareCoverImage(
+export function coverImage(
+  type: 'square' | 'threeD',
   resourceId: string,
   layoutSize: number,
   state: State,
 ): {
-  entity: CoverImageEntity;
+  entity: FsPath;
   uri: string;
   networkUrl: string;
   downloaded: boolean;
 } | null {
   const resource = state.editions.resources[resourceId];
   if (!resource) {
-    console.log(`here? ${resourceId}`);
     return null;
   }
 
-  const entity = CoverImageEntity.fromLayoutSize(resourceId, layoutSize);
-  const networkUrl = resource.images.find((i) => i.size === entity.size)?.url;
+  const entity =
+    type === `square`
+      ? SquareCoverImageEntity.fromLayoutWidth(resourceId, layoutSize)
+      : ThreeDCoverImageEntity.fromLayoutWidth(resourceId, layoutSize);
+
+  const networkUrl =
+    type === `square`
+      ? resource.images.square.find((i) => i.size === entity.size)?.url
+      : resource.images.threeD.find((i) => i.width === entity.size)?.url;
+
   if (!networkUrl) {
     return null;
   }

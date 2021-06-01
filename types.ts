@@ -30,7 +30,8 @@ export interface EbookData {
 
 export type StackParamList = {
   Home: undefined;
-  Read: { resourceId: string };
+  Read: { resourceId: string; chapterId?: string };
+  Ebook: { resourceId: string };
   Listen: { resourceId: string };
   Settings: undefined;
   AudioBookList: { resourceType: 'audio' };

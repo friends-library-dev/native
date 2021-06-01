@@ -26,22 +26,19 @@ export interface ClassList {
   value: string;
 }
 
-export interface Node {
-  innerHTML: string;
-  classList: ClassList;
-  style: Record<string, string | number>;
-}
-
 export interface Element {
   innerHTML: string;
   nextElementSibling?: Element;
+  classList: ClassList;
   matches(selector: string): boolean;
+  getBoundingClientRect(): { top: number };
+  style: Record<string, string | number>;
 }
 
 export interface Document {
   body: { classList: ClassList };
   documentElement: { scrollHeight: number; classList: ClassList };
-  getElementById(id: string): Node | null;
+  getElementById(id: string): Element | null;
   addEventListener(event: string, handler: (event: any) => unknown): unknown;
-  querySelectorAll(selector: string): Node[];
+  querySelectorAll(selector: string): Element[];
 }

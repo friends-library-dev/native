@@ -28,14 +28,29 @@ function injectIntoWebView(
   window: Window,
   document: Document,
   position: number,
+  chapterId: string | undefined,
   initialFontSize: number,
   initialColorScheme: EbookColorScheme,
   initialShowingHeader: boolean,
   initialHeaderHeight: number,
   safeAreaVerticalOffset: number,
 ): void {
-  if (position > 0) {
-    window.scrollTo(0, position * document.documentElement.scrollHeight);
+  function scrollPercent(pixelOffsetY: number): number {
+    return pixelOffsetY / document.documentElement.scrollHeight;
+  }
+
+  function scrollPixelOffsetY(percent: number): number {
+    return percent * document.documentElement.scrollHeight;
+  }
+
+  let chapter: Element | null = null;
+  if (chapterId && (chapter = document.getElementById(chapterId))) {
+    const rect = chapter.getBoundingClientRect();
+    const chapterOffset = rect.top + 75;
+    window.scrollTo(0, chapterOffset);
+    sendMsg({ type: `update_position`, position: scrollPercent(chapterOffset) });
+  } else if (position > 0) {
+    window.scrollTo(0, scrollPixelOffsetY(position));
   }
 
   const fnOverlay = document.getElementById(`fn-overlay`);
@@ -83,9 +98,9 @@ function injectIntoWebView(
 
   window.setFontSize = (newFontSize) => {
     fontSize = newFontSize;
-    const before = window.scrollY / document.documentElement.scrollHeight;
+    const before = scrollPercent(window.scrollY);
     setHtmlClassList();
-    window.scrollTo(0, before * document.documentElement.scrollHeight);
+    window.scrollTo(0, scrollPixelOffsetY(before));
   };
 
   window.setColorScheme = (newColorScheme) => {
@@ -96,8 +111,7 @@ function injectIntoWebView(
   window.requestPositionUpdateIfChanged = () => {
     const newScroll = window.scrollY;
     if (newScroll !== lastScroll) {
-      const position = newScroll / document.documentElement.scrollHeight;
-      sendMsg({ type: `update_position`, position });
+      sendMsg({ type: `update_position`, position: scrollPercent(newScroll) });
     }
     lastScroll = newScroll;
   };
@@ -168,6 +182,7 @@ export function wrapHtml(
   colorScheme: EbookColorScheme,
   fontSize: number,
   position: number,
+  chapterId: string | undefined,
   showingHeader: boolean,
   headerHeight: number,
   safeAreaVerticalOffset: number,
@@ -196,6 +211,7 @@ export function wrapHtml(
           window,
           document,
           ${position},
+          ${chapterId ? `"${chapterId}"` : `undefined`},
           ${fontSize},
           "${colorScheme}",
           ${showingHeader},

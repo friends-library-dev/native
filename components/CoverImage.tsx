@@ -6,15 +6,18 @@ import * as select from '../state/selectors/filesystem-selectors';
 
 interface Props {
   resourceId: string;
-  layoutSize: number;
+  layoutWidth: number;
+  type: 'square' | 'threeD';
   style?: ViewStyle;
 }
 
-const Artwork: React.FC<Props> = ({ resourceId, layoutSize, style = {} }) => {
+const THREE_D_RATIO = 564 / 824;
+
+const CoverImage: React.FC<Props> = ({ resourceId, layoutWidth, style = {}, type }) => {
   const uri = useRef<string>();
   const dispatch = useDispatch();
   const image = useSelector((state) =>
-    select.squareCoverImage(resourceId, layoutSize, state),
+    select.coverImage(type, resourceId, layoutWidth, state),
   );
 
   useEffect(() => {
@@ -23,7 +26,11 @@ const Artwork: React.FC<Props> = ({ resourceId, layoutSize, style = {} }) => {
     }
   }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl]);
 
-  const dims = { width: layoutSize, height: layoutSize };
+  const dims = {
+    width: layoutWidth,
+    height: layoutWidth / (type === `square` ? 1 : THREE_D_RATIO),
+  };
+
   if (!image) {
     return <View style={{ ...dims, ...style }} />;
   }
@@ -41,4 +48,4 @@ const Artwork: React.FC<Props> = ({ resourceId, layoutSize, style = {} }) => {
   );
 };
 
-export default Artwork;
+export default CoverImage;

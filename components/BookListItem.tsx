@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
-import Artwork from './Artwork';
+import CoverImage from './CoverImage';
 import { LANG } from '../env';
 
 interface Props {
@@ -27,7 +27,12 @@ const BookListItem: React.FC<Props> = ({
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <Artwork resourceId={resourceId} layoutSize={90} />
+        <CoverImage
+          resourceId={resourceId}
+          layoutWidth={90}
+          type="square"
+          aspectRatio={1}
+        />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>
@@ -52,7 +57,7 @@ const BookListItem: React.FC<Props> = ({
         {isNew && (
           <View
             style={tw.style(
-              LANG === `es` ? `w-12` : `w-10`,
+              LANG === `es` ? `w-12` : `w-24`,
               `mt-px mb-0 h-4 rounded-full bg-v1-green-500 text-center items-center justify-center`,
             )}
           >
@@ -60,7 +65,8 @@ const BookListItem: React.FC<Props> = ({
               style={tw`uppercase text-white text-center font-bold android:-mt-px`}
               size={9.5}
             >
-              {LANG === `es` ? `Nuevo` : `New`}
+              Recommended
+              {/* {LANG === `es` ? `Nuevo` : `New`} */}
             </Sans>
           </View>
         )}

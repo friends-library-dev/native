@@ -8,6 +8,7 @@ import { StackParamList } from '../types';
 import Home from '../screens/Home';
 import BookList from '../screens/BookList';
 import Audio from '../screens/Audio';
+import Ebook from '../screens/Ebook';
 import Settings from '../screens/Settings';
 import Read from '../screens/Read';
 import { useDispatch, useSelector, State } from '../state';
@@ -70,7 +71,6 @@ const App: React.FC = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {/* <Stack.Navigator headerMode="screen" initialRouteName="Read"> */}
         <Stack.Navigator headerMode="screen" initialRouteName="Home">
           <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
           <Stack.Screen
@@ -87,10 +87,6 @@ const App: React.FC = () => {
               headerShown: showingEbookHeader,
             }}
             component={Read}
-            // temp
-            // initialParams={{
-            //   resourceId: `08b94a0b-b96f-4525-bd46-79b0d60c4302--modernized`,
-            // }}
           />
           <Stack.Screen
             name="AudioBookList"
@@ -99,6 +95,7 @@ const App: React.FC = () => {
             initialParams={{ resourceType: `audio` }}
           />
           <Stack.Screen name="Listen" options={{ title: t`Listen` }} component={Audio} />
+          <Stack.Screen name="Ebook" options={{ title: `Read` }} component={Ebook} />
           <Stack.Screen
             name="Settings"
             options={{ title: t`Settings` }}

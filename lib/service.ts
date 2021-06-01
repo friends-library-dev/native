@@ -144,10 +144,10 @@ function editionResourcesValid(resources: any): resources is EditionResource[] {
     Array.isArray(resources) &&
     resources.every((r) => {
       return (
-        Array.isArray(r.images) &&
-        r.images.every((image: any) => typeof image?.url === `string`) &&
+        Array.isArray(r.images.square) &&
+        r.images.square.every((image: any) => typeof image?.url === `string`) &&
         Array.isArray(r.chapters) &&
-        r.chapters.every((ch: any) => typeof ch?.shortTitle === `string`)
+        r.chapters.every((ch: any) => typeof ch?.title === `string`)
       );
     })
   );

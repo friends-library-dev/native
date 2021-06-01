@@ -8,6 +8,7 @@ import { StackHeaderProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from '../state';
 import { toggleShowingEbookSettings } from '../state/ephemeral';
 import { setEbookHeaderHeight } from '../state/dimensions';
+import { utf8ShortTitle } from '@friends-library/adoc-utils';
 
 const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
     const params = scene.route.params as { resourceId?: string } | null;
     const editionId = params?.resourceId ?? ``;
     let title = state.editions.resources[editionId]?.documentTitle ?? ``;
+    title = utf8ShortTitle(title);
     // @TODO, move into API, causing `shouldStartLoading` errors, probably for time?
     if (title.length > 35) {
       title = title

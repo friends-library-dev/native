@@ -58,11 +58,11 @@ export default css`
   }
 
   .chapter-1 {
-    margin-top: 6rem;
+    padding-top: 6rem;
   }
 
   .chapter + .chapter {
-    margin-top: 25vh;
+    padding-top: 25vh;
   }
 
   .footnote,
