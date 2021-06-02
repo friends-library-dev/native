@@ -167,5 +167,6 @@ export function progress(audioId: string, state: State): number {
     }
   });
 
+  console.log({ listened, total, audioId });
   return Math.floor((listened / total) * 100);
 }

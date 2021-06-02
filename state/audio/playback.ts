@@ -167,6 +167,7 @@ export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
 
   const nextIndex = part.index + 1;
   if (nextIndex === audio.parts.length) {
+    console.log(`in here?`);
     // we just finished the last track, clear the 'last playing' state
     dispatch(setLastAudiobookEditionId(undefined));
     // pause, for good measure, don't leave a weird state

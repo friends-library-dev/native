@@ -9,6 +9,8 @@ export type ResourceType = 'audio' | 'edition';
 
 export type EbookColorScheme = 'white' | 'black' | 'sepia';
 
+export type EditionId = string;
+
 export interface AudioPart {
   audioId: string;
   index: number;

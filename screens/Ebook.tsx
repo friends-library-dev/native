@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Dimensions, ScrollView, Linking } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -128,6 +128,14 @@ export const Ebook: React.FC<Props> = ({
               />
             </TouchableOpacity>
           ))}
+          <TouchableOpacity
+            style={tw`pt-1 pb-6 px-4`}
+            onPress={() => Linking.openURL(`https://www.friendslibrary.com/editions`)}
+          >
+            <Sans style={tw`text-right text-flblue`}>
+              Learn more about editions <Icon name="external-link" size={10} />
+            </Sans>
+          </TouchableOpacity>
         </View>
       )}
     </ScrollView>

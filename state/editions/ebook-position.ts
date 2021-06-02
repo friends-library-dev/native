@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as keys from '../../lib/keys';
+import { EditionId } from '../../types';
 
-export type EbookPositionState = Record<string, number | undefined>;
+export type EbookPositionState = Record<EditionId, number | undefined>;
 
 export const initialState: EbookPositionState = {};
 
@@ -11,7 +11,7 @@ const ebookPosition = createSlice({
   reducers: {
     setEbookPosition: (
       state,
-      action: PayloadAction<{ editionId: string; position: number }>,
+      action: PayloadAction<{ editionId: EditionId; position: number }>,
     ) => {
       const { editionId, position } = action.payload;
       state[editionId] = position;
