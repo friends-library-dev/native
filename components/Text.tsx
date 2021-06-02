@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, Platform, TextStyle } from 'react-native';
+import tw from '../lib/tailwind';
 
 interface TextProps {
   size?: number;
@@ -47,4 +48,32 @@ export const Sans: React.FC<TextProps> = ({
   >
     {children}
   </Text>
+);
+
+interface ProseProps {
+  size?: number;
+  tailwindClasses?: string;
+  variant?: 'italic' | 'bold';
+}
+
+export const Prose: React.FC<ProseProps> = ({
+  children,
+  variant,
+  size = 20,
+  tailwindClasses,
+}) => (
+  <Serif
+    size={size}
+    style={tw.style(
+      tailwindClasses,
+      `text-gray-700`,
+      {
+        italic: variant === `italic`,
+        'font-bold': variant === `bold`,
+      },
+      { lineHeight: size * 1.5 },
+    )}
+  >
+    {children}
+  </Serif>
 );
