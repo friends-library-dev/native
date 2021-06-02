@@ -1,4 +1,5 @@
 import filesize from 'filesize';
+import { AudioResource } from '../types';
 
 export const humansize = filesize.partial({ round: 0, spacer: `` });
 
@@ -19,3 +20,7 @@ const ABBREV_MAP: Record<string, string> = {
   Sección: `Pt`,
   Capítulo: `Cp`,
 };
+
+export function totalDuration(audio: AudioResource): number {
+  return audio.parts.reduce((acc, part) => acc + part.duration, 0);
+}

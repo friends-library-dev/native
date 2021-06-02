@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { EditionType } from '@friends-library/types';
 import { Sans, Serif } from '../components/Text';
 import { StackParamList } from '../types';
@@ -67,7 +68,7 @@ export const Ebook: React.FC<Props> = ({
           <View
             style={tw.style(
               `mt-2 px-4 self-stretch border-t pt-4`,
-              `pb-${editions.length === 1 ? 8 : 4}`,
+              `pb-${editions.length === 1 ? 8 : 6}`,
               { backgroundColor: `#eaeaea`, borderColor: `#e5e5e5` },
             )}
           >
@@ -89,27 +90,41 @@ export const Ebook: React.FC<Props> = ({
         )}
       </View>
       {editions.length > 1 && (
-        <View style={tw.style({ 'mt-4': chapters.length <= 2 })}>
-          <Sans size={16} style={tw`p-2 italic text-white text-center bg-gray-400`}>
-            Available in {editions.length == 3 ? `three` : `two`} editions:
+        <View style={tw.style(`mb-6`, { 'mt-4': chapters.length <= 2 })}>
+          <Sans size={16} style={tw`p-2 italic text-white text-center bg-gray-500`}>
+            Choose from {editions.length == 3 ? `three` : `two`} editions:
           </Sans>
           {editions.map((edition) => (
             <TouchableOpacity
-              disabled={edition.type == selected.id}
+              disabled={edition.type === selected.type}
               key={edition.id}
               onPress={() => selectEdition(edition.type)}
             >
               <BookListItem
-                friend={`${edition.type.toLocaleUpperCase()} EDITION`}
-                title={
-                  edition.isSelected
-                    ? `Reading the ${edition.type} edition`
-                    : `Switch to the ${edition.type} edition`
+                upperLeft={`${edition.type.toLocaleUpperCase()} EDITION`}
+                title={() =>
+                  edition.isSelected ? (
+                    <Serif size={22}>
+                      <Serif size={22}>Now reading</Serif>:{' '}
+                      <Serif size={22} style={tw`italic underline`}>
+                        {edition.type} edition
+                      </Serif>{' '}
+                    </Serif>
+                  ) : (
+                    <Serif size={22} style={tw`text-gray-500`}>
+                      Switch to the{' '}
+                      <Serif size={22} style={tw`italic`}>
+                        {edition.type} edition
+                      </Serif>
+                      {'  '}
+                      <Icon name="refresh" size={12} style={tw`ml-4 text-flblue-700`} />
+                    </Serif>
+                  )
                 }
-                resourceId={edition.id}
-                duration={edition.isSelected ? `SELECTED` : ``}
+                editionId={edition.id}
+                upperRight={edition.isSelected ? `SELECTED` : ``}
                 progress={edition.isSelected ? 100 : 0}
-                isNew={edition.isMostModernized}
+                badgeText={edition.isMostModernized ? `Recommended` : undefined}
               />
             </TouchableOpacity>
           ))}

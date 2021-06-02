@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as keys from '../../lib/keys';
+import { setLastAudiobookEditionId } from '../resume';
 import * as select from '../selectors/audio-selectors';
 import Service from '../../lib/service';
 import { Thunk, Dispatch, State } from '..';

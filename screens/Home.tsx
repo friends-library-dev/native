@@ -15,14 +15,20 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-  const { numAudios, numEditions, connected } = useSelector((s) => ({
-    numEditions: Object.values(s.editions.resources).filter((e) => e?.isMostModernized)
-      .length,
-    numAudios: Object.keys(s.audio.resources).length,
-    connected: s.network.connected,
-  }));
+  const { numAudios, numEditions, connected, lastAudio, lastEbook } = useSelector(
+    (s) => ({
+      numEditions: Object.values(s.editions.resources).filter((e) => e?.isMostModernized)
+        .length,
+      numAudios: Object.keys(s.audio.resources).length,
+      connected: s.network.connected,
+      lastAudio: s.resume.lastAudiobookEditionId,
+      lastEbook: s.resume.lastEbookEditionId,
+    }),
+  );
   return (
     <View style={tw`flex-grow items-center justify-center`}>
+      <Sans>Last Audio: {lastAudio ?? `<none>`}</Sans>
+      <Sans>Last Ebook: {lastEbook ?? `<none>`}</Sans>
       <HomeButton
         title={`Ebooks (${numEditions})`}
         onPress={() => navigation.navigate(`EBookList`, { resourceType: `edition` })}

@@ -15,7 +15,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   await FS.init();
 
   let savedState: Partial<State> = {};
-  if (false && FS.hasFile(FileSystem.paths.state)) {
+  if (FS.hasFile(FileSystem.paths.state)) {
     savedState = await FS.readJson(FileSystem.paths.state);
     savedState = migrate(savedState);
   }
@@ -49,6 +49,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
           },
           editions: state.editions,
           dimensions: state.dimensions,
+          resume: state.resume,
           preferences: {
             ...state.preferences,
             audioSearchQuery: ``,

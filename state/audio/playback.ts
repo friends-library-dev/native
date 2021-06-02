@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import Service from '../../lib/service';
 import { State, Dispatch, Thunk } from '..';
 import { downloadAudio, isDownloaded } from '../filesystem';
+import { setLastAudiobookEditionId } from '../resume';
 import { set as setActivePart } from './active-part';
 import * as select from '../selectors/audio-selectors';
 import { seekTo } from './track-position';
@@ -77,6 +78,7 @@ export const play = (audioId: string, partIndex: number): Thunk => async (
 ) => {
   const queue = select.trackQueue(audioId, getState());
   if (queue) {
+    dispatch(setLastAudiobookEditionId(audioId));
     dispatch(setActivePart({ audioId, partIndex }));
     dispatch(set({ audioId, state: `PLAYING` }));
     return Service.audioPlayTrack(keys.audioPart(audioId, partIndex), queue);
@@ -114,6 +116,7 @@ async function execTogglePartPlayback(
   dispatch: Dispatch,
   state: State,
 ): Promise<void> {
+  dispatch(setLastAudiobookEditionId(audioId));
   const file = select.audioPartFile(audioId, part.index, state);
 
   if (!isDownloaded(file)) {
@@ -144,9 +147,9 @@ async function execTogglePartPlayback(
  * When a track ends, RNTP will proceed to the next track queued
  * if there is one. The only way we can know this, is by the
  * `playback-track-changed` event, which also fires at other times
- * when the queue is not auto-advancing. This determines
+ * when the queue is not auto-advancing. This function determines
  * which changes were caused by queue auto-advancing, and therefore
- * which ones we need to opt in to updating out state with.
+ * which ones we need to opt in to updating our state with.
  */
 export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
   dispatch,
@@ -163,7 +166,17 @@ export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
   }
 
   const nextIndex = part.index + 1;
+  if (nextIndex === audio.parts.length) {
+    // we just finished the last track, clear the 'last playing' state
+    dispatch(setLastAudiobookEditionId(undefined));
+    // pause, for good measure, don't leave a weird state
+    dispatch(pause());
+    return;
+  }
+
+  // should be redundant/unecessary
   if (!audio.parts[nextIndex]) return;
+
   const nextPartId = keys.audioPart(audio.id, nextIndex);
   if (nextPartId !== nextTrackId) {
     return;

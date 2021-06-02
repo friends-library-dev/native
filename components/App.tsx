@@ -18,10 +18,7 @@ import { fetchEditions } from '../state/editions/resources';
 import { batchSet as batchSetFilesystem } from '../state/filesystem';
 import Service from '../lib/service';
 import FS from '../lib/fs';
-import { View } from 'react-native';
-import { Sans } from './Text';
 import ReadHeader from './ReadHeader';
-import tw from '../lib/tailwind';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -61,10 +58,10 @@ const App: React.FC = () => {
   // as soon as we know we're connected to the internet, fetch resources
   useEffect(() => {
     if (networkConnected && !fetchedResources) {
+      setFetchedResources(true);
       dispatch(fetchAudios());
       dispatch(fetchEditions());
       Service.downloadLatestEbookCss();
-      setFetchedResources(true);
     }
   }, [dispatch, networkConnected, fetchedResources, setFetchedResources]);
 

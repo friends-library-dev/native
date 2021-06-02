@@ -9,6 +9,7 @@ import { initialState as prefsInitialState } from './preferences';
 import { initialState as networkInitialState } from './network';
 import { initialState as ephemeralInitialState } from './ephemeral';
 import { initialState as dimensionsInitialState } from './dimensions';
+import { initialState as resumeInitialState } from './resume';
 
 export const INITIAL_STATE: State = {
   version: 2,
@@ -19,6 +20,7 @@ export const INITIAL_STATE: State = {
   network: networkInitialState,
   ephemeral: ephemeralInitialState,
   dimensions: dimensionsInitialState,
+  resume: resumeInitialState,
 };
 
 export type { State };

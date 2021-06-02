@@ -32,12 +32,12 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
       }
     >
       <BookListItem
-        resourceId={item.resourceId}
+        editionId={item.resourceId}
         title={item.title}
-        friend={item.nameDisplay}
-        duration={item.duration}
+        upperLeft={item.nameDisplay}
+        upperRight={item.duration}
         progress={item.progress}
-        isNew={item.isNew}
+        badgeText={item.isNew ? (LANG === `es` ? `Nuevo` : `New`) : undefined}
       />
     </TouchableOpacity>
   );

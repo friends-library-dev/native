@@ -5,9 +5,9 @@ import FS from '../../lib/fs';
 import * as keys from '../../lib/keys';
 import { TrackData, AudioResource, AudioPart } from '../../types';
 import { FileState } from '../filesystem';
-import { backgroundPartTitle } from '../../lib/utils';
+import { backgroundPartTitle, totalDuration } from '../../lib/utils';
 import { AudioPartEntity } from '../../lib/models';
-import { squareCoverImage } from './filesystem-selectors';
+import { coverImage } from './filesystem-selectors';
 
 export function isAudioPartPlaying(
   audioId: string,
@@ -133,7 +133,7 @@ export function trackData(
   } = state;
   const audioPath = new AudioPartEntity(audioId, partIndex, prefs.audioQuality).fsPath;
   const audio = resources[audioId];
-  const image = squareCoverImage(audioId, Infinity, state);
+  const image = coverImage(`square`, audioId, Infinity, state);
   if (!audio || !image) return null;
   const part = audio.parts[partIndex];
   if (!part) return null;
@@ -157,7 +157,7 @@ export function progress(audioId: string, state: State): number {
   if (activePart.index === 0 && position === 0) {
     return 0;
   }
-  const totalDuration = audio.parts.reduce((total, part) => (total += part.duration), 0);
+  const total = totalDuration(audio);
   let listened = 0;
   audio.parts.forEach((part) => {
     if (part.index < activePart.index) {
@@ -167,5 +167,5 @@ export function progress(audioId: string, state: State): number {
     }
   });
 
-  return Math.floor((listened / totalDuration) * 100);
+  return Math.floor((listened / total) * 100);
 }

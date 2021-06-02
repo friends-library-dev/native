@@ -1,10 +1,13 @@
 import React, { PureComponent, useEffect, useState } from 'react';
 import { View, StatusBar, GestureResponderEvent, Platform } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
-import { EditionResource, StackParamList, EbookColorScheme } from '../types';
+import Popover, { PopoverMode } from 'react-native-popover-view';
+import { AnyAction } from 'redux';
+import { Html } from '@friends-library/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import EbookLoading from '../components/EbookLoading';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
@@ -13,11 +16,9 @@ import * as select from '../state/selectors/edition';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
 import { setEbookPosition } from '../state/editions/ebook-position';
-import { Html } from '@friends-library/types';
-import Popover, { PopoverMode } from 'react-native-popover-view';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
-import { AnyAction } from 'redux';
+import { setLastEbookEditionId } from '../state/resume';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
@@ -361,11 +362,15 @@ type ContainerState =
 
 const ReadContainer: React.FC<OwnProps> = (ownProps) => {
   const insets = useSafeAreaInsets();
+  const dispatch = useDispatch();
+  const props = useSelector(propSelector(ownProps, dispatch));
   const [containerState, setContainerState] = useState<ContainerState>({
     state: `loading`,
   });
-  const dispatch = useDispatch();
-  const props = useSelector(propSelector(ownProps, dispatch));
+
+  useEffect(() => {
+    dispatch(setLastEbookEditionId(ownProps.route.params.resourceId));
+  }, []);
 
   useEffect(() => {
     if (!props) {

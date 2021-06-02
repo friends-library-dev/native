@@ -24,41 +24,41 @@ storiesOf(EbookLoading.name, module)
 storiesOf(BookListItem.name, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
     <BookListItem
-      resourceId="webb"
+      editionId="webb"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={0}
-      duration="41 min"
+      upperRight="41 min"
     />
     <BookListItem
-      resourceId="webb"
+      editionId="webb"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={33}
-      duration="41 min"
-      isNew
+      upperRight="41 min"
+      badgeText="New"
     />
     <BookListItem
-      resourceId="webb"
+      editionId="webb"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={98}
-      duration="41 min"
+      upperRight="41 min"
     />
     <BookListItem
-      resourceId="penington"
+      editionId="penington"
       title="The Writings of Isaac Penington — Vol. I"
-      friend="Isaac Penington"
+      upperLeft="Isaac Penington"
       progress={0}
-      duration="12 hr 13 min"
+      upperRight="12 hr 13 min"
     />
     <BookListItem
-      resourceId="penington"
+      editionId="penington"
       title="The Writings of Isaac Penington — Vol. I"
-      friend="Isaac Penington"
+      upperLeft="Isaac Penington"
       progress={0}
-      duration="12 hr 13 min"
-      isNew
+      upperRight="12 hr 13 min"
+      badgeText="New"
     />
   </View>
 ));

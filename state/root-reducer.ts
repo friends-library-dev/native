@@ -6,6 +6,7 @@ import preferences from './preferences';
 import network from './network';
 import ephemeral from './ephemeral';
 import dimensions from './dimensions';
+import resume from './resume';
 
 const rootReducer = combineReducers({
   version: (): number => 2,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   network,
   ephemeral,
   dimensions,
+  resume,
 });
 
 export type State = ReturnType<typeof rootReducer>;

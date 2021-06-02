@@ -5,34 +5,28 @@ import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
 import CoverImage from './CoverImage';
-import { LANG } from '../env';
 
 interface Props {
-  resourceId: string;
-  title: string;
-  friend: string;
+  editionId: string;
+  title: string | (() => JSX.Element);
+  upperLeft: string;
+  upperRight: string;
   progress: number;
-  duration: string;
-  isNew?: boolean;
+  badgeText?: string;
 }
 
 const BookListItem: React.FC<Props> = ({
-  resourceId,
+  editionId,
   title,
-  friend,
+  upperLeft,
+  upperRight,
   progress,
-  isNew,
-  duration,
+  badgeText,
 }) => {
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <CoverImage
-          resourceId={resourceId}
-          layoutWidth={90}
-          type="square"
-          aspectRatio={1}
-        />
+        <CoverImage resourceId={editionId} layoutWidth={90} type="square" />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>
@@ -42,31 +36,34 @@ const BookListItem: React.FC<Props> = ({
             size={11}
             style={tw.style(`uppercase text-v1-gray-700 mb-1`, { letterSpacing: 0.75 })}
           >
-            {friend}
+            {upperLeft}
           </Sans>
           <Sans
             size={11}
             style={tw.style(`text-v1-gray-600 mb-1`, { letterSpacing: 0.5 })}
           >
-            {duration}
+            {upperRight}
           </Sans>
         </View>
         <Serif size={22} style={tw`pb-1`} numberOfLines={2}>
-          {utf8ShortTitle(title)}
+          {typeof title === `function` ? title() : utf8ShortTitle(title)}
         </Serif>
-        {isNew && (
+        {badgeText && (
           <View
             style={tw.style(
-              LANG === `es` ? `w-12` : `w-24`,
               `mt-px mb-0 h-4 rounded-full bg-v1-green-500 text-center items-center justify-center`,
+              {
+                'w-10': badgeText.length < 5,
+                'w-12': badgeText.length == 5,
+                'w-24': badgeText.length > 5,
+              },
             )}
           >
             <Sans
               style={tw`uppercase text-white text-center font-bold android:-mt-px`}
               size={9.5}
             >
-              Recommended
-              {/* {LANG === `es` ? `Nuevo` : `New`} */}
+              {badgeText}
             </Sans>
           </View>
         )}

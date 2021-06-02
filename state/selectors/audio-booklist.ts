@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Audio } from '@friends-library/friends';
 import { State } from '../';
-import { BookListItem, AudioResource } from '../../types';
+import { BookListItem } from '../../types';
+import { totalDuration } from '../../lib/utils';
 import * as select from './audio-selectors';
 import { LANG } from '../../env';
 
@@ -10,7 +11,7 @@ export default function selectAudioBooklist(
 ): { headerHeight: number; resources: BookListItem[] } {
   const query = state.preferences.audioSearchQuery.toLowerCase().trim();
   const sort = state.preferences.sortAudiosBy;
-  const headerHeight = state.preferences.audioSortHeaderHeight;
+  const headerHeight = state.dimensions.audioSortHeaderHeight;
 
   const resources: BookListItem[] = Object.values(state.audio.resources)
     .filter((audio) => {
@@ -80,8 +81,4 @@ const NEW_MS = 1000 * 60 * 60 * 24 * 60;
 
 export function sortable(str: string): string {
   return str.replace(/^(A|The) /, ``);
-}
-
-function totalDuration(audio: AudioResource): number {
-  return audio.parts.reduce((acc, part) => acc + part.duration, 0);
 }

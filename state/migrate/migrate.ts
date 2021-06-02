@@ -37,6 +37,14 @@ function migrate1to2(v1: Record<string, any>): State {
       ...INIT.ephemeral,
     },
 
+    editions: {
+      ...INIT.editions,
+    },
+
+    resume: {
+      ...INIT.resume,
+    },
+
     dimensions: {
       ...INIT.dimensions,
       audioSortHeaderHeight: v1.preferences.audioSortHeaderHeight,
@@ -49,10 +57,6 @@ function migrate1to2(v1: Record<string, any>): State {
       ebookColorScheme: INIT.preferences.ebookColorScheme,
       ebookFontSize: INIT.preferences.ebookFontSize,
       editionSearchQuery: INIT.preferences.editionSearchQuery,
-    },
-
-    editions: {
-      ...INIT.editions,
     },
 
     ...omit(v1, [
