@@ -57,7 +57,7 @@ export default function selectAudioBooklist({
         title: edition!.documentTitle,
         navigateTo: `Ebook` as const,
         duration: `${edition!.numTotalPaperbackPages} pages`,
-        progress: editions.ebookPosition[edition!.id] ?? 0,
+        progress: (editions.ebookPosition[edition!.id] ?? 0) * 100,
         isNew: isNew(edition!.publishedDate, 0), // TODO `0`
         name: edition!.friendName,
         nameDisplay:

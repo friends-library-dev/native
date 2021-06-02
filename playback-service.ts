@@ -61,7 +61,7 @@ module.exports = async function () {
       Player.getPosition(),
       Player.getState(),
     ]);
-    if (state !== `PLAYING`) {
+    if (state !== `PLAYING` || position < 0) {
       return;
     }
     Player.dispatch(setCurrentTrackPosition(position));

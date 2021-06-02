@@ -105,18 +105,18 @@ export const Ebook: React.FC<Props> = ({
                 title={() =>
                   edition.isSelected ? (
                     <Serif size={22}>
-                      <Serif size={22}>Now reading</Serif>:{' '}
+                      <Serif size={22}>Now reading</Serif>:{` `}
                       <Serif size={22} style={tw`italic underline`}>
                         {edition.type} edition
-                      </Serif>{' '}
+                      </Serif>{` `}
                     </Serif>
                   ) : (
                     <Serif size={22} style={tw`text-gray-500`}>
-                      Switch to the{' '}
+                      Switch to the{` `}
                       <Serif size={22} style={tw`italic`}>
                         {edition.type} edition
                       </Serif>
-                      {'  '}
+                      {`  `}
                       <Icon name="refresh" size={12} style={tw`ml-4 text-flblue-700`} />
                     </Serif>
                   )
