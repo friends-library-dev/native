@@ -7,6 +7,7 @@ import { Html } from '@friends-library/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import RNScrubber from 'react-native-scrubber';
 import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import EbookLoading from '../components/EbookLoading';
 import EbookError from '../components/EbookError';
@@ -15,10 +16,12 @@ import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
 import * as select from '../state/selectors/edition';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
+import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
 import { setEbookPosition } from '../state/editions/ebook-position';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 import { setLastEbookEditionId } from '../state/resume';
+import { Sans } from '../components/Text';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
@@ -46,7 +49,8 @@ export type Props =
       dispatch: Dispatch;
       showingSettings: boolean;
       showingHeader: boolean;
-      safeAreaVerticalOffset: number;
+      safeAreaTopOffset: number;
+      safeAreaBottomOffset: number;
     };
 
 interface State {
@@ -54,6 +58,7 @@ interface State {
   touchStartLocationX: number;
   touchStartLocationY: number;
   touchStartTimestamp: number;
+  position: number;
 }
 
 class Read extends PureComponent<Props, State> {
@@ -62,6 +67,7 @@ class Read extends PureComponent<Props, State> {
   private webViewRef: React.RefObject<WebView>;
 
   public state: State = {
+    position: 0,
     showingFootnote: false,
     touchStartLocationX: -999,
     touchStartLocationY: -999,
@@ -134,6 +140,7 @@ class Read extends PureComponent<Props, State> {
 
     switch (msg.type) {
       case `update_position`:
+        this.setState({ position: Math.ceil(msg.position * 100) / 100 });
         return dispatch(setEbookPosition({ editionId, position: msg.position }));
       case `toggle_header_visibility`:
         return dispatch(toggleShowingEbookHeader());
@@ -265,7 +272,8 @@ class Read extends PureComponent<Props, State> {
       fontSize,
       position,
       chapterId,
-      safeAreaVerticalOffset,
+      safeAreaTopOffset,
+      safeAreaBottomOffset,
     } = this.props;
 
     if (this.htmlRef.current === null) {
@@ -278,9 +286,11 @@ class Read extends PureComponent<Props, State> {
         chapterId,
         showingHeader,
         headerHeight,
-        safeAreaVerticalOffset,
+        safeAreaTopOffset,
       );
     }
+
+    const percentComplete = Math.round((this.state.position || position) * 100);
     return (
       <View style={tw`flex-grow bg-ebook-colorscheme-${colorScheme}-bg`}>
         <PrefersHomeIndicatorAutoHidden />
@@ -292,17 +302,69 @@ class Read extends PureComponent<Props, State> {
               : `dark-content`
           }
         />
-        <WebView
-          style={tw`bg-transparent`}
-          showsVerticalScrollIndicator={false}
-          ref={this.webViewRef}
-          decelerationRate="normal"
-          onTouchStart={this.onWebViewTouchStart}
-          onTouchEnd={this.onWebViewTouchEnd}
-          onMessage={this.handleWebViewMessage}
-          source={{ html: this.htmlRef.current }}
-          onTouchCancel={this.onWebViewTouchCancel}
-        />
+        {/* @TODO - this whole scrubber position area should be extracted into its own component */}
+        <View style={tw`flex-grow relative`}>
+          {showingHeader && percentComplete >= 0 && (
+            <View
+              style={tw.style(
+                `absolute bottom-0 right-0 w-full z-10 px-10`,
+                `bg-ebook-colorscheme-${colorScheme}-bg`,
+                colorSchemeSubtleDropshadowStyle(`above`, colorScheme),
+                {
+                  paddingTop: 24,
+                  paddingBottom: safeAreaBottomOffset * 1.2 || 24,
+                },
+              )}
+            >
+              <View style={tw`pr-6 mb-1 relative`}>
+                <RNScrubber
+                  onSlidingComplete={(newPercentComplete) => {
+                    const newPosition = newPercentComplete / 100;
+                    this.setState({ position: newPosition });
+                    this.injectJs(`window.updatePosition(${newPosition})`);
+                  }}
+                  onSlide={(newPercentComplete) => {
+                    const newPosition = newPercentComplete / 100;
+                    this.setState({ position: newPosition });
+                    this.injectJs(`window.updatePosition(${newPosition})`);
+                  }}
+                  onSlidingStart={() => {}}
+                  value={percentComplete}
+                  totalDuration={100}
+                  displayValues={false}
+                  scrubbedColor={
+                    colorScheme === `white`
+                      ? tw.color(`flmaroon`)
+                      : colorScheme === `sepia`
+                      ? tw.color(`ebook-colorscheme-sepia-accent`)
+                      : `rgba(110, 141, 234, 1)` // TODO, make black-accent
+                  }
+                />
+                <Sans
+                  size={11}
+                  style={tw.style(
+                    `opacity-75 absolute`,
+                    `text-ebook-colorscheme-${colorScheme}-fg`,
+                    { right: -16, top: 4 },
+                  )}
+                >
+                  {percentComplete}%
+                </Sans>
+              </View>
+            </View>
+          )}
+          <WebView
+            style={tw`bg-transparent`}
+            showsVerticalScrollIndicator={false}
+            ref={this.webViewRef}
+            decelerationRate="normal"
+            onTouchStart={this.onWebViewTouchStart}
+            onTouchEnd={this.onWebViewTouchEnd}
+            onMessage={this.handleWebViewMessage}
+            source={{ html: this.htmlRef.current }}
+            onTouchCancel={this.onWebViewTouchCancel}
+          />
+        </View>
         <Popover
           mode={PopoverMode.JS_MODAL}
           onRequestClose={this.closeSettingsPopover}
@@ -422,7 +484,8 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
       showingHeader={props!.showingHeader}
       headerHeight={props!.headerHeight}
       dispatch={dispatch}
-      safeAreaVerticalOffset={insets.top}
+      safeAreaTopOffset={insets.top}
+      safeAreaBottomOffset={insets.bottom}
       chapterId={ownProps.route.params.chapterId}
     />
   );

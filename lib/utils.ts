@@ -1,5 +1,5 @@
 import filesize from 'filesize';
-import { AudioResource } from '../types';
+import { AudioResource, EbookColorScheme } from '../types';
 
 export const humansize = filesize.partial({ round: 0, spacer: `` });
 
@@ -23,4 +23,20 @@ const ABBREV_MAP: Record<string, string> = {
 
 export function totalDuration(audio: AudioResource): number {
   return audio.parts.reduce((acc, part) => acc + part.duration, 0);
+}
+
+export function colorSchemeSubtleDropshadowStyle(
+  dir: 'above' | 'below',
+  colorScheme: EbookColorScheme,
+): Record<string, any> {
+  return {
+    elevation: 1,
+    shadowColor: colorScheme === `black` ? `#fff` : `#000`,
+    shadowOpacity: colorScheme === `black` ? 0.1625 : 0.0375,
+    shadowRadius: 1,
+    shadowOffset: {
+      width: 1,
+      height: dir === `above` ? -1 : 1,
+    },
+  };
 }

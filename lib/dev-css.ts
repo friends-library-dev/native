@@ -65,6 +65,10 @@ export default css`
     padding-top: 25vh;
   }
 
+  .chapter:last-of-type {
+    margin-bottom: 25vh;
+  }
+
   .footnote,
   .footnote-content {
     display: none;

@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View } from 'react-native';
+import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -8,7 +9,7 @@ import { StackHeaderProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from '../state';
 import { toggleShowingEbookSettings } from '../state/ephemeral';
 import { setEbookHeaderHeight } from '../state/dimensions';
-import { utf8ShortTitle } from '@friends-library/adoc-utils';
+import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
 
 const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) => {
   const dispatch = useDispatch();
@@ -34,8 +35,9 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
       onLayout={(e) => dispatch(setEbookHeaderHeight(e.nativeEvent.layout.height))}
       style={tw.style(
         `bg-ebook-colorscheme-${colorScheme}-bg`,
-        `flex-row justify-between items-center shadow-sm`,
+        `flex-row justify-between items-center`,
         { paddingTop: insets.top + 5, paddingBottom: 5 },
+        colorSchemeSubtleDropshadowStyle(`below`, colorScheme),
       )}
     >
       <View style={tw.style(`flex-row justify-between flex-grow max-w-full`)}>

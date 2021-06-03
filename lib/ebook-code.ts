@@ -86,6 +86,10 @@ function injectIntoWebView(
   }
   setFootnotePadding();
 
+  window.updatePosition = (newPercent) => {
+    window.scrollTo(0, scrollPixelOffsetY(newPercent));
+  };
+
   window.setHeaderHeight = (newHeight) => {
     headerHeight = newHeight;
     setFootnotePadding();
