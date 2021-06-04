@@ -1,165 +1,145 @@
 import { isNotNull } from 'x-ts-utils';
-import { utf8ShortTitle } from '@friends-library/adoc-utils';
+import { t } from '@friends-library/locale';
 import { State } from '..';
 import FS from '../../lib/fs';
-import * as keys from '../../lib/keys';
-import { TrackData, AudioResource, AudioPart } from '../../types';
-import { FileState } from '../filesystem';
-import { backgroundPartTitle, totalDuration } from '../../lib/utils';
-import { AudioPartEntity } from '../../lib/models';
-import { coverImage } from './filesystem-selectors';
+import { TrackData, EditionResource, AudioPart, EditionId, Audio } from '../../types';
+import { FileState } from '../audio/filesystem';
+import { backgroundPartTitle } from '../../lib/utils';
+import { AudioPartEntity, AudioPartQualityEntity } from '../../lib/models';
+import Editions from '../../lib/Editions';
+import { coverImage } from '../../lib/cover-images';
 
 export function isAudioPartPlaying(
-  audioId: string,
+  editionId: EditionId,
   partIndex: number,
   state: State,
 ): boolean {
   return (
-    isAudioPlaying(audioId, state) && partIndex === audioActivePartIndex(audioId, state)
+    isAudioPlaying(editionId, state) && isAudioPartActive(editionId, partIndex, state)
   );
 }
 export function isAudioPartPaused(
-  audioId: string,
+  editionId: EditionId,
   partIndex: number,
   state: State,
 ): boolean {
   return (
-    isAudioPaused(audioId, state) && partIndex === audioActivePartIndex(audioId, state)
+    isAudioPaused(editionId, state) && isAudioPartActive(editionId, partIndex, state)
   );
 }
 
 export function isAudioPartActive(
-  audioId: string,
+  editionId: EditionId,
   partIndex: number,
   state: State,
 ): boolean {
-  return partIndex === audioActivePartIndex(audioId, state);
+  return partIndex === audioActivePartIndex(editionId, state);
 }
 
-export function audio(audioId: string, state: State): AudioResource | null {
-  return state.audio.resources[audioId] || null;
-}
-
-export function trackPosition(audioId: string, partIndex: number, state: State): number {
-  const key = keys.audioPart(audioId, partIndex);
+export function trackPosition(
+  editionId: EditionId,
+  partIndex: number,
+  state: State,
+): number {
+  const key = new AudioPartEntity(editionId, partIndex).stateKey;
   return state.audio.trackPosition[key] ?? 0;
 }
 
-export function currentlyPlayingPart(state: State): null | [AudioPart, AudioResource] {
-  const audioId = state.audio.playback.audioId;
-  if (!audioId) return null;
-  return activeAudioPart(audioId, state);
-}
-
-export function audioPart(
-  audioId: string,
-  partIndex: number,
+export function currentlyPlayingPart(
   state: State,
-): null | [AudioPart, AudioResource] {
-  const audioResource = audio(audioId, state);
-  if (!audioResource) return null;
-  const part = audioResource.parts[partIndex];
-  if (!part) return null;
-  return [part, audioResource];
+): null | [AudioPart, EditionResource, Audio] {
+  const editionId = state.audio.playback.editionId;
+  if (!editionId) return null;
+  return activeAudioPart(editionId, state);
 }
 
 export function activeAudioPart(
-  audioId: string,
+  editionId: EditionId,
   state: State,
-): null | [AudioPart, AudioResource] {
-  return audioPart(audioId, audioActivePartIndex(audioId, state), state);
+): null | [AudioPart, EditionResource, Audio] {
+  return Editions.getAudioPart(editionId, audioActivePartIndex(editionId, state));
 }
 
-export function isAudioPaused(audioId: string, state: State): boolean {
-  return isAudioSelected(audioId, state) && state.audio.playback.state === `PAUSED`;
+export function isAudioPaused(editionId: EditionId, state: State): boolean {
+  return isAudioSelected(editionId, state) && state.audio.playback.state === `PAUSED`;
 }
 
-export function isAudioPlaying(audioId: string, state: State): boolean {
-  return isAudioSelected(audioId, state) && state.audio.playback.state === `PLAYING`;
+export function isAudioPlaying(editionId: EditionId, state: State): boolean {
+  return isAudioSelected(editionId, state) && state.audio.playback.state === `PLAYING`;
 }
 
-export function isAudioSelected(audioId: string, state: State): boolean {
-  return state.audio.playback.audioId === audioId;
+export function isAudioSelected(editionId: EditionId, state: State): boolean {
+  return state.audio.playback.editionId === editionId;
 }
 
-export function audioActivePartIndex(audioId: string, state: State): number {
-  return state.audio.activePart[audioId] ?? 0;
+export function audioActivePartIndex(editionId: EditionId, state: State): number {
+  return state.audio.activePart[editionId] ?? 0;
 }
 
-export function audioFiles(audioId: string, state: State): null | FileState[] {
-  const audioResource = audio(audioId, state);
-  if (!audioResource) return null;
-  return audioResource.parts.map((part, index) => audioPartFile(audioId, index, state));
+export function audioFiles(editionId: EditionId, state: State): null | FileState[] {
+  const audio = Editions.getAudio(editionId);
+  if (!audio) return null;
+  return audio.parts.map((_, index) => audioPartFile(editionId, index, state));
 }
 
 export function audioPartFile(
-  audioId: string,
+  editionId: EditionId,
   partIndex: number,
   state: State,
 ): FileState {
   const quality = state.preferences.audioQuality;
-  const audioEntity = new AudioPartEntity(audioId, partIndex, quality);
-  const audio = state.audio.resources[audioId];
-  let fallbackSize = 10000;
-  if (audio && audio.parts[partIndex]) {
-    fallbackSize =
-      audio.parts[partIndex]?.[quality === `HQ` ? `size` : `sizeLq`] ?? fallbackSize;
-  }
+  const audioEntity = new AudioPartQualityEntity(editionId, partIndex, quality);
   return (
-    state.filesystem[audioEntity.fsPath] || {
-      totalBytes: fallbackSize,
+    state.audio.filesystem[audioEntity.stateKey] ?? {
+      totalBytes: Editions.getAudioPartFilesize(editionId, partIndex, quality) ?? 10000,
       bytesOnDisk: 0,
     }
   );
 }
 
-export function trackQueue(audioId: string, state: State): null | TrackData[] {
-  const audioResource = audio(audioId, state);
-  if (!audioResource) return null;
-  const tracks = audioResource.parts
-    .map((part) => trackData(audioId, part.index, state))
+export function trackQueue(editionId: EditionId, state: State): null | TrackData[] {
+  const audio = Editions.getAudio(editionId);
+  if (!audio) return null;
+  const tracks = audio.parts
+    .map((part) => trackData(editionId, part.index, state))
     .filter(isNotNull);
   return tracks.length > 0 ? tracks : null;
 }
 
 export function trackData(
-  audioId: string,
+  editionId: EditionId,
   partIndex: number,
   state: State,
 ): TrackData | null {
-  const {
-    audio: { resources },
-    preferences: prefs,
-  } = state;
-  const audioPath = new AudioPartEntity(audioId, partIndex, prefs.audioQuality).fsPath;
-  const audio = resources[audioId];
-  const image = coverImage(`square`, audioId, Infinity, state);
-  if (!audio || !image) return null;
-  const part = audio.parts[partIndex];
-  if (!part) return null;
-  const title = utf8ShortTitle(audio.title);
+  const quality = state.preferences.audioQuality;
+  const entity = new AudioPartQualityEntity(editionId, partIndex, quality);
+  const found = Editions.getAudioPart(editionId, partIndex);
+  const image = coverImage(`square`, editionId, Infinity);
+  if (!found || !image) return null;
+  const [part, resource] = found;
+  const shortTitle = part.utf8ShortTitle;
   return {
-    id: keys.audioPart(audioId, partIndex),
-    filepath: `file://${FS.abspath(audioPath)}`,
-    title: backgroundPartTitle(part.title, title),
-    artist: audio.friend.startsWith(`Compila`) ? title : audio.friend,
-    album: audio.friend.startsWith(`Compila`) ? `Friends Library` : audio.friend,
+    id: entity.trackId,
+    filepath: `file://${FS.abspath(entity.fsPath)}`,
+    title: backgroundPartTitle(part.title, shortTitle),
+    artist: resource.friend.isCompilations ? shortTitle : resource.friend.name,
+    album: resource.friend.isCompilations ? t`Friends Library` : resource.friend.name,
     artworkUrl: image.uri,
     duration: part.duration,
   };
 }
 
-export function progress(audioId: string, state: State): number {
-  const active = activeAudioPart(audioId, state);
+export function progress(editionId: EditionId, state: State): number {
+  const active = activeAudioPart(editionId, state);
   if (!active) return 0;
-  const [activePart, audio] = active;
-  const position = trackPosition(audioId, activePart.index, state);
-  if (activePart.index === 0 && position === 0) {
+  const [activePart, resource] = active;
+  const position = trackPosition(editionId, activePart.index, state);
+  if (!resource.audio || (activePart.index === 0 && position === 0)) {
     return 0;
   }
-  const total = totalDuration(audio);
+
   let listened = 0;
-  audio.parts.forEach((part) => {
+  resource.audio.parts.forEach((part) => {
     if (part.index < activePart.index) {
       listened += part.duration;
     } else if (part.index === activePart.index) {
@@ -167,5 +147,5 @@ export function progress(audioId: string, state: State): number {
     }
   });
 
-  return Math.floor((listened / total) * 100);
+  return Math.floor((listened / resource.audio.totalDuration) * 100);
 }

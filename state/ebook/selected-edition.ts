@@ -1,8 +1,9 @@
 import { EditionType } from '@friends-library/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DocumentId } from '../../types';
 import { DocumentEntity } from '../../lib/models';
 
-export type EbookSelectedEditionState = Record<string, EditionType | undefined>;
+export type EbookSelectedEditionState = Record<DocumentId, EditionType | undefined>;
 
 export const initialState: EbookSelectedEditionState = {};
 

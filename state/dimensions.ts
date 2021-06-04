@@ -16,7 +16,7 @@ const dimensions = createSlice({
   name: `dimensions`,
   initialState,
   reducers: {
-    setEditionSortHeaderHeight: (state, action: PayloadAction<number>) => {
+    setEbookSortHeaderHeight: (state, action: PayloadAction<number>) => {
       state.editionSortHeaderHeight = action.payload;
     },
     setAudioSortHeaderHeight: (state, action: PayloadAction<number>) => {
@@ -29,7 +29,7 @@ const dimensions = createSlice({
 });
 
 export const {
-  setEditionSortHeaderHeight,
+  setEbookSortHeaderHeight,
   setAudioSortHeaderHeight,
   setEbookHeaderHeight,
 } = dimensions.actions;

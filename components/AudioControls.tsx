@@ -6,8 +6,9 @@ import tw from '../lib/tailwind';
 import { PropSelector, useSelector, useDispatch } from '../state';
 import * as select from '../state/selectors/audio-selectors';
 import { togglePlayback, skipNext, skipBack } from '../state/audio/playback';
-import { downloadProgress, isDownloading } from '../state/filesystem';
+import { downloadProgress, isDownloading } from '../state/audio/filesystem';
 import { seekRelative, seekTo } from '../state/audio/track-position';
+import { EditionId } from '../types';
 
 export interface Props {
   skipNext?: () => any;
@@ -108,15 +109,15 @@ export const AudioControls: React.FC<Props> = ({
 };
 
 interface OwnProps {
-  audioId: string;
+  editionId: EditionId;
 }
 
-export const propSelector: PropSelector<OwnProps, Props> = ({ audioId }, dispatch) => {
+export const propSelector: PropSelector<OwnProps, Props> = ({ editionId }, dispatch) => {
   return (state) => {
-    const activePart = select.activeAudioPart(audioId, state);
+    const activePart = select.activeAudioPart(editionId, state);
     if (!activePart) return null;
-    const [part, audio] = activePart;
-    const file = select.audioPartFile(audioId, part.index, state);
+    const [part, edition, audio] = activePart;
+    const file = select.audioPartFile(editionId, part.index, state);
     const multipart = audio.parts.length > 1;
     const canSkipNext = multipart && part.index < audio.parts.length - 1;
     const canSkipBack = multipart && part.index > 0;
@@ -124,16 +125,16 @@ export const propSelector: PropSelector<OwnProps, Props> = ({ audioId }, dispatc
       multipart,
       skipNext: canSkipNext ? () => dispatch(skipNext()) : undefined,
       skipBack: canSkipBack ? () => dispatch(skipBack()) : undefined,
-      playing: select.isAudioPlaying(audioId, state),
+      playing: select.isAudioPlaying(editionId, state),
       duration: part.duration,
       numParts: audio.parts.length,
       progress: downloadProgress(file),
       downloading: isDownloading(file),
-      position: select.trackPosition(audioId, part.index, state),
-      togglePlayback: () => dispatch(togglePlayback(audioId)),
-      seekForward: () => dispatch(seekRelative(audioId, part.index, 30)),
-      seekBackward: () => dispatch(seekRelative(audioId, part.index, -30)),
-      seekTo: (position: number) => dispatch(seekTo(audioId, part.index, position)),
+      position: select.trackPosition(editionId, part.index, state),
+      togglePlayback: () => dispatch(togglePlayback(editionId)),
+      seekForward: () => dispatch(seekRelative(editionId, part.index, 30)),
+      seekBackward: () => dispatch(seekRelative(editionId, part.index, -30)),
+      seekTo: (position: number) => dispatch(seekTo(editionId, part.index, position)),
     };
   };
 };

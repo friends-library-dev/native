@@ -1,4 +1,5 @@
 import React from 'react';
+import { isDefined } from 'x-ts-utils';
 import { View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -8,7 +9,7 @@ import { StackParamList } from '../types';
 import { Sans } from '../components/Text';
 import { useDispatch, useSelector } from '../state/';
 import { toggleQuality } from '../state/preferences';
-import { deleteAllAudios } from '../state/filesystem';
+import { deleteAllAudios } from '../state/audio/filesystem';
 import { humansize } from '../lib/utils';
 import { BUILD_SEMVER_STRING, APP_NAME } from '../env';
 
@@ -21,11 +22,9 @@ const Home: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const { quality, deletableBytes } = useSelector((state) => ({
     quality: state.preferences.audioQuality,
-    deletableBytes: Object.keys(state.filesystem).reduce((acc, path) => {
-      return path.endsWith(`.mp3`)
-        ? acc + (state.filesystem[path] || { bytesOnDisk: 0 }).bytesOnDisk
-        : acc;
-    }, 0),
+    deletableBytes: Object.values(state.audio.filesystem)
+      .filter(isDefined)
+      .reduce((acc, file) => acc + file.bytesOnDisk, 0),
   }));
   const hqEnabled = quality === `HQ`;
 

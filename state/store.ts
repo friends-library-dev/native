@@ -6,16 +6,18 @@ import merge from 'lodash.merge';
 import rootReducer from './root-reducer';
 import FS, { FileSystem } from '../lib/fs';
 import Player from '../lib/player';
+import Editions from '../lib/Editions';
 import { INITIAL_STATE, State } from './';
-import { batchSet as batchSetFilesystem } from './filesystem';
 import migrate from './migrate/migrate';
 
 export default async function getStore(): Promise<Store<any, AnyAction>> {
   Player.init();
   await FS.init();
+  const editions = await FS.readJson(FileSystem.paths.editions);
+  Editions.setResourcesIfValid(editions);
 
   let savedState: Partial<State> = {};
-  if (FS.hasFile(FileSystem.paths.state)) {
+  if (false && FS.hasFile(FileSystem.paths.state)) {
     savedState = await FS.readJson(FileSystem.paths.state);
     savedState = migrate(savedState);
   }
@@ -46,19 +48,19 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
               ...state.audio.playback,
               state: `STOPPED`,
             },
+            filesystem: {},
           },
-          editions: state.editions,
+          ebook: state.ebook,
           dimensions: state.dimensions,
           resume: state.resume,
           preferences: {
             ...state.preferences,
             audioSearchQuery: ``,
           },
-          network: INITIAL_STATE.network,
-          ephemeral: INITIAL_STATE.ephemeral,
-          filesystem: {},
+          network: { ...INITIAL_STATE.network },
+          ephemeral: { ...INITIAL_STATE.ephemeral },
         };
-        FS.writeFile(FileSystem.paths.state, JSON.stringify(saveState));
+        FS.writeJson(FileSystem.paths.state, saveState);
       },
       5000,
       { leading: false, trailing: true },

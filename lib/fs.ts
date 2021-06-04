@@ -8,12 +8,13 @@ export class FileSystem {
 
   public static readonly paths = {
     state: `data/state.json`,
+    editions: `data/editions.json`,
   } as const;
 
   public static readonly dirs = {
     images: `images`,
     audio: `audio`,
-    editions: `editions`,
+    ebooks: `ebooks`,
     data: `data`,
   } as const;
 
@@ -24,7 +25,7 @@ export class FileSystem {
       RNFS.mkdir(this.abspath()),
       RNFS.mkdir(this.abspath(`${FileSystem.dirs.images}/`), BACKUP_EXCLUDE),
       RNFS.mkdir(this.abspath(`${FileSystem.dirs.audio}/`), BACKUP_EXCLUDE),
-      RNFS.mkdir(this.abspath(`${FileSystem.dirs.editions}/`), BACKUP_EXCLUDE),
+      RNFS.mkdir(this.abspath(`${FileSystem.dirs.ebooks}/`), BACKUP_EXCLUDE),
       RNFS.mkdir(this.abspath(`${FileSystem.dirs.data}/`)),
     ]);
 
@@ -39,8 +40,6 @@ export class FileSystem {
 
     if (!this.hasFile(V1_MIGRATED_FLAG_FILE)) {
       await this.removeLegacyV1Artwork();
-    } else {
-      console.log(`already migrated v1 artwork`);
     }
   }
 
@@ -153,12 +152,12 @@ export class FileSystem {
     );
   }
 
-  public readFile(
+  public async readFile(
     path: string,
     encoding: 'utf8' | 'ascii' | 'binary' | 'base64' = `utf8`,
   ): Promise<string | null> {
     try {
-      return RNFS.readFile(
+      return await RNFS.readFile(
         this.abspath(path),
         encoding === `binary` ? `base64` : encoding,
       );
@@ -199,6 +198,18 @@ export class FileSystem {
       return JSON.parse(json);
     } catch {
       return null;
+    }
+  }
+
+  public async writeJson(
+    path: ValuesOf<typeof FileSystem.paths>,
+    data: any,
+  ): Promise<void> {
+    try {
+      const string = JSON.stringify(data);
+      return this.writeFile(path, string);
+    } catch {
+      return;
     }
   }
 

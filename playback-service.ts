@@ -1,7 +1,7 @@
 import Player from './lib/player';
 import { Platform } from 'react-native';
 import { setCurrentTrackPosition } from './state/audio/track-position';
-import { maybeDownloadNextQueuedTrack } from './state/filesystem';
+import { maybeDownloadNextQueuedTrack } from './state/audio/filesystem';
 import { setState as setPlaybackState, maybeAdvanceQueue } from './state/audio/playback';
 
 module.exports = async function () {

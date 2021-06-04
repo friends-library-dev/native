@@ -26,7 +26,7 @@ const BookListItem: React.FC<Props> = ({
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <CoverImage resourceId={editionId} layoutWidth={90} type="square" />
+        <CoverImage editionId={editionId} layoutWidth={90} type="square" />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>

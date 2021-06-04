@@ -20,4 +20,5 @@ const ebookPosition = createSlice({
 });
 
 export const { setEbookPosition } = ebookPosition.actions;
+
 export default ebookPosition.reducer;

@@ -3,7 +3,7 @@ import Service from '../lib/service';
 import { EditionResource } from '../types';
 
 export async function readScreenProps(
-  edition: Pick<EditionResource, 'id' | 'url' | 'revision'>,
+  edition: EditionResource,
   networkConnected: boolean,
 ): Promise<Result<{ html: string; css: string }, 'unknown' | 'no_internet'>> {
   // first we try the local filesystem

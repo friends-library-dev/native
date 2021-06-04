@@ -1,11 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Image, ViewStyle } from 'react-native';
-import { useSelector, useDispatch } from '../state';
-import { downloadFile } from '../state/filesystem';
-import * as select from '../state/selectors/filesystem-selectors';
+import { useSelector } from '../state';
+import { coverImage } from '../lib/cover-images';
+import { EditionId } from '../types';
+import Service from '../lib/service';
+import tw from '../lib/tailwind';
+import { EditionEntity } from '../lib/models';
+import { LANG } from '../env';
 
 interface Props {
-  resourceId: string;
+  editionId: EditionId;
   layoutWidth: number;
   type: 'square' | 'threeD';
   style?: ViewStyle;
@@ -13,26 +17,37 @@ interface Props {
 
 const THREE_D_RATIO = 564 / 824;
 
-const CoverImage: React.FC<Props> = ({ resourceId, layoutWidth, style = {}, type }) => {
+const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type }) => {
   const uri = useRef<string>();
-  const dispatch = useDispatch();
-  const image = useSelector((state) =>
-    select.coverImage(type, resourceId, layoutWidth, state),
-  );
+  const connected = useSelector((state) => state.network.connected);
+  const image = coverImage(type, editionId, layoutWidth);
 
   useEffect(() => {
-    if (image && !image.downloaded) {
-      dispatch(downloadFile(image.entity.fsPath, image.networkUrl));
+    if (image && !image.downloaded && !connected) {
+      Service.fsDownloadFile(image.entity.fsPath, image.networkUrl);
     }
-  }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl]);
+  }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl, connected]);
 
   const dims = {
     width: layoutWidth,
     height: layoutWidth / (type === `square` ? 1 : THREE_D_RATIO),
   };
 
+  const editionBg =
+    type === `square`
+      ? {
+          backgroundColor: tw.color(
+            {
+              original: `flgreen`,
+              modernized: `flblue`,
+              updated: LANG == `es` ? `flgold` : `flmaroon`,
+            }[new EditionEntity(editionId).editionType],
+          ),
+        }
+      : {};
+
   if (!image) {
-    return <View style={{ ...dims, ...style }} />;
+    return <View style={{ ...dims, ...style, ...editionBg }} />;
   }
 
   // prevent flicker of image resulting from loading it first
@@ -42,7 +57,7 @@ const CoverImage: React.FC<Props> = ({ resourceId, layoutWidth, style = {}, type
   }
 
   return (
-    <View style={{ ...dims, ...style }}>
+    <View style={{ ...dims, ...style, ...editionBg }}>
       <Image source={{ uri: uri.current, ...dims }} />
     </View>
   );

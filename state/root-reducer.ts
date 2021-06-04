@@ -1,7 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import audio from './audio/audio-root-reducer';
-import editions from './editions/editions-root-reducer';
-import filesystem from './filesystem';
+import ebook from './ebook/ebook-root-reducer';
 import preferences from './preferences';
 import network from './network';
 import ephemeral from './ephemeral';
@@ -11,8 +10,7 @@ import resume from './resume';
 const rootReducer = combineReducers({
   version: (): number => 2,
   audio,
-  editions,
-  filesystem,
+  ebook,
   preferences,
   network,
   ephemeral,

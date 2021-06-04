@@ -11,14 +11,12 @@ import Audio from '../screens/Audio';
 import Ebook from '../screens/Ebook';
 import Settings from '../screens/Settings';
 import Read from '../screens/Read';
-import { useDispatch, useSelector, State } from '../state';
+import { useDispatch, useSelector } from '../state';
 import { setConnected } from '../state/network';
-import { fetchAudios } from '../state/audio/resources';
-import { fetchEditions } from '../state/editions/resources';
-import { batchSet as batchSetFilesystem } from '../state/filesystem';
 import Service from '../lib/service';
-import FS from '../lib/fs';
+import FS, { FileSystem } from '../lib/fs';
 import ReadHeader from './ReadHeader';
+import Editions from '../lib/Editions';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -30,23 +28,25 @@ const App: React.FC = () => {
     showingEbookHeader: state.ephemeral.showingEbookHeader,
   }));
 
+  // @TODO CURRENT, do i need to replace this?
   // set up filesystem state one time
-  useEffect(() => {
-    dispatch(
-      batchSetFilesystem(
-        Object.keys(FS.manifest).reduce<State['filesystem']>((acc, path) => {
-          const storedBytes = FS.manifest[path];
-          if (typeof storedBytes === `number`) {
-            acc[path] = {
-              totalBytes: storedBytes,
-              bytesOnDisk: storedBytes,
-            };
-          }
-          return acc;
-        }, {}),
-      ),
-    );
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(
+  //     batchSetFilesystem(
+  //       // TODO - this is not great.... make more "audio" specific
+  //       Object.keys(FS.manifest).reduce<State['filesystem']>((acc, path) => {
+  //         const storedBytes = FS.manifest[path];
+  //         if (path.endsWith(`.mp3`) && typeof storedBytes === `number`) {
+  //           acc[path] = {
+  //             totalBytes: storedBytes,
+  //             bytesOnDisk: storedBytes,
+  //           };
+  //         }
+  //         return acc;
+  //       }, {}),
+  //     ),
+  //   );
+  // }, [dispatch]);
 
   // add a listener for network connectivity events one time
   useEffect(() => {
@@ -59,11 +59,13 @@ const App: React.FC = () => {
   useEffect(() => {
     if (networkConnected && !fetchedResources) {
       setFetchedResources(true);
-      dispatch(fetchAudios());
-      dispatch(fetchEditions());
       Service.downloadLatestEbookCss();
+      Service.networkFetchEditions().then((resources) => {
+        Editions.setResourcesIfValid(resources);
+        FS.writeJson(FileSystem.paths.editions, resources);
+      });
     }
-  }, [dispatch, networkConnected, fetchedResources, setFetchedResources]);
+  }, [networkConnected, fetchedResources, setFetchedResources]);
 
   return (
     <SafeAreaProvider>
@@ -74,7 +76,7 @@ const App: React.FC = () => {
             name="EBookList"
             options={{ title: t`Ebooks` }}
             component={BookList}
-            initialParams={{ resourceType: `edition` }}
+            initialParams={{ listType: `ebook` }}
           />
           <Stack.Screen
             name="Read"
@@ -89,7 +91,7 @@ const App: React.FC = () => {
             name="AudioBookList"
             options={{ title: t`Audiobooks` }}
             component={BookList}
-            initialParams={{ resourceType: `audio` }}
+            initialParams={{ listType: `audio` }}
           />
           <Stack.Screen name="Listen" options={{ title: t`Listen` }} component={Audio} />
           <Stack.Screen name="Ebook" options={{ title: `Read` }} component={Ebook} />

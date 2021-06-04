@@ -28,21 +28,26 @@ function migrate1to2(v1: Record<string, any>): State {
       // .trackPosition -> .audio.trackPosition
       trackPosition: v1.trackPosition,
 
-      // clear out the old resources and re-download fresh
-      // no need to write a migration for a perf optimization
-      resources: {},
+      // @TODO add test?
+      filesystem: {
+        ...INIT.audio.filesystem,
+      },
+    },
+
+    ebook: {
+      ...INIT.ebook,
     },
 
     ephemeral: {
       ...INIT.ephemeral,
     },
 
-    editions: {
-      ...INIT.editions,
-    },
-
     resume: {
       ...INIT.resume,
+    },
+
+    network: {
+      ...INIT.network,
     },
 
     dimensions: {
@@ -53,10 +58,10 @@ function migrate1to2(v1: Record<string, any>): State {
     preferences: {
       ...omit(v1.preferences ?? {}, [`searchQuery`, `audioSortHeaderHeight`]),
       audioSearchQuery: v1.preferences?.searchQuery ?? ``,
-      sortEditionsBy: INIT.preferences.sortEditionsBy,
+      sortEbooksBy: INIT.preferences.sortEbooksBy,
       ebookColorScheme: INIT.preferences.ebookColorScheme,
       ebookFontSize: INIT.preferences.ebookFontSize,
-      editionSearchQuery: INIT.preferences.editionSearchQuery,
+      ebookSearchQuery: INIT.preferences.ebookSearchQuery,
     },
 
     ...omit(v1, [

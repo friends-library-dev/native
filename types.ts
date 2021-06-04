@@ -1,29 +1,29 @@
-import { AppAudioResourceV1, AppEditionResourceV1 } from '@friends-library/api';
+import { AppEditionResourceV1 } from '@friends-library/api';
 import { Html, Sha } from '@friends-library/types';
 
 export type PlayerState = 'STOPPED' | 'PLAYING' | 'PAUSED' | 'DUCKED';
 
 export type BookSortMethod = 'duration' | 'published' | 'author' | 'title';
 
-export type ResourceType = 'audio' | 'edition';
-
 export type EbookColorScheme = 'white' | 'black' | 'sepia';
 
+/**
+ * string in format: `"<document-id>--<EditionType>"`
+ * eg `"f413cec8-c609-4d58-9721-4ad552cb27ae--modernized"`
+ */
 export type EditionId = string;
 
-export interface AudioPart {
-  audioId: string;
-  index: number;
-  title: string;
-  duration: number;
-  size: number;
-  sizeLq: number;
-  url: string;
-  urlLq: string;
-}
+/**
+ * Document UUID
+ * eg `"f413cec8-c609-4d58-9721-4ad552cb27ae"`
+ */
+export type DocumentId = string;
 
-export type AudioResource = AppAudioResourceV1;
 export type EditionResource = AppEditionResourceV1;
+
+export type Audio = ReturnType<typeof deriveAudioType>;
+
+export type AudioPart = ReturnType<typeof deriveAudioPartType>;
 
 export interface EbookData {
   sha: Sha;
@@ -32,17 +32,17 @@ export interface EbookData {
 
 export type StackParamList = {
   Home: undefined;
-  Read: { resourceId: string; chapterId?: string };
-  Ebook: { resourceId: string };
-  Listen: { resourceId: string };
+  Read: { editionId: string; chapterId?: string };
+  Ebook: { editionId: string };
+  Listen: { editionId: string };
   Settings: undefined;
-  AudioBookList: { resourceType: 'audio' };
-  EBookList: { resourceType: 'edition' };
+  AudioBookList: { listType: 'audio' };
+  EBookList: { listType: 'ebook' };
 };
 
 export interface BookListItem {
   navigateTo: keyof StackParamList;
-  resourceId: string;
+  editionId: string;
   isNew: boolean;
   progress: number;
   duration: string;
@@ -59,4 +59,12 @@ export interface TrackData {
   artworkUrl: string;
   album: string;
   duration: number;
+}
+
+function deriveAudioType(edition: EditionResource) {
+  return edition.audio!;
+}
+
+function deriveAudioPartType(edition: EditionResource) {
+  return edition.audio!.parts[0]!;
 }

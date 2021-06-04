@@ -5,16 +5,13 @@ import tw from '../lib/tailwind';
 import { Sans } from './Text';
 import Search from './Search';
 import { LANG } from '../env';
-import { BookSortMethod, ResourceType } from '../types';
-import {
-  setAudioSortHeaderHeight,
-  setEditionSortHeaderHeight,
-} from '../state/dimensions';
+import { BookSortMethod } from '../types';
+import { setAudioSortHeaderHeight, setEbookSortHeaderHeight } from '../state/dimensions';
 import {
   setAudioSearchQuery,
   setSortAudiosBy,
-  setEditionSearchQuery,
-  setSortEditionsBy,
+  setEbookSearchQuery,
+  setSortEbooksBy,
 } from '../state/preferences';
 
 interface Props {
@@ -92,7 +89,7 @@ const SortButton: React.FC<{
 
 export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) => {
   return (state) => {
-    if (ownProps.resourceType === `audio`) {
+    if (ownProps.listType === `audio`) {
       return {
         query: state.preferences.audioSearchQuery,
         sort: state.preferences.sortAudiosBy,
@@ -102,17 +99,17 @@ export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) 
       };
     }
     return {
-      query: state.preferences.editionSearchQuery,
-      sort: state.preferences.sortEditionsBy,
-      setQuery: (query) => dispatch(setEditionSearchQuery(query)),
-      setSort: (criteria) => dispatch(setSortEditionsBy(criteria)),
-      setHeight: (height) => dispatch(setEditionSortHeaderHeight(height)),
+      query: state.preferences.ebookSearchQuery,
+      sort: state.preferences.sortEbooksBy,
+      setQuery: (query) => dispatch(setEbookSearchQuery(query)),
+      setSort: (criteria) => dispatch(setSortEbooksBy(criteria)),
+      setHeight: (height) => dispatch(setEbookSortHeaderHeight(height)),
     };
   };
 };
 
 type OwnProps = {
-  resourceType: ResourceType;
+  listType: 'ebook' | 'audio';
 };
 
 const ListControlsContainer: React.FC<OwnProps> = (ownProps) => {

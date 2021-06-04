@@ -81,8 +81,8 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
-    "@friends-library/api": "^1.1.0-beta.9",
-    "@friends-library/dev": "^4.1.18",
+    "@friends-library/api": "^1.1.0-beta.12",
+    "@friends-library/dev": "^4.1.19",
     "@react-native-community/eslint-config": "^1.1.0",
     "@storybook/addon-actions": "^6.0.16",
     "@storybook/addon-essentials": "^6.0.16",

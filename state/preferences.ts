@@ -6,8 +6,8 @@ export interface PreferencesState {
   audioQuality: AudioQuality;
   sortAudiosBy: BookSortMethod;
   audioSearchQuery: string;
-  sortEditionsBy: BookSortMethod;
-  editionSearchQuery: string;
+  sortEbooksBy: BookSortMethod;
+  ebookSearchQuery: string;
   ebookColorScheme: EbookColorScheme;
   ebookFontSize: number;
 }
@@ -19,8 +19,8 @@ export const initialState: PreferencesState = {
   audioSearchQuery: ``,
 
   // edition/ebook prefs
-  sortEditionsBy: `published`,
-  editionSearchQuery: ``,
+  sortEbooksBy: `published`,
+  ebookSearchQuery: ``,
   ebookColorScheme: `white`,
   ebookFontSize: 5,
 };
@@ -29,11 +29,11 @@ const preferences = createSlice({
   name: `preferences`,
   initialState,
   reducers: {
-    setSortEditionsBy: (state, action: PayloadAction<BookSortMethod>) => {
-      state.sortEditionsBy = action.payload;
+    setSortEbooksBy: (state, action: PayloadAction<BookSortMethod>) => {
+      state.sortEbooksBy = action.payload;
     },
-    setEditionSearchQuery: (state, action: PayloadAction<string>) => {
-      state.editionSearchQuery = action.payload;
+    setEbookSearchQuery: (state, action: PayloadAction<string>) => {
+      state.ebookSearchQuery = action.payload;
     },
     setSortAudiosBy: (state, action: PayloadAction<BookSortMethod>) => {
       state.sortAudiosBy = action.payload;
@@ -61,8 +61,8 @@ export const {
   toggleQuality,
   setAudioSearchQuery,
   setSortAudiosBy,
-  setSortEditionsBy,
-  setEditionSearchQuery,
+  setSortEbooksBy,
+  setEbookSearchQuery,
   setEbookColorScheme,
   setEbookFontSize,
 } = preferences.actions;

@@ -5,16 +5,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { EditionType } from '@friends-library/types';
 import { Sans, Serif } from '../components/Text';
-import { StackParamList } from '../types';
+import { EditionId, StackParamList } from '../types';
 import { EditionEntity } from '../lib/models';
+import Editions from '../lib/Editions';
 import { PropSelector, useDispatch, useSelector } from '../state';
-import * as select from '../state/selectors/edition';
+import * as select from '../state/selectors/ebook';
 import BookListItem from '../components/BookListItem';
 import CoverImage from '../components/CoverImage';
 import tw from '../lib/tailwind';
 import { ByLine, JustifiedDescription, MainTitle } from '../components/BookParts';
 import IconButton from '../components/IconButton';
-import { selectEdition } from '../state/editions/ebook-selected-edition';
+import { selectEdition } from '../state/ebook/selected-edition';
 
 interface Props {
   documentTitle: string;
@@ -57,7 +58,7 @@ export const Ebook: React.FC<Props> = ({
             key={selected.id}
             type="threeD"
             layoutWidth={COVER_IMG_WIDTH}
-            resourceId={selected.id}
+            editionId={selected.id}
           />
         </TouchableOpacity>
         <MainTitle title={documentTitle} />
@@ -108,7 +109,8 @@ export const Ebook: React.FC<Props> = ({
                       <Serif size={22}>Now reading</Serif>:{` `}
                       <Serif size={22} style={tw`italic underline`}>
                         {edition.type} edition
-                      </Serif>{` `}
+                      </Serif>
+                      {` `}
                     </Serif>
                   ) : (
                     <Serif size={22} style={tw`text-gray-500`}>
@@ -148,10 +150,10 @@ interface OwnProps {
 }
 
 const propSelector: PropSelector<
-  { editionId: string; navigation: OwnProps['navigation'] },
+  { editionId: EditionId; navigation: OwnProps['navigation'] },
   Props
 > = ({ editionId, navigation }, dispatch) => (state) => {
-  const resource = select.editionResource(editionId, state);
+  const resource = Editions.get(editionId);
   if (!resource) {
     return null;
   }
@@ -161,7 +163,7 @@ const propSelector: PropSelector<
     return null;
   }
 
-  const editionResources = select.documentEditions(edition.document, state);
+  const editionResources = Editions.getDocumentEditions(edition.document);
   const selectedResource = editionResources.find((e) => e.type === selectedEditionType);
   if (!selectedResource) {
     return null;
@@ -177,19 +179,22 @@ const propSelector: PropSelector<
   return {
     selectEdition: (editionType: EditionType) =>
       dispatch(selectEdition({ documentId: edition.documentId, editionType })),
-    read: () => navigation.navigate(`Read`, { resourceId: selectedResource.id }),
+    read: () => navigation.navigate(`Read`, { editionId: selectedResource.id }),
     readChapter: (chapterId: string) =>
-      navigation.navigate(`Read`, { resourceId: selectedResource.id, chapterId }),
-    friendName: resource.friendName,
-    documentTitle: resource.documentTitle,
-    description: resource.documentDescription,
-    chapters: selectedResource.chapters,
+      navigation.navigate(`Read`, { editionId: selectedResource.id, chapterId }),
+    friendName: resource.friend.name,
+    documentTitle: resource.document.utf8ShortTitle,
+    description: resource.document.description,
+    chapters: selectedResource.chapters.map((ch) => ({
+      id: ch.id,
+      title: ch.shortHeading,
+    })),
     editions,
   };
 };
 
 const EbookContainer: React.FC<OwnProps> = ({ route, navigation }) => {
-  const editionId = route.params.resourceId;
+  const editionId = route.params.editionId;
   const props = useSelector(propSelector({ editionId, navigation }, useDispatch()));
   if (!props) {
     return null;

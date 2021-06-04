@@ -1,9 +1,9 @@
-import { AudioResource, EbookData, EditionResource, TrackData } from '../types';
+import { Html } from '@friends-library/types';
+import { EbookData, EditionResource, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
-import * as keys from './keys';
 import { LANG } from '../env';
-import { Html } from '@friends-library/types';
+import { EbookCss, EbookEntity, EbookRevisionEntity } from './models';
 
 export default class Service {
   public static audioSeekTo(position: number): Promise<void> {
@@ -46,33 +46,29 @@ export default class Service {
   }
 
   public static async fsEbookCss(): Promise<string | null> {
-    return FS.readFile(keys.ebookCssFilepath());
+    return FS.readFile(new EbookCss().fsPath);
   }
 
   public static async fsEbookData(editionId: string): Promise<EbookData | null> {
-    const file = FS.filesWithPrefix(keys.ebookHtmlFilepathPrefix(editionId))[0];
+    const entity = new EbookEntity(editionId);
+    const file = FS.filesWithPrefix(entity.fsPathPrefix)[0];
     if (!file) {
       return null;
     }
-
-    const sha =
-      file.filename
-        .replace(/\.html$/, ``)
-        .split(`--`)
-        .pop() || ``;
 
     const innerHtml = await FS.readFile(file.relPath, `utf8`);
     if (!innerHtml) {
       return null;
     }
 
+    const sha = EbookRevisionEntity.extractRevisionFromFilename(file.filename);
     return { sha, innerHtml };
   }
 
   public static EBOOK_CSS_NETWORK_URL = `https://flp-assets.nyc3.digitaloceanspaces.com/static/app-ebook.css`;
 
   public static async downloadLatestEbookCss(): Promise<void> {
-    const destPath = keys.ebookCssFilepath();
+    const destPath = new EbookCss().fsPath;
     const tempPath = `${destPath}.temp.css`;
     if (!(await FS.download(tempPath, Service.EBOOK_CSS_NETWORK_URL))) {
       return;
@@ -82,10 +78,15 @@ export default class Service {
   }
 
   public static async downloadLatestEbookHtml(
-    edition: Pick<EditionResource, 'url' | 'revision' | 'id'>,
+    edition: Pick<
+      EditionResource,
+      'ebookHtmlLoggedDownloadUrl' | 'ebookHtmlDirectDownloadUrl' | 'revision' | 'id'
+    >,
   ): Promise<Html | null> {
-    const relPath = keys.ebookRevisionHtmlFilepath(edition.id, edition.revision);
-    if (!(await FS.download(relPath, edition.url))) {
+    const entity = new EbookRevisionEntity(edition.id, edition.revision);
+    const relPath = entity.fsPath;
+    // @TODO switch to logged
+    if (!(await FS.download(relPath, edition.ebookHtmlDirectDownloadUrl))) {
       return null;
     }
 
@@ -93,8 +94,8 @@ export default class Service {
 
     // if we've got good, new fresh data, clean out any old stuff
     if (newHtml) {
-      const toDelete = FS.filesWithPrefix(keys.ebookHtmlFilepathPrefix(edition.id))
-        .filter((f) => !f.filename.endsWith(`${edition.revision}.html`))
+      const toDelete = FS.filesWithPrefix(entity.fsPathPrefix)
+        .filter((f) => !f.filename.endsWith(entity.revisionFilenameSuffix))
         .map((f) => f.relPath);
       await FS.deleteMany(toDelete);
       return newHtml;
@@ -103,52 +104,13 @@ export default class Service {
     return null;
   }
 
-  public static async networkFetchAudios(): Promise<AudioResource[] | null> {
+  public static async networkFetchEditions(): Promise<any> {
     try {
-      const res = await fetch(`https://api.friendslibrary.com/app-audios/v1/${LANG}`);
-      const resources = await res.json();
-      if (audioResourcesValid(resources)) {
-        return resources;
-      }
-    } catch (err) {
-      // ¯\_(ツ)_/¯
-    }
-    return null;
-  }
-
-  public static async networkFetchEditions(): Promise<EditionResource[] | null> {
-    try {
+      // @TODO fake url
       const res = await fetch(`http://10.0.1.251:8888/app-editions/v1/${LANG}`);
-      const resources = await res.json();
-      if (editionResourcesValid(resources)) {
-        return resources;
-      }
+      return await res.json();
     } catch (err) {
       // ¯\_(ツ)_/¯
     }
-    return null;
   }
-}
-
-function audioResourcesValid(resources: any): resources is AudioResource[] {
-  return (
-    Array.isArray(resources) &&
-    resources.every((r) => {
-      return typeof r.artwork === `string` && Array.isArray(r.parts);
-    })
-  );
-}
-
-function editionResourcesValid(resources: any): resources is EditionResource[] {
-  return (
-    Array.isArray(resources) &&
-    resources.every((r) => {
-      return (
-        Array.isArray(r.images.square) &&
-        r.images.square.every((image: any) => typeof image?.url === `string`) &&
-        Array.isArray(r.chapters) &&
-        r.chapters.every((ch: any) => typeof ch?.title === `string`)
-      );
-    })
-  );
 }

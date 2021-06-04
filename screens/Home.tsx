@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -6,6 +6,7 @@ import { t } from '@friends-library/locale';
 import { StackParamList } from '../types';
 import { Sans } from '../components/Text';
 import tw from '../lib/tailwind';
+import Editions from '../lib/Editions';
 import { useSelector } from '../state';
 import { PRIMARY_COLOR_HEX } from '../env';
 
@@ -15,28 +16,32 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-  const { numAudios, numEditions, connected, lastAudio, lastEbook } = useSelector(
-    (s) => ({
-      numEditions: Object.values(s.editions.resources).filter((e) => e?.isMostModernized)
-        .length,
-      numAudios: Object.keys(s.audio.resources).length,
-      connected: s.network.connected,
-      lastAudio: s.resume.lastAudiobookEditionId,
-      lastEbook: s.resume.lastEbookEditionId,
-    }),
-  );
+  // watch for (and re-render) on changes to Editions singleton
+  // from app boot initial filesystem re-hydrate && network refresh
+  const [editionChanges, setEditionChanges] = useState(0);
+  useEffect(() => {
+    Editions.addChangeListener(() => setEditionChanges(editionChanges + 1));
+    return () => Editions.removeAllChangeListeners();
+  }, [Editions, setEditionChanges, editionChanges]);
+
+  const { connected, lastAudio, lastEbook } = useSelector((s) => ({
+    connected: s.network.connected,
+    lastAudio: s.resume.lastAudiobookEditionId,
+    lastEbook: s.resume.lastEbookEditionId,
+  }));
+
   return (
     <View style={tw`flex-grow items-center justify-center`}>
       <Sans>Last Audio: {lastAudio ?? `<none>`}</Sans>
       <Sans>Last Ebook: {lastEbook ?? `<none>`}</Sans>
       <HomeButton
-        title={`Ebooks (${numEditions})`}
-        onPress={() => navigation.navigate(`EBookList`, { resourceType: `edition` })}
+        title={`LOL Ebooks (${Editions.numDocuments()})`}
+        onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}
         backgroundColor={PRIMARY_COLOR_HEX}
       />
       <HomeButton
-        title={`${t`Audiobooks`} (${numAudios})`}
-        onPress={() => navigation.navigate(`AudioBookList`, { resourceType: `audio` })}
+        title={`${t`Audiobooks`} (${Editions.numAudios()})`}
+        onPress={() => navigation.navigate(`AudioBookList`, { listType: `audio` })}
         backgroundColor={PRIMARY_COLOR_HEX}
       />
       <HomeButton

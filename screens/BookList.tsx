@@ -18,7 +18,7 @@ interface Props {
 }
 
 const BookList: React.FC<Props> = ({ navigation, route }) => {
-  const type = route.params.resourceType;
+  const type = route.params.listType;
   const { resources, headerHeight } = useSelector(
     type === `audio` ? selectAudiobooks : selectEditions,
   );
@@ -27,12 +27,10 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
     item,
   }) => (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate(item.navigateTo, { resourceId: item.resourceId })
-      }
+      onPress={() => navigation.navigate(item.navigateTo, { editionId: item.editionId })}
     >
       <BookListItem
-        editionId={item.resourceId}
+        editionId={item.editionId}
         title={item.title}
         upperLeft={item.nameDisplay}
         upperRight={item.duration}
@@ -55,9 +53,9 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
             : `Ningún audiolibro corresponde a tu búsqueda.`}
         </Sans>
       )}
-      ListHeaderComponent={<ListControls resourceType={type} />}
+      ListHeaderComponent={<ListControls listType={type} />}
       renderItem={renderItem}
-      keyExtractor={(item) => item.resourceId}
+      keyExtractor={(item) => item.editionId}
     />
   );
 };

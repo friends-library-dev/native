@@ -2,7 +2,7 @@
 import { Audio } from '@friends-library/friends';
 import { State } from '../';
 import { BookListItem } from '../../types';
-import { totalDuration } from '../../lib/utils';
+import Editions from '../../lib/Editions';
 import * as select from './audio-selectors';
 import { LANG } from '../../env';
 
@@ -13,57 +13,52 @@ export default function selectAudioBooklist(
   const sort = state.preferences.sortAudiosBy;
   const headerHeight = state.dimensions.audioSortHeaderHeight;
 
-  const resources: BookListItem[] = Object.values(state.audio.resources)
-    .filter((audio) => {
-      // this is a possibly expensive filter than can get run many times
-      // while the user is updating their query, order, etc.
-      // so, we do the undefined check here, instead of with a dedicated
-      // `.filter(isDefined)`, trading all the `!`s below for some perf
-      if (!audio) {
-        return false;
-      }
-
+  const resources: BookListItem[] = Editions.getAllAudios()
+    .map(([audio, edition]) => ({ ...audio, edition }))
+    .filter(({ edition }) => {
       if (query.length < 1) {
         return true;
       }
       return (
-        audio.friend.toLowerCase().includes(query) ||
-        audio.title.toLowerCase().includes(query)
+        edition.friend.name.toLowerCase().includes(query) ||
+        edition.document.title.toLowerCase().includes(query)
       );
     })
     .sort((a, b) => {
       switch (sort) {
         case `author`: {
-          if (a!.friendSort === b!.friendSort) return 0;
-          return a!.friendSort > b!.friendSort ? 1 : -1;
+          if (a.edition.friend.nameSort === b.edition.friend.nameSort) return 0;
+          return a.edition.friend.nameSort > b.edition.friend.nameSort ? 1 : -1;
         }
         case `title`:
-          return sortable(a!.title) < sortable(b!.title) ? -1 : 1;
+          return sortable(a.edition.document.title) < sortable(b.edition.document.title)
+            ? -1
+            : 1;
         case `duration`:
-          return totalDuration(a!) < totalDuration(b!) ? -1 : 1;
+          return a.totalDuration < b.totalDuration ? -1 : 1;
         default:
-          return Number(new Date(a!.date)) > Number(new Date(b!.date)) ? -1 : 1;
+          return Number(new Date(a.publishedDate)) > Number(new Date(b.publishedDate))
+            ? -1
+            : 1;
       }
     })
     .map((audio) => {
-      const progress = select.progress(audio!.id, state);
+      const progress = select.progress(audio.edition.id, state);
       return {
-        artworkId: audio!.id,
-        title: audio!.title,
+        editionId: audio.edition.id,
+        title: audio.edition.document.utf8ShortTitle,
         navigateTo: `Listen` as const,
-        resourceId: audio!.id,
         duration: Audio.humanDuration(
-          audio!.parts.map((p) => p.duration),
+          audio.parts.map((p) => p.duration),
           `abbrev`,
           LANG,
         ),
         progress,
-        isNew: isNew(audio!.date, progress),
-        name: audio!.friend,
+        isNew: isNew(audio.publishedDate, progress),
+        name: audio.edition.friend.name,
+        // @TODO, check this, had a `.replace(/, *$/, ``)`
         nameDisplay:
-          sort === `author`
-            ? (audio!.friendSort ?? audio!.friend).replace(/, *$/, ``)
-            : audio!.friend,
+          sort === `author` ? audio.edition.friend.nameSort : audio.edition.friend.name,
       };
     });
   return { resources, headerHeight };

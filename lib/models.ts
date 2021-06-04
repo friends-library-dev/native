@@ -5,18 +5,34 @@ import {
   SQUARE_COVER_IMAGE_SIZES,
   THREE_D_COVER_IMAGE_WIDTHS,
   EditionType,
+  Sha,
 } from '@friends-library/types';
 import { PixelRatio } from 'react-native';
+import { EditionId, DocumentId } from '../types';
 import { FileSystem } from './fs';
 
 export interface DocumentEntityInterface {
-  readonly documentId: string;
+  readonly documentId: DocumentId;
 }
 
 interface EditionEntityInterface {
-  readonly editionId: string;
-  readonly documentId: string;
+  readonly editionId: EditionId;
+  readonly documentId: DocumentId;
   readonly document: DocumentEntityInterface;
+  readonly editionType: EditionType;
+}
+
+export interface EbookRevisionEntityInterface {
+  readonly fsFilenamePrefix: string;
+  readonly revisionFilenameSuffix: string;
+  readonly fsPathPrefix: string;
+  readonly fsFilename: string;
+  readonly fsPath: string;
+}
+
+export interface EbookEntityInterface {
+  readonly fsFilenamePrefix: string;
+  readonly fsPathPrefix: string;
 }
 
 export interface FsFilename {
@@ -31,8 +47,12 @@ export interface StateKey {
   readonly stateKey: string;
 }
 
+export interface TrackId {
+  readonly trackId: string;
+}
+
 export class DocumentEntity implements DocumentEntityInterface, StateKey {
-  public constructor(public readonly documentId: string) {}
+  public constructor(public readonly documentId: DocumentId) {}
 
   public get stateKey(): string {
     return this.documentId;
@@ -42,7 +62,7 @@ export class DocumentEntity implements DocumentEntityInterface, StateKey {
 export class EditionEntity
   implements EditionEntityInterface, DocumentEntityInterface, StateKey {
   public static fromDocumentIdAndEditionType(
-    documentId: string,
+    documentId: DocumentId,
     editionType: EditionType,
   ): EditionEntity {
     return new EditionEntity(`${documentId}--${editionType}`);
@@ -58,24 +78,49 @@ export class EditionEntity
     return new DocumentEntity(this.documentId);
   }
 
-  public get documentId(): string {
+  public get documentId(): DocumentId {
     return this.editionId.split(`--`).shift() ?? ``;
+  }
+
+  public get editionType(): EditionType {
+    return this.editionId.split(`--`).pop() as EditionType;
   }
 }
 
 export class AudioPartEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface {
-  public constructor(
-    editionId: string,
-    private partIndex: number,
-    private quality: AudioQuality,
-  ) {
+  implements StateKey, TrackId, EditionEntityInterface {
+  public constructor(editionId: string, private partIndex: number) {
     super(editionId);
   }
 
+  public get stateKey(): string {
+    return `${this.editionId}--${this.partIndex}`;
+  }
+
+  public get trackId(): string {
+    // don't just call this.stateKey because of inheritance
+    return `${this.editionId}--${this.partIndex}`;
+  }
+}
+
+export class AudioPartQualityEntity
+  extends AudioPartEntity
+  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface {
+  public constructor(
+    editionId: EditionId,
+    partIndex: number,
+    private quality: AudioQuality,
+  ) {
+    super(editionId, partIndex);
+  }
+
+  public get stateKey(): string {
+    return `${super.stateKey}--${this.quality}`;
+  }
+
   public get fsFilename(): string {
-    return `${this.editionId}--${this.partIndex}--${this.quality}.mp3`;
+    return `${this.stateKey}.mp3`;
   }
 
   public get fsPath(): string {
@@ -87,7 +132,7 @@ export class SquareCoverImageEntity
   extends EditionEntity
   implements FsPath, FsFilename, EditionEntityInterface {
   public static fromLayoutWidth(
-    editionId: string,
+    editionId: EditionId,
     layoutWidth: number,
   ): SquareCoverImageEntity {
     return new SquareCoverImageEntity(
@@ -96,7 +141,7 @@ export class SquareCoverImageEntity
     );
   }
 
-  public constructor(editionId: string, public readonly size: SquareCoverImageSize) {
+  public constructor(editionId: EditionId, public readonly size: SquareCoverImageSize) {
     super(editionId);
   }
 
@@ -113,7 +158,7 @@ export class ThreeDCoverImageEntity
   extends EditionEntity
   implements FsPath, FsFilename, EditionEntityInterface {
   public static fromLayoutWidth(
-    editionId: string,
+    editionId: EditionId,
     layoutWidth: number,
   ): ThreeDCoverImageEntity {
     return new ThreeDCoverImageEntity(
@@ -122,7 +167,7 @@ export class ThreeDCoverImageEntity
     );
   }
 
-  public constructor(editionId: string, public readonly size: ThreeDCoverImageWidth) {
+  public constructor(editionId: EditionId, public readonly size: ThreeDCoverImageWidth) {
     super(editionId);
   }
 
@@ -133,6 +178,53 @@ export class ThreeDCoverImageEntity
   public get fsPath(): string {
     return `${FileSystem.dirs.images}/${this.fsFilename}`;
   }
+}
+
+export class EbookEntity extends EditionEntity implements EbookEntityInterface {
+  public constructor(editionId: EditionId) {
+    super(editionId);
+  }
+
+  public get fsFilenamePrefix(): string {
+    return `${this.editionId}--`;
+  }
+
+  public get fsPathPrefix(): string {
+    return `${FileSystem.dirs.ebooks}/${this.fsFilenamePrefix}`;
+  }
+}
+
+export class EbookRevisionEntity
+  extends EbookEntity
+  implements EbookRevisionEntityInterface, FsPath, FsFilename {
+  public constructor(editionId: EditionId, private readonly revision: Sha) {
+    super(editionId);
+  }
+
+  public get fsFilename(): string {
+    return `${this.fsFilenamePrefix}${this.revisionFilenameSuffix}`;
+  }
+
+  public get revisionFilenameSuffix(): string {
+    return `${this.revision}.html`;
+  }
+
+  public get fsPath(): string {
+    return `${FileSystem.dirs.ebooks}/${this.fsFilename}`;
+  }
+
+  public static extractRevisionFromFilename(filename: string): Sha {
+    return (
+      filename
+        .replace(/\.html$/, ``)
+        .split(`--`)
+        .pop() || ``
+    );
+  }
+}
+
+export class EbookCss implements FsPath {
+  public readonly fsPath = `${FileSystem.dirs.ebooks}/ebook.css`;
 }
 
 function bestImageSize<T extends number[]>(layoutSize: number, sizes: T): T[number] {

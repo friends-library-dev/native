@@ -64,11 +64,11 @@ describe(`migrate()`, () => {
   it(`adds new edition* prefs`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
-    expect(migrated.preferences.sortEditionsBy).toBe(
-      INITIAL_STATE.preferences.sortEditionsBy,
+    expect(migrated.preferences.sortEbooksBy).toBe(
+      INITIAL_STATE.preferences.sortEbooksBy,
     );
-    expect(migrated.preferences.editionSearchQuery).toBe(
-      INITIAL_STATE.preferences.editionSearchQuery,
+    expect(migrated.preferences.ebookSearchQuery).toBe(
+      INITIAL_STATE.preferences.ebookSearchQuery,
     );
     expect(migrated.preferences.ebookColorScheme).toBe(
       INITIAL_STATE.preferences.ebookColorScheme,

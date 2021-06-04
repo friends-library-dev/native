@@ -35,7 +35,6 @@ const EbookLoading: React.FC<{ colorScheme: EbookColorScheme }> = ({ colorScheme
       <View style={tw`items-center justify-center opacity-${opacity}`}>
         <Image
           source={icon}
-          // @ts-ignore
           style={tw.style({
             opacity: iconOpacity,
             width: IMAGE_SIZE * 0.9,

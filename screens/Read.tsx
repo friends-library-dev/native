@@ -12,12 +12,13 @@ import { EditionResource, StackParamList, EbookColorScheme } from '../types';
 import EbookLoading from '../components/EbookLoading';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
+import Editions from '../lib/Editions';
 import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
-import * as select from '../state/selectors/edition';
+import * as select from '../state/selectors/ebook';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
 import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
-import { setEbookPosition } from '../state/editions/ebook-position';
+import { setEbookPosition } from '../state/ebook/position';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 import { setLastEbookEditionId } from '../state/resume';
@@ -386,7 +387,7 @@ class Read extends PureComponent<Props, State> {
  * This type models the rest of the props we can get immediately from state.
  */
 export interface SyncProps {
-  resource: Pick<EditionResource, 'url' | 'revision' | 'id'>;
+  resource: EditionResource;
   networkConnected: boolean;
   position: number;
   fontSize: number;
@@ -402,8 +403,8 @@ interface OwnProps {
 }
 
 const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps) => (state) => {
-  const editionId = ownProps.route.params.resourceId;
-  const resource = select.editionResource(editionId, state);
+  const editionId = ownProps.route.params.editionId;
+  const resource = Editions.get(editionId);
   if (!resource) return null;
   return {
     resource,
@@ -431,7 +432,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
   });
 
   useEffect(() => {
-    dispatch(setLastEbookEditionId(ownProps.route.params.resourceId));
+    dispatch(setLastEbookEditionId(ownProps.route.params.editionId));
   }, []);
 
   useEffect(() => {
@@ -464,9 +465,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
     containerState.state === `error` ? containerState.reason : null,
     props?.networkConnected,
     setContainerState,
-    props?.resource.id,
-    props?.resource.url,
-    props?.resource.revision,
+    props?.resource,
   ]);
 
   if (containerState.state !== `ready`) {

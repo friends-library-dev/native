@@ -1,27 +1,19 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { State } from '../';
 import { BookListItem, EditionResource } from '../../types';
 import { isNew, sortable } from './audio-booklist';
+import Editions from '../../lib/Editions';
 
 export default function selectAudioBooklist({
+  ebook,
   preferences,
-  editions,
   dimensions,
 }: State): { headerHeight: number; resources: BookListItem[] } {
-  const query = preferences.editionSearchQuery.toLowerCase();
-  const sort = preferences.sortEditionsBy;
+  const query = preferences.ebookSearchQuery.toLowerCase();
+  const sort = preferences.sortEbooksBy;
   const headerHeight = dimensions.editionSortHeaderHeight;
 
-  const resources: BookListItem[] = Object.values(editions.resources)
-    .filter((edition: EditionResource | undefined) => {
-      // this is a possibly expensive filter than can get run many times
-      // while the user is updating their query, order, etc.
-      // so, we do the undefined check here, instead of with a dedicated
-      // `.filter(isDefined)`, trading all the `!`s below for some perf
-      if (!edition) {
-        return false;
-      }
-
+  const resources: BookListItem[] = Editions.getEditions()
+    .filter((edition) => {
       if (!edition.isMostModernized) {
         return false;
       }
@@ -30,40 +22,37 @@ export default function selectAudioBooklist({
         return true;
       }
       return (
-        edition.friendName.toLowerCase().includes(query) ||
-        edition.documentTitle.toLowerCase().includes(query)
+        edition.friend.name.toLowerCase().includes(query) ||
+        edition.document.title.toLowerCase().includes(query)
       );
     })
     .sort((a, b) => {
       switch (sort) {
         case `author`: {
-          if (a!.friendNameSort === b!.friendNameSort) return 0;
-          return a!.friendNameSort > b!.friendNameSort ? 1 : -1;
+          if (a.friend.nameSort === b.friend.nameSort) return 0;
+          return a.friend.nameSort > b.friend.nameSort ? 1 : -1;
         }
         case `title`:
-          return sortable(a!.documentTitle) < sortable(b!.documentTitle) ? -1 : 1;
+          return sortable(a.document.title) < sortable(b.document.title) ? -1 : 1;
         case `duration`:
-          return a!.numTotalPaperbackPages < b!.numTotalPaperbackPages ? -1 : 1;
+          return a.numTotalPaperbackPages < b.numTotalPaperbackPages ? -1 : 1;
         default:
-          return Number(new Date(a!.publishedDate)) > Number(new Date(b!.publishedDate))
+          return Number(new Date(a.publishedDate)) > Number(new Date(b.publishedDate))
             ? -1
             : 1;
       }
     })
     .map((edition) => {
+      const progress = (ebook.position[edition.id] ?? 0) * 100;
       return {
-        resourceId: edition!.id,
-        artworkId: edition!.id,
-        title: edition!.documentTitle,
+        editionId: edition.id,
+        title: edition.document.utf8ShortTitle,
         navigateTo: `Ebook` as const,
-        duration: `${edition!.numTotalPaperbackPages} pages`,
-        progress: (editions.ebookPosition[edition!.id] ?? 0) * 100,
-        isNew: isNew(edition!.publishedDate, 0), // TODO `0`
-        name: edition!.friendName,
-        nameDisplay:
-          sort === `author`
-            ? edition!.friendNameSort.replace(/, *$/, ``)
-            : edition!.friendName,
+        duration: `${edition.numTotalPaperbackPages} pages`,
+        progress,
+        isNew: isNew(edition.publishedDate, progress),
+        name: edition.friend.name,
+        nameDisplay: sort === `author` ? edition.friend.nameSort : edition.friend.name,
       };
     });
 

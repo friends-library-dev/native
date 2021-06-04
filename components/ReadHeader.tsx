@@ -10,19 +10,19 @@ import { useDispatch, useSelector } from '../state';
 import { toggleShowingEbookSettings } from '../state/ephemeral';
 import { setEbookHeaderHeight } from '../state/dimensions';
 import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
+import Editions from '../lib/Editions';
 
 const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) => {
   const dispatch = useDispatch();
   const { colorScheme, title } = useSelector((state) => {
-    const params = scene.route.params as { resourceId?: string } | null;
-    const editionId = params?.resourceId ?? ``;
-    let title = state.editions.resources[editionId]?.documentTitle ?? ``;
-    title = utf8ShortTitle(title);
-    // @TODO, move into API, causing `shouldStartLoading` errors, probably for time?
-    if (title.length > 35) {
-      title = title
-        .replace(/^(The|A) /, ``)
-        .replace(/^Selection from the (.*)/, `$1 (Selection)`);
+    const params = scene.route.params as { editionId?: string } | null;
+    const editionId = params?.editionId ?? ``;
+    const edition = Editions.get(editionId);
+    let title = edition?.document.utf8ShortTitle ?? ``;
+    // @TODO: maybe measure screen dims instead of hardcoding?
+    const shouldShorten = title.length > 35;
+    if (shouldShorten) {
+      title = edition?.document.trimmedUtf8ShortTitle ?? title;
     }
     return {
       title,
