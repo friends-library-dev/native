@@ -33,21 +33,8 @@ const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type 
     height: layoutWidth / (type === `square` ? 1 : THREE_D_RATIO),
   };
 
-  const editionBg =
-    type === `square`
-      ? {
-          backgroundColor: tw.color(
-            {
-              original: `flgreen`,
-              modernized: `flblue`,
-              updated: LANG == `es` ? `flgold` : `flmaroon`,
-            }[new EditionEntity(editionId).editionType],
-          ),
-        }
-      : {};
-
   if (!image) {
-    return <View style={{ ...dims, ...style, ...editionBg }} />;
+    return <View style={{ ...dims, ...style, ...bgStyle(type, editionId) }} />;
   }
 
   // prevent flicker of image resulting from loading it first
@@ -57,10 +44,25 @@ const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type 
   }
 
   return (
-    <View style={{ ...dims, ...style, ...editionBg }}>
+    <View style={{ ...dims, ...style, ...bgStyle(type, editionId) }}>
       <Image source={{ uri: uri.current, ...dims }} />
     </View>
   );
 };
 
 export default CoverImage;
+
+function bgStyle(type: 'square' | 'threeD', editionId: EditionId): Record<string, any> {
+  if (type !== `square`) {
+    return {};
+  }
+  return {
+    backgroundColor: tw.color(
+      {
+        original: `flgreen`,
+        modernized: `flblue`,
+        updated: LANG == `es` ? `flgold` : `flmaroon`,
+      }[new EditionEntity(editionId).editionType],
+    ),
+  };
+}

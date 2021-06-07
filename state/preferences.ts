@@ -10,6 +10,7 @@ export interface PreferencesState {
   ebookSearchQuery: string;
   ebookColorScheme: EbookColorScheme;
   ebookFontSize: number;
+  ebookJustify: boolean;
 }
 
 export const initialState: PreferencesState = {
@@ -23,6 +24,7 @@ export const initialState: PreferencesState = {
   ebookSearchQuery: ``,
   ebookColorScheme: `white`,
   ebookFontSize: 5,
+  ebookJustify: true,
 };
 
 const preferences = createSlice({

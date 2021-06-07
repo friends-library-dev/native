@@ -1,6 +1,7 @@
 import { Result } from 'x-ts-utils';
 import Service from '../lib/service';
 import { EditionResource } from '../types';
+import { EbookEntity, EbookRevisionEntity } from '../lib/models';
 
 export async function readScreenProps(
   edition: EditionResource,
@@ -8,7 +9,7 @@ export async function readScreenProps(
 ): Promise<Result<{ html: string; css: string }, 'unknown' | 'no_internet'>> {
   // first we try the local filesystem
   const [fsData, fsCss] = await Promise.all([
-    Service.fsEbookData(edition.id),
+    Service.fsEbookData(EbookEntity.fromResource(edition)),
     Service.fsEbookCss(),
   ]);
 
@@ -33,7 +34,12 @@ export async function readScreenProps(
 
   // if we get here, we either have NO fsData, or it's stale,
   // and we have a network connection, so we'll try to download a fresh copy
-  const html = await Service.downloadLatestEbookHtml(edition);
+  const key = process.env.NODE_ENV?.startsWith(`prod`)
+    ? `loggedDownloadUrl`
+    : `directDownloadUrl`;
+  const networkUrl = edition.ebook[key];
+  const entity = EbookRevisionEntity.fromResource(edition);
+  const html = await Service.downloadLatestEbookHtml(entity, networkUrl);
 
   if (!html) {
     if (fsData) {

@@ -28,7 +28,6 @@ function migrate1to2(v1: Record<string, any>): State {
       // .trackPosition -> .audio.trackPosition
       trackPosition: v1.trackPosition,
 
-      // @TODO add test?
       filesystem: {
         ...INIT.audio.filesystem,
       },
@@ -62,6 +61,7 @@ function migrate1to2(v1: Record<string, any>): State {
       ebookColorScheme: INIT.preferences.ebookColorScheme,
       ebookFontSize: INIT.preferences.ebookFontSize,
       ebookSearchQuery: INIT.preferences.ebookSearchQuery,
+      ebookJustify: INIT.preferences.ebookJustify,
     },
 
     ...omit(v1, [

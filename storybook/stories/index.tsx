@@ -8,7 +8,7 @@ import { AudioControls } from '../../components/AudioControls';
 import tw from '../../lib/tailwind';
 
 // prettier-ignore
-storiesOf(EbookError.name, module)
+storiesOf(`EbookError`, module)
   .add(`black (unknown)`, () => <EbookError colorScheme="black" reason="unknown" />)
   .add(`sepia (unknown)`, () => <EbookError colorScheme="sepia" reason="unknown" />)
   .add(`white (unknown)`, () => <EbookError colorScheme="white" reason="unknown" />)
@@ -16,22 +16,22 @@ storiesOf(EbookError.name, module)
   .add(`sepia (no internet)`, () => <EbookError colorScheme="sepia" reason="no_internet" />)
   .add(`white (no internet)`, () => <EbookError colorScheme="white" reason="no_internet" />);
 
-storiesOf(EbookLoading.name, module)
+storiesOf(`EbookLoading`, module)
   .add(`black`, () => <EbookLoading colorScheme="black" />)
   .add(`sepia`, () => <EbookLoading colorScheme="sepia" />)
   .add(`white`, () => <EbookLoading colorScheme="white" />);
 
-storiesOf(BookListItem.name, module).add(`default`, () => (
+storiesOf(`BookListItem`, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
     <BookListItem
-      editionId="webb"
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
       upperLeft="Elizabeth Webb"
       progress={0}
       upperRight="41 min"
     />
     <BookListItem
-      editionId="webb"
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
       upperLeft="Elizabeth Webb"
       progress={33}
@@ -39,21 +39,21 @@ storiesOf(BookListItem.name, module).add(`default`, () => (
       badgeText="New"
     />
     <BookListItem
-      editionId="webb"
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
       upperLeft="Elizabeth Webb"
       progress={98}
       upperRight="41 min"
     />
     <BookListItem
-      editionId="penington"
+      editionId="c248c2e7-947b-4629-8296-0cdff67a6d99--updated"
       title="The Writings of Isaac Penington — Vol. I"
       upperLeft="Isaac Penington"
       progress={0}
       upperRight="12 hr 13 min"
     />
     <BookListItem
-      editionId="penington"
+      editionId="c248c2e7-947b-4629-8296-0cdff67a6d99--updated"
       title="The Writings of Isaac Penington — Vol. I"
       upperLeft="Isaac Penington"
       progress={0}
@@ -63,7 +63,7 @@ storiesOf(BookListItem.name, module).add(`default`, () => (
   </View>
 ));
 
-storiesOf(AudioControls.name, module)
+storiesOf(`AudioControls`, module)
   .add(`default`, () => (
     <View style={tw`p-6`}>
       <AudioControls

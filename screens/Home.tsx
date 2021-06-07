@@ -34,6 +34,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
     <View style={tw`flex-grow items-center justify-center`}>
       <Sans>Last Audio: {lastAudio ?? `<none>`}</Sans>
       <Sans>Last Ebook: {lastEbook ?? `<none>`}</Sans>
+      <Sans>{process.env.NODE_ENV}</Sans>
       <HomeButton
         title={`LOL Ebooks (${Editions.numDocuments()})`}
         onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}

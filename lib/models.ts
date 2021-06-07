@@ -1,3 +1,12 @@
+/**
+ * In this app, there are lots of CONVENTION-BASED STRINGS -- particularly as KEYS for STATE,
+ * and also as PATHS for storing things in the local FILESYSTEM. This file (and all of
+ * the thin wrapper classes and interfaces in it) exists to _minimize random strings_ flying
+ * around, and so that we can get some measure of type-safety and compile-time errors
+ * for modifying and accessing things according to what ultimately boils down to plain strings.
+ * The methods on the classes in this file should be the ONLY PLACE were knowledge of
+ * these conventions--how to create/assemble/dissemble these conventional strings--lives.
+ */
 import {
   AudioQuality,
   SquareCoverImageSize,
@@ -8,7 +17,7 @@ import {
   Sha,
 } from '@friends-library/types';
 import { PixelRatio } from 'react-native';
-import { EditionId, DocumentId } from '../types';
+import { EditionId, DocumentId, EditionResource } from '../types';
 import { FileSystem } from './fs';
 
 export interface DocumentEntityInterface {
@@ -70,6 +79,10 @@ export class EditionEntity
     editionType: EditionType,
   ): EditionEntity {
     return new EditionEntity(`${documentId}--${editionType}`);
+  }
+
+  public static fromResource(resource: EditionResource): EditionEntity {
+    return new EditionEntity(resource.id);
   }
 
   public constructor(public readonly editionId: string) {}
@@ -187,6 +200,10 @@ export class ThreeDCoverImageEntity
 export class EbookEntity
   extends EditionEntity
   implements EbookEntityInterface, FsPathPrefix {
+  public static fromResource(resource: EditionResource): EbookEntity {
+    return new EbookEntity(resource.id);
+  }
+
   public constructor(editionId: EditionId) {
     super(editionId);
   }
@@ -203,6 +220,10 @@ export class EbookEntity
 export class EbookRevisionEntity
   extends EbookEntity
   implements EbookRevisionEntityInterface, FsPath, FsFilename {
+  public static fromResource(resource: EditionResource): EbookRevisionEntity {
+    return new EbookRevisionEntity(resource.id, resource.revision);
+  }
+
   public constructor(editionId: EditionId, private readonly revision: Sha) {
     super(editionId);
   }

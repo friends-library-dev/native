@@ -410,7 +410,7 @@ const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps) => (state) =>
     resource,
     colorScheme: state.preferences.ebookColorScheme,
     fontSize: state.preferences.ebookFontSize,
-    position: select.ebookPosition(editionId, state),
+    position: state.ebook.position[editionId] || 0,
     networkConnected: state.network.connected,
     showingSettings: state.ephemeral.showingEbookSettings,
     showingHeader: state.ephemeral.showingEbookHeader,

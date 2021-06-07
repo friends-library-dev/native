@@ -1,9 +1,9 @@
-import { Html } from '@friends-library/types';
-import { EbookData, EditionResource, TrackData } from '../types';
+import { Html, Sha } from '@friends-library/types';
+import { EbookData, EditionId, EditionResource, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
 import { LANG } from '../env';
-import { FsPath, EbookCss, EbookEntity, EbookRevisionEntity } from './models';
+import { FsPath, EbookCss, EbookRevisionEntity, EbookEntity } from './models';
 
 export default class Service {
   public static audioSeekTo(position: number): Promise<void> {
@@ -49,9 +49,8 @@ export default class Service {
     return FS.readFile(new EbookCss());
   }
 
-  public static async fsEbookData(editionId: string): Promise<EbookData | null> {
-    const entity = new EbookEntity(editionId);
-    const file = FS.filesWithPrefix(entity)[0];
+  public static async fsEbookData(entity: EbookEntity): Promise<EbookData | null> {
+    const file = FS.filesWithPrefix(entity).shift();
     if (!file) {
       return null;
     }
@@ -78,14 +77,10 @@ export default class Service {
   }
 
   public static async downloadLatestEbookHtml(
-    edition: Pick<
-      EditionResource,
-      'ebookHtmlLoggedDownloadUrl' | 'ebookHtmlDirectDownloadUrl' | 'revision' | 'id'
-    >,
+    entity: EbookRevisionEntity,
+    networkUrl: string,
   ): Promise<Html | null> {
-    const entity = new EbookRevisionEntity(edition.id, edition.revision);
-    // @TODO switch to logged
-    if (!(await FS.download(entity, edition.ebookHtmlDirectDownloadUrl))) {
+    if (!(await FS.download(entity, networkUrl))) {
       return null;
     }
 

@@ -4,9 +4,9 @@ import { INITIAL_STATE } from '../../';
 import { getV1State } from './v1.state';
 
 describe(`migrate()`, () => {
-  it(`should put audio resources into sub field`, () => {
-    const migrated = migrate(getV1State());
-    expect(migrated.audio.resources).toMatchObject({});
+  it(`should remove audioResources`, () => {
+    const migrated: any = migrate(getV1State());
+    expect(migrated.audioResources).toBeUndefined();
   });
 
   const cases = [false, null, `whoops`, [`whoops`], 33];
@@ -26,6 +26,18 @@ describe(`migrate()`, () => {
     expect(migrated.audio.playback).toMatchObject(v1.playback);
   });
 
+  it(`moves .activePart into .audio sub-object`, () => {
+    const v1 = getV1State();
+    const migrated = migrate(v1);
+    expect(migrated.audio.activePart).toMatchObject(v1.activePart);
+  });
+
+  it(`creates empty audio.filesystem state`, () => {
+    const v1 = getV1State();
+    const migrated = migrate(v1);
+    expect(migrated.audio.filesystem).toMatchObject({});
+  });
+
   it(`renames preferences.searchQuery -> .audioSearchQuery`, () => {
     const v1 = getV1State();
     v1.preferences.searchQuery = `foo bar`;
@@ -43,16 +55,16 @@ describe(`migrate()`, () => {
     expect(migrated.trackPosition).toBeUndefined();
   });
 
-  it(`moves .activePart into .audio sub-object`, () => {
+  it(`adds new .ebook state slice`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
-    expect(migrated.audio.activePart).toMatchObject(v1.activePart);
+    expect(migrated.ebook).toMatchObject(INITIAL_STATE.ebook);
   });
 
-  it(`adds new .editions state slice`, () => {
+  it(`adds new .resume state slice`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
-    expect(migrated.editions).toMatchObject(INITIAL_STATE.editions);
+    expect(migrated.resume).toMatchObject({ ...INITIAL_STATE.resume });
   });
 
   it(`adds new .ephemeral state slice`, () => {

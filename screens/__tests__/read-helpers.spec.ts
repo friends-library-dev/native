@@ -7,7 +7,7 @@ import { EbookData, EditionResource } from 'types';
 jest.mock(`../../lib/service`);
 
 let fsData: EbookData | null = null;
-let edition: Pick<EditionResource, 'id' | 'url' | 'revision'>;
+let edition: EditionResource;
 
 describe(readScreenProps.name, () => {
   beforeEach(() => {
@@ -15,8 +15,11 @@ describe(readScreenProps.name, () => {
     edition = {
       id: `edition-id`,
       revision: `latest-sha`,
-      url: `/edition-id.html`,
-    };
+      ebook: {
+        directDownloadUrl: `/`,
+        loggedDownloadUrl: `/logged`,
+      },
+    } as EditionResource;
   });
 
   describe(`when filesystem cached data FOUND`, () => {
@@ -89,7 +92,10 @@ describe(readScreenProps.name, () => {
           css: `<style>fs_css</style>`,
         },
       });
-      expect(<jest.Mock>Service.downloadLatestEbookHtml).toHaveBeenCalledWith(edition);
+
+      const entity = (<jest.Mock>Service.downloadLatestEbookHtml).mock.calls[0][0];
+      expect(entity.editionId).toBe(edition.id);
+      expect(entity.revision).toBe(edition.revision);
     });
   });
 
@@ -110,7 +116,10 @@ describe(readScreenProps.name, () => {
       const props = await readScreenProps(edition, true);
 
       expect(props).toMatchObject({ success: false, error: `unknown` });
-      expect(<jest.Mock>Service.downloadLatestEbookHtml).toHaveBeenCalledWith(edition);
+
+      const entity = (<jest.Mock>Service.downloadLatestEbookHtml).mock.calls[0][0];
+      expect(entity.editionId).toBe(edition.id);
+      expect(entity.revision).toBe(edition.revision);
     });
 
     it(`should return fresh html if download request succeeds`, async () => {
@@ -125,7 +134,10 @@ describe(readScreenProps.name, () => {
           css: `<style>fs_css</style>`,
         },
       });
-      expect(<jest.Mock>Service.downloadLatestEbookHtml).toHaveBeenCalledWith(edition);
+
+      const entity = (<jest.Mock>Service.downloadLatestEbookHtml).mock.calls[0][0];
+      expect(entity.editionId).toBe(edition.id);
+      expect(entity.revision).toBe(edition.revision);
     });
   });
 });
