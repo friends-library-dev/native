@@ -28,26 +28,6 @@ const App: React.FC = () => {
     showingEbookHeader: state.ephemeral.showingEbookHeader,
   }));
 
-  // @TODO CURRENT, do i need to replace this?
-  // set up filesystem state one time
-  // useEffect(() => {
-  //   dispatch(
-  //     batchSetFilesystem(
-  //       // TODO - this is not great.... make more "audio" specific
-  //       Object.keys(FS.manifest).reduce<State['filesystem']>((acc, path) => {
-  //         const storedBytes = FS.manifest[path];
-  //         if (path.endsWith(`.mp3`) && typeof storedBytes === `number`) {
-  //           acc[path] = {
-  //             totalBytes: storedBytes,
-  //             bytesOnDisk: storedBytes,
-  //           };
-  //         }
-  //         return acc;
-  //       }, {}),
-  //     ),
-  //   );
-  // }, [dispatch]);
-
   // add a listener for network connectivity events one time
   useEffect(() => {
     return NetInfo.addEventListener((state) => {

@@ -88,11 +88,11 @@ export function audioPartFile(
   state: State,
 ): FileState {
   const quality = state.preferences.audioQuality;
-  const audioEntity = new AudioPartQualityEntity(editionId, partIndex, quality);
+  const entity = new AudioPartQualityEntity(editionId, partIndex, quality);
   return (
-    state.audio.filesystem[audioEntity.stateKey] ?? {
+    state.audio.filesystem[entity.stateKey] ?? {
       totalBytes: Editions.getAudioPartFilesize(editionId, partIndex, quality) ?? 10000,
-      bytesOnDisk: 0,
+      bytesOnDisk: FS.bytesOnDisk(entity),
     }
   );
 }

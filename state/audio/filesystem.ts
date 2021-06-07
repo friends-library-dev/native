@@ -184,11 +184,11 @@ function execDownloadAudio(
   const found = Editions.getAudioPart(editionId, partIndex);
   if (!found) return Promise.resolve(undefined);
   const [audioPart] = found;
-  const key = new AudioPartQualityEntity(editionId, partIndex, quality).stateKey;
+  const entity = new AudioPartQualityEntity(editionId, partIndex, quality);
   const url = audioPart[quality === `HQ` ? `url` : `urlLq`];
   const part = { editionId, index: partIndex, quality };
   return FS.eventedDownload(
-    key,
+    entity,
     url,
     (totalBytes) => {
       dispatch(set({ part, fileState: { bytesOnDisk: 1, totalBytes } }));

@@ -104,9 +104,9 @@ export const togglePartPlayback = (
 
 export const togglePlayback = (audioId: string): Thunk => async (dispatch, getState) => {
   const state = getState();
-  const audioPart = select.activeAudioPart(audioId, state);
-  if (!audioPart) return;
-  const [part] = audioPart;
+  const found = select.activeAudioPart(audioId, state);
+  if (!found) return;
+  const [part] = found;
   execTogglePartPlayback(audioId, part, dispatch, state);
 };
 

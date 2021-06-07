@@ -1,9 +1,10 @@
 import RNFS from 'react-native-fs';
 import { Platform } from 'react-native';
 import { ValuesOf } from 'x-ts-utils';
+import { FsPath } from './models';
 
 export class FileSystem {
-  public manifest: Record<string, number> = {};
+  private manifest: Record<string, number | undefined> = {};
   private downloads: Record<string, Promise<number | null>> = {};
 
   public static readonly paths = {
@@ -41,6 +42,10 @@ export class FileSystem {
     if (!this.hasFile(V1_MIGRATED_FLAG_FILE)) {
       await this.removeLegacyV1Artwork();
     }
+  }
+
+  public bytesOnDisk({ fsPath: relPath }: FsPath): number {
+    return this.manifest[relPath] ?? 0;
   }
 
   public download(relPath: string, networkUrl: string): Promise<number | null> {
@@ -87,7 +92,7 @@ export class FileSystem {
   }
 
   public async eventedDownload(
-    relPath: string,
+    { fsPath: relPath }: FsPath,
     networkUrl: string,
     onStart: (totalBytes: number) => any = () => {},
     onProgress: (bytesWritten: number, totalBytes: number) => any = () => {},
