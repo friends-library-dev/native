@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { RouteProp } from '@react-navigation/native';
 import { t } from '@friends-library/locale';
 import { StackParamList } from '../types';
 import { Sans } from '../components/Text';
+import Continue from '../components/Continue';
 import tw from '../lib/tailwind';
 import Editions from '../lib/Editions';
 import { useSelector } from '../state';
-import { PRIMARY_COLOR_HEX } from '../env';
 
 interface Props {
   navigation: StackNavigationProp<StackParamList, 'Home'>;
@@ -24,46 +25,78 @@ const Home: React.FC<Props> = ({ navigation }) => {
     return () => Editions.removeAllChangeListeners();
   }, [Editions, setEditionChanges, editionChanges]);
 
-  const { connected, lastAudio, lastEbook } = useSelector((s) => ({
-    connected: s.network.connected,
-    lastAudio: s.resume.lastAudiobookEditionId,
-    lastEbook: s.resume.lastEbookEditionId,
-  }));
+  const { connected, lastAudio, lastEbook } = useSelector((s) => {
+    return {
+      connected: s.network.connected,
+      lastAudio: s.resume.lastAudiobookEditionId,
+      lastEbook: s.resume.lastEbookEditionId,
+    };
+  });
 
   return (
-    <View style={tw`flex-grow items-center justify-center`}>
-      <Sans>Last Audio: {lastAudio ?? `<none>`}</Sans>
-      <Sans>Last Ebook: {lastEbook ?? `<none>`}</Sans>
-      <Sans>{process.env.NODE_ENV}</Sans>
-      <HomeButton
-        title={`LOL Ebooks (${Editions.numDocuments()})`}
-        onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}
-        backgroundColor={PRIMARY_COLOR_HEX}
-      />
-      <HomeButton
-        title={`${t`Audiobooks`} (${Editions.numAudios()})`}
-        onPress={() => navigation.navigate(`AudioBookList`, { listType: `audio` })}
-        backgroundColor={PRIMARY_COLOR_HEX}
-      />
-      <HomeButton
-        title={t`Settings`}
-        onPress={() => navigation.navigate(`Settings`)}
-        backgroundColor="#999"
-      />
+    <SafeAreaView
+      style={tw.style(`flex-grow items-center justify-between`, {
+        background: `#efefef`,
+      })}
+    >
+      <View
+        style={tw.style(`self-stretch`, {
+          height: lastEbook && lastAudio ? `15%` : `25%`,
+        })}
+      >
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-center pt-6 mt-1`}
+          onPress={() => navigation.navigate(`Settings`)}
+        >
+          <Icon name="gear" style={tw`pr-2 text-gray-500 mt-px text-sm`} />
+          <Sans size={16} style={tw`text-gray-500`}>
+            Settings
+          </Sans>
+        </TouchableOpacity>
+      </View>
+      <View style={tw`self-stretch`}>
+        <HomeButton
+          title={`${t`Listen`} (${Editions.numAudios()})`}
+          onPress={() => navigation.navigate(`AudioBookList`, { listType: `audio` })}
+          backgroundColor={`flprimary`}
+        />
+        <HomeButton
+          title={`Read (${Editions.numDocuments()})`}
+          onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}
+          backgroundColor={`flblue`}
+        />
+      </View>
+      <View style={tw.style(`self-stretch justify-end pb-6 px-6`, { height: `25%` })}>
+        {lastEbook && (
+          <Continue
+            type="ebook"
+            editionId={lastEbook}
+            onPress={() => navigation.navigate(`Read`, { editionId: lastEbook })}
+          />
+        )}
+        {lastAudio && (
+          <Continue
+            type="audio"
+            editionId={lastAudio}
+            onPress={() => navigation.navigate(`Listen`, { editionId: lastAudio })}
+          />
+        )}
+      </View>
       {!connected && <Sans>{t`No internet connection`}.</Sans>}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const HomeButton: React.FC<{
-  onPress: () => any;
+  onPress: () => unknown;
   title: string;
   backgroundColor: string;
 }> = ({ onPress, title, backgroundColor }) => (
   <TouchableOpacity
-    style={tw.style(`self-stretch mx-12 mb-5 px-8 py-4 rounded-full`, {
-      backgroundColor,
-    })}
+    style={tw.style(
+      `self-stretch mx-12 my-2 px-8 py-4 rounded-full`,
+      `bg-${backgroundColor}`,
+    )}
     onPress={onPress}
   >
     <Sans size={20} style={tw`text-white text-center`}>

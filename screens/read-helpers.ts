@@ -32,13 +32,16 @@ export async function readScreenProps(
     return { success: false, error: `no_internet` };
   }
 
+  const urlKey =
+    // don't log for re-download of fresh version (or dev)
+    process.env.NODE_ENV === `development` || fsData
+      ? `directDownloadUrl`
+      : `loggedDownloadUrl`;
+  const networkUrl = edition.ebook[urlKey];
+  const entity = EbookRevisionEntity.fromResource(edition);
+
   // if we get here, we either have NO fsData, or it's stale,
   // and we have a network connection, so we'll try to download a fresh copy
-  const key = process.env.NODE_ENV?.startsWith(`prod`)
-    ? `loggedDownloadUrl`
-    : `directDownloadUrl`;
-  const networkUrl = edition.ebook[key];
-  const entity = EbookRevisionEntity.fromResource(edition);
   const html = await Service.downloadLatestEbookHtml(entity, networkUrl);
 
   if (!html) {

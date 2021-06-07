@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View } from 'react-native';
-import { utf8ShortTitle } from '@friends-library/adoc-utils';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
