@@ -17,7 +17,7 @@ export default async function getStore(): Promise<Store<any, AnyAction>> {
   Editions.setResourcesIfValid(editions);
 
   let savedState: Partial<State> = {};
-  if (false && FS.hasFile(FileSystem.paths.state)) {
+  if (FS.hasFile({ fsPath: FileSystem.paths.state })) {
     savedState = await FS.readJson(FileSystem.paths.state);
     savedState = migrate(savedState);
   }

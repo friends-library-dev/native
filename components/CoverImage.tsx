@@ -24,7 +24,7 @@ const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type 
 
   useEffect(() => {
     if (image && !image.downloaded && !connected) {
-      Service.fsDownloadFile(image.entity.fsPath, image.networkUrl);
+      Service.fsDownloadFile(image.entity, image.networkUrl);
     }
   }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl, connected]);
 

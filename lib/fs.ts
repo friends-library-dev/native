@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
 import { Platform } from 'react-native';
 import { ValuesOf } from 'x-ts-utils';
-import { FsPath } from './models';
+import { FsPath, FsPathPrefix } from './models';
 
 export class FileSystem {
   private manifest: Record<string, number | undefined> = {};
@@ -39,16 +39,15 @@ export class FileSystem {
         });
     }
 
-    if (!this.hasFile(V1_MIGRATED_FLAG_FILE)) {
+    if (!this.hasFile({ fsPath: V1_MIGRATED_FLAG_FILE })) {
       await this.removeLegacyV1Artwork();
     }
   }
 
-  public bytesOnDisk({ fsPath: relPath }: FsPath): number {
-    return this.manifest[relPath] ?? 0;
-  }
-
-  public download(relPath: string, networkUrl: string): Promise<number | null> {
+  public download(
+    { fsPath: relPath }: FsPath,
+    networkUrl: string,
+  ): Promise<number | null> {
     if (this.downloads[relPath]) {
       return this.downloads[relPath]!;
     }
@@ -75,19 +74,22 @@ export class FileSystem {
     }
   }
 
-  public hasFile(relPath: string): boolean {
-    return relPath in this.manifest;
+  public hasFile({ fsPath }: FsPath): boolean {
+    return fsPath in this.manifest;
   }
 
-  public filesWithPrefix(
-    prefix: string,
-  ): Array<{ abspath: string; filename: string; relPath: string }> {
+  public bytesOnDisk(entity: FsPath): number {
+    return this.manifest[entity.fsPath] ?? 0;
+  }
+
+  public filesWithPrefix({
+    fsPathPrefix: prefix,
+  }: FsPathPrefix): Array<{ filename: string; path: FsPath }> {
     return Object.keys(this.manifest)
       .filter((relPath) => relPath.startsWith(prefix))
       .map((relPath) => ({
-        abspath: this.abspath(relPath),
         filename: basename(relPath),
-        relPath,
+        path: { fsPath: relPath },
       }));
   }
 
@@ -128,37 +130,37 @@ export class FileSystem {
     await Promise.all(promises);
   }
 
-  public async batchDelete(paths: string[]): Promise<void> {
+  public async batchDelete(paths: FsPath[]): Promise<void> {
     await Promise.all(
-      paths.filter((path) => this.manifest[path]).map((path) => this.delete(path)),
+      paths.filter((path) => this.hasFile(path)).map((path) => this.delete(path)),
     );
   }
 
   public async deleteAllAudios(): Promise<void> {
-    const promises = Object.keys(this.manifest).map((path) => {
-      return path.endsWith(`.mp3`) ? this.delete(path) : Promise.resolve(true);
+    const promises = Object.keys(this.manifest).map((fsPath) => {
+      return fsPath.endsWith(`.mp3`) ? this.delete({ fsPath }) : Promise.resolve(true);
     });
     await Promise.all(promises);
   }
 
-  public async delete(path: string): Promise<boolean> {
-    delete this.manifest[path];
+  public async delete({ fsPath: relPath }: FsPath): Promise<boolean> {
+    delete this.manifest[relPath];
     try {
-      await RNFS.unlink(this.abspath(path));
+      await RNFS.unlink(this.abspath(relPath));
       return true;
     } catch {
       return false;
     }
   }
 
-  public async deleteMany(paths: string[]): Promise<boolean> {
+  public async deleteMany(paths: FsPath[]): Promise<boolean> {
     return Promise.all(paths.map((p) => this.delete(p))).then((results) =>
       results.every((res) => res === true),
     );
   }
 
   public async readFile(
-    path: string,
+    { fsPath: path }: FsPath,
     encoding: 'utf8' | 'ascii' | 'binary' | 'base64' = `utf8`,
   ): Promise<string | null> {
     try {
@@ -172,7 +174,7 @@ export class FileSystem {
   }
 
   public async writeFile(
-    path: string,
+    { fsPath: path }: FsPath,
     contents: string,
     encoding: 'utf8' | 'ascii' | 'binary' | 'base64' = `utf8`,
   ): Promise<void> {
@@ -182,7 +184,7 @@ export class FileSystem {
     // @see https://github.com/itinance/react-native-fs/pull/890
     // @see https://issuetracker.google.com/issues/180526528?pli=1
     if (Platform.OS === `android` && this.manifest[path]) {
-      await this.delete(path);
+      await this.delete({ fsPath: path });
     }
 
     const writePromise = RNFS.writeFile(
@@ -195,7 +197,7 @@ export class FileSystem {
   }
 
   public async readJson(path: ValuesOf<typeof FileSystem.paths>): Promise<any> {
-    const json = await this.readFile(path);
+    const json = await this.readFile({ fsPath: path });
     if (json === null) {
       return null;
     }
@@ -212,40 +214,42 @@ export class FileSystem {
   ): Promise<void> {
     try {
       const string = JSON.stringify(data);
-      return this.writeFile(path, string);
+      return this.writeFile({ fsPath: path }, string);
     } catch {
       return;
     }
   }
 
-  public async moveFile(srcRelPath: string, destRelPath: string): Promise<boolean> {
+  public async moveFile(
+    { fsPath: srcPath }: FsPath,
+    { fsPath: destPath }: FsPath,
+  ): Promise<boolean> {
     try {
-      await RNFS.moveFile(this.abspath(srcRelPath), this.abspath(destRelPath), {});
+      await RNFS.moveFile(this.abspath(srcPath), this.abspath(destPath), {});
       return true;
     } catch (err) {
-      console.error(err.message);
       return false;
     }
   }
 
-  public abspath(path?: string): string {
+  public url({ fsPath }: FsPath): string {
+    return `file://${this.abspath(fsPath)}`;
+  }
+
+  private abspath(path?: string): string {
     return `${RNFS.DocumentDirectoryPath}/__FLP_APP_FILES__${
       path ? `/${path.replace(/^\//, ``)}` : ``
     }`;
   }
 
-  public async removeLegacyV1Artwork() {
+  private async removeLegacyV1Artwork() {
     if (await RNFS.exists(this.abspath(`artwork/`))) {
-      console.log(`migrating v1 artwork by deleting all the things`);
       const legacyArtworkFiles = await RNFS.readDir(this.abspath(`artwork/`));
       legacyArtworkFiles
         .filter((file) => file.isFile())
         .forEach((file) => RNFS.unlink(file.path));
-    } else {
-      console.log(`no v1 artwork to migrate`);
     }
-    console.log(`add migrated flag file`);
-    await this.writeFile(V1_MIGRATED_FLAG_FILE, `true`);
+    await this.writeFile({ fsPath: V1_MIGRATED_FLAG_FILE }, `true`);
   }
 }
 

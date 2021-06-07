@@ -43,6 +43,10 @@ export interface FsPath {
   readonly fsPath: string;
 }
 
+export interface FsPathPrefix {
+  readonly fsPathPrefix: string;
+}
+
 export interface StateKey {
   readonly stateKey: string;
 }
@@ -180,7 +184,9 @@ export class ThreeDCoverImageEntity
   }
 }
 
-export class EbookEntity extends EditionEntity implements EbookEntityInterface {
+export class EbookEntity
+  extends EditionEntity
+  implements EbookEntityInterface, FsPathPrefix {
   public constructor(editionId: EditionId) {
     super(editionId);
   }

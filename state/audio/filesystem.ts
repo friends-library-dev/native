@@ -5,7 +5,7 @@ import { EditionId } from '../../types';
 import { Thunk, Dispatch, State } from '..';
 import { canDownloadNow } from '../network';
 import Editions from '../../lib/Editions';
-import { AudioPartQualityEntity } from '../../lib/models';
+import { AudioPartQualityEntity, FsPath } from '../../lib/models';
 import FS from '../../lib/fs';
 import Service from '../../lib/service';
 import * as select from '../../state/selectors/audio-selectors';
@@ -113,11 +113,11 @@ export const deleteAllAudioParts = (editionId: EditionId): Thunk => async (dispa
   const audio = Editions.getAudio(editionId);
   if (!audio) return;
   const deletedFiles: FilesystemState = {};
-  const fsPaths: string[] = [];
+  const fsPaths: FsPath[] = [];
   audio.parts.forEach((part, index) => {
     ([`HQ`, `LQ`] as const).forEach((quality) => {
       const entity = new AudioPartQualityEntity(editionId, index, quality);
-      fsPaths.push(entity.fsPath);
+      fsPaths.push(entity);
       const key = entity.stateKey;
       const part = { editionId, index, quality };
       deletedFiles[key] = {

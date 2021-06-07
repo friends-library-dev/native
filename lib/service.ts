@@ -3,7 +3,7 @@ import { EbookData, EditionResource, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
 import { LANG } from '../env';
-import { EbookCss, EbookEntity, EbookRevisionEntity } from './models';
+import { FsPath, EbookCss, EbookEntity, EbookRevisionEntity } from './models';
 
 export default class Service {
   public static audioSeekTo(position: number): Promise<void> {
@@ -34,29 +34,29 @@ export default class Service {
     return FS.deleteAllAudios();
   }
 
-  public static fsBatchDelete(paths: string[]): Promise<void> {
+  public static fsBatchDelete(paths: FsPath[]): Promise<void> {
     return FS.batchDelete(paths);
   }
 
   public static async fsDownloadFile(
-    relPath: string,
+    path: FsPath,
     networkUrl: string,
   ): Promise<number | null> {
-    return FS.download(relPath, networkUrl);
+    return FS.download(path, networkUrl);
   }
 
   public static async fsEbookCss(): Promise<string | null> {
-    return FS.readFile(new EbookCss().fsPath);
+    return FS.readFile(new EbookCss());
   }
 
   public static async fsEbookData(editionId: string): Promise<EbookData | null> {
     const entity = new EbookEntity(editionId);
-    const file = FS.filesWithPrefix(entity.fsPathPrefix)[0];
+    const file = FS.filesWithPrefix(entity)[0];
     if (!file) {
       return null;
     }
 
-    const innerHtml = await FS.readFile(file.relPath, `utf8`);
+    const innerHtml = await FS.readFile(file.path, `utf8`);
     if (!innerHtml) {
       return null;
     }
@@ -68,8 +68,8 @@ export default class Service {
   public static EBOOK_CSS_NETWORK_URL = `https://flp-assets.nyc3.digitaloceanspaces.com/static/app-ebook.css`;
 
   public static async downloadLatestEbookCss(): Promise<void> {
-    const destPath = new EbookCss().fsPath;
-    const tempPath = `${destPath}.temp.css`;
+    const destPath = new EbookCss();
+    const tempPath = { fsPath: `${destPath}.temp.css` };
     if (!(await FS.download(tempPath, Service.EBOOK_CSS_NETWORK_URL))) {
       return;
     }
@@ -84,19 +84,18 @@ export default class Service {
     >,
   ): Promise<Html | null> {
     const entity = new EbookRevisionEntity(edition.id, edition.revision);
-    const relPath = entity.fsPath;
     // @TODO switch to logged
-    if (!(await FS.download(relPath, edition.ebookHtmlDirectDownloadUrl))) {
+    if (!(await FS.download(entity, edition.ebookHtmlDirectDownloadUrl))) {
       return null;
     }
 
-    const newHtml = FS.readFile(relPath);
+    const newHtml = FS.readFile(entity);
 
     // if we've got good, new fresh data, clean out any old stuff
     if (newHtml) {
-      const toDelete = FS.filesWithPrefix(entity.fsPathPrefix)
+      const toDelete = FS.filesWithPrefix(entity)
         .filter((f) => !f.filename.endsWith(entity.revisionFilenameSuffix))
-        .map((f) => f.relPath);
+        .map((f) => f.path);
       await FS.deleteMany(toDelete);
       return newHtml;
     }

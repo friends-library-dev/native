@@ -34,8 +34,8 @@ export function coverImage(
 
   let uri = networkUrl;
   let downloaded = false;
-  if (FS.hasFile(entity.fsPath)) {
-    uri = `file://${FS.abspath(entity.fsPath)}`;
+  if (FS.hasFile(entity)) {
+    uri = FS.url(entity);
     downloaded = true;
   }
 

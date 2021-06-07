@@ -120,7 +120,7 @@ export function trackData(
   const shortTitle = part.utf8ShortTitle;
   return {
     id: entity.trackId,
-    filepath: `file://${FS.abspath(entity.fsPath)}`,
+    filepath: FS.url(entity),
     title: backgroundPartTitle(part.title, shortTitle),
     artist: resource.friend.isCompilations ? shortTitle : resource.friend.name,
     album: resource.friend.isCompilations ? t`Friends Library` : resource.friend.name,
