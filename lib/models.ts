@@ -85,7 +85,7 @@ export class EditionEntity
     return new EditionEntity(resource.id);
   }
 
-  public constructor(public readonly editionId: string) {}
+  public constructor(public readonly editionId: EditionId) {}
 
   public get stateKey(): string {
     return this.editionId;
@@ -107,7 +107,7 @@ export class EditionEntity
 export class AudioPartEntity
   extends EditionEntity
   implements StateKey, TrackId, EditionEntityInterface {
-  public constructor(editionId: string, private partIndex: number) {
+  public constructor(editionId: EditionId, private partIndex: number) {
     super(editionId);
   }
 

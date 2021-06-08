@@ -2,12 +2,13 @@ import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { utf8ShortTitle } from '@friends-library/adoc-utils';
+import { EditionId } from '../types';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
 import CoverImage from './CoverImage';
 
 interface Props {
-  editionId: string;
+  editionId: EditionId;
   title: string | (() => JSX.Element);
   upperLeft: string;
   upperRight: string;

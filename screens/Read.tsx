@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RNScrubber from 'react-native-scrubber';
-import { EditionResource, StackParamList, EbookColorScheme } from '../types';
+import { EditionResource, StackParamList, EbookColorScheme, EditionId } from '../types';
 import EbookLoading from '../components/EbookLoading';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
@@ -41,7 +41,7 @@ export type Props =
       state: `ready`;
       position: number;
       chapterId?: string;
-      editionId: string;
+      editionId: EditionId;
       html: string;
       css: string;
       headerHeight: number;

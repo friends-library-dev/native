@@ -32,9 +32,9 @@ export interface EbookData {
 
 export type StackParamList = {
   Home: undefined;
-  Read: { editionId: string; chapterId?: string };
-  Ebook: { editionId: string };
-  Listen: { editionId: string };
+  Read: { editionId: EditionId; chapterId?: string };
+  Ebook: { editionId: EditionId };
+  Listen: { editionId: EditionId };
   Settings: undefined;
   AudioBookList: { listType: 'audio' };
   EBookList: { listType: 'ebook' };
@@ -42,7 +42,7 @@ export type StackParamList = {
 
 export interface BookListItem {
   navigateTo: keyof StackParamList;
-  editionId: string;
+  editionId: EditionId;
   isNew: boolean;
   progress: number;
   duration: string;

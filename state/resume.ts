@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { EditionId } from '../types';
 
 export interface ResumeState {
-  lastAudiobookEditionId: string | undefined;
-  lastEbookEditionId: string | undefined;
+  lastAudiobookEditionId: EditionId | undefined;
+  lastEbookEditionId: EditionId | undefined;
 }
 
 export const initialState: ResumeState = {
@@ -14,10 +15,10 @@ const resume = createSlice({
   name: `resume`,
   initialState,
   reducers: {
-    setLastEbookEditionId: (state, action: PayloadAction<string | undefined>) => {
+    setLastEbookEditionId: (state, action: PayloadAction<EditionId | undefined>) => {
       state.lastEbookEditionId = action.payload;
     },
-    setLastAudiobookEditionId: (state, action: PayloadAction<string | undefined>) => {
+    setLastAudiobookEditionId: (state, action: PayloadAction<EditionId | undefined>) => {
       state.lastAudiobookEditionId = action.payload;
     },
   },

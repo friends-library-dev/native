@@ -45,16 +45,18 @@ export const Continue: React.FC<Props> = ({
       <Serif size={17} style={tw`pt-1 text-gray-600`} numberOfLines={1}>
         {title}
       </Serif>
-      <View
-        style={tw.style(
-          `bg-flblue rounded-full opacity-75 mt-1 self-start items-center justify-center`,
-          { height: 14, width: 30 },
-        )}
-      >
-        <Sans size={10} style={tw`uppercase text-white px-1`}>
-          {percentComplete}%
-        </Sans>
-      </View>
+      {percentComplete > 0 && (
+        <View
+          style={tw.style(
+            `bg-flblue rounded-full opacity-75 mt-1 self-start items-center justify-center`,
+            { height: 14, width: 30 },
+          )}
+        >
+          <Sans size={10} style={tw`uppercase text-white px-1`}>
+            {percentComplete}%
+          </Sans>
+        </View>
+      )}
     </View>
     <View style={tw.style(`justify-center pl-3 flex-grow items-end`)}>
       <Icon name="chevron-right" style={tw`text-flblue pb-2`} />

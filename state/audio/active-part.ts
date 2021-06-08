@@ -9,7 +9,7 @@ const activePart = createSlice({
   name: `activePart`,
   initialState,
   reducers: {
-    set: (state, action: PayloadAction<{ editionId: string; partIndex: number }>) => {
+    set: (state, action: PayloadAction<{ editionId: EditionId; partIndex: number }>) => {
       const { editionId, partIndex } = action.payload;
       state[editionId] = partIndex;
     },
