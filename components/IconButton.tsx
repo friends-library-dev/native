@@ -5,17 +5,17 @@ import tw from '../lib/tailwind';
 import { Sans } from './Text';
 
 interface Props {
-  style?: string | { [key: string]: number | string };
   icon: string;
   text: string;
   secondaryText?: string;
+  tailwindClass?: string;
   bgTailwindClass?: string;
   textTailwindClass?: string;
   onPress: () => any;
 }
 
 const IconButton: React.FC<Props> = ({
-  style,
+  tailwindClass,
   icon,
   text,
   secondaryText,
@@ -23,10 +23,15 @@ const IconButton: React.FC<Props> = ({
   textTailwindClass = `text-v1-blue-800`,
   onPress,
 }) => (
-  <View style={tw.style(`pb-2 px-4 flex-row justify-center`, style)}>
+  <View style={tw.style(`pb-2 px-4 flex-row justify-center`, tailwindClass)}>
     <TouchableOpacity
       onPress={onPress}
-      style={tw`${bgTailwindClass} flex-row px-6 py-2 rounded-full`}
+      style={tw.style(
+        `${bgTailwindClass} justify-center flex-row px-6 py-2 rounded-full`,
+        {
+          minWidth: 160,
+        },
+      )}
     >
       <Icon name={icon} size={21} style={tw`pr-2 ${textTailwindClass}`} />
       <View style={tw`flex-row`}>

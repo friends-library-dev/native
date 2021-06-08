@@ -1,48 +1,64 @@
 import React from 'react';
 import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
-import AudioListItem from '../../components/AudioListItem';
+import BookListItem from '../../components/BookListItem';
+import EbookLoading from '../../components/EbookLoading';
+import EbookError from '../../components/EbookError';
 import { AudioControls } from '../../components/AudioControls';
 import tw from '../../lib/tailwind';
 
-storiesOf(`AudioListItem`, module).add(`default`, () => (
+// prettier-ignore
+storiesOf(`EbookError`, module)
+  .add(`black (unknown)`, () => <EbookError colorScheme="black" reason="unknown" />)
+  .add(`sepia (unknown)`, () => <EbookError colorScheme="sepia" reason="unknown" />)
+  .add(`white (unknown)`, () => <EbookError colorScheme="white" reason="unknown" />)
+  .add(`black (no internet)`, () => <EbookError colorScheme="black" reason="no_internet" />)
+  .add(`sepia (no internet)`, () => <EbookError colorScheme="sepia" reason="no_internet" />)
+  .add(`white (no internet)`, () => <EbookError colorScheme="white" reason="no_internet" />);
+
+storiesOf(`EbookLoading`, module)
+  .add(`black`, () => <EbookLoading colorScheme="black" />)
+  .add(`sepia`, () => <EbookLoading colorScheme="sepia" />)
+  .add(`white`, () => <EbookLoading colorScheme="white" />);
+
+storiesOf(`BookListItem`, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={0}
-      duration="41 min"
+      upperRight="41 min"
     />
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={33}
-      duration="41 min"
-      isNew
+      upperRight="41 min"
+      badgeText="New"
     />
-    <AudioListItem
-      id="webb"
+    <BookListItem
+      editionId="a52eb875-8a1a-4f2f-b1b4-650eb3af1126--updated"
       title="A Letter of Elizabeth Webb"
-      friend="Elizabeth Webb"
+      upperLeft="Elizabeth Webb"
       progress={98}
-      duration="41 min"
+      upperRight="41 min"
     />
-    <AudioListItem
-      id="penington"
+    <BookListItem
+      editionId="c248c2e7-947b-4629-8296-0cdff67a6d99--updated"
       title="The Writings of Isaac Penington — Vol. I"
-      friend="Isaac Penington"
+      upperLeft="Isaac Penington"
       progress={0}
-      duration="12 hr 13 min"
+      upperRight="12 hr 13 min"
     />
-    <AudioListItem
-      id="penington"
+    <BookListItem
+      editionId="c248c2e7-947b-4629-8296-0cdff67a6d99--updated"
       title="The Writings of Isaac Penington — Vol. I"
-      friend="Isaac Penington"
+      upperLeft="Isaac Penington"
       progress={0}
-      duration="12 hr 13 min"
-      isNew
+      upperRight="12 hr 13 min"
+      badgeText="New"
     />
   </View>
 ));

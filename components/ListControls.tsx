@@ -1,22 +1,24 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { PropSelector, useDispatch, useSelector } from '../state';
-import {
-  setSearchQuery,
-  setSortAudiosBy,
-  AudioSortCriteria,
-  setAudioSortHeaderHeight,
-} from '../state/preferences';
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
 import Search from './Search';
 import { LANG } from '../env';
+import { BookSortMethod } from '../types';
+import { setAudioSortHeaderHeight, setEbookSortHeaderHeight } from '../state/dimensions';
+import {
+  setAudioSearchQuery,
+  setSortAudiosBy,
+  setEbookSearchQuery,
+  setSortEbooksBy,
+} from '../state/preferences';
 
 interface Props {
   query: string;
   setQuery: (query: string) => unknown;
-  sort: AudioSortCriteria;
-  setSort: (criteria: AudioSortCriteria) => unknown;
+  sort: BookSortMethod;
+  setSort: (criteria: BookSortMethod) => unknown;
   setHeight: (height: number) => unknown;
 }
 
@@ -87,21 +89,32 @@ const SortButton: React.FC<{
 
 export const propSelector: PropSelector<OwnProps, Props> = (ownProps, dispatch) => {
   return (state) => {
+    if (ownProps.listType === `audio`) {
+      return {
+        query: state.preferences.audioSearchQuery,
+        sort: state.preferences.sortAudiosBy,
+        setQuery: (query) => dispatch(setAudioSearchQuery(query)),
+        setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
+        setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
+      };
+    }
     return {
-      query: state.preferences.searchQuery,
-      sort: state.preferences.sortAudiosBy,
-      setQuery: (query) => dispatch(setSearchQuery(query)),
-      setSort: (criteria) => dispatch(setSortAudiosBy(criteria)),
-      setHeight: (height) => dispatch(setAudioSortHeaderHeight(height)),
+      query: state.preferences.ebookSearchQuery,
+      sort: state.preferences.sortEbooksBy,
+      setQuery: (query) => dispatch(setEbookSearchQuery(query)),
+      setSort: (criteria) => dispatch(setSortEbooksBy(criteria)),
+      setHeight: (height) => dispatch(setEbookSortHeaderHeight(height)),
     };
   };
 };
 
-type OwnProps = Record<string, never>;
+type OwnProps = {
+  listType: 'ebook' | 'audio';
+};
 
-const ListControlsContainer: React.FC<OwnProps> = () => {
+const ListControlsContainer: React.FC<OwnProps> = (ownProps) => {
   const dispatch = useDispatch();
-  const props = useSelector(propSelector({}, dispatch));
+  const props = useSelector(propSelector(ownProps, dispatch));
   if (!props) return null;
   return <ListControls {...props} />;
 };

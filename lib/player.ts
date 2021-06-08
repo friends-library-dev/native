@@ -38,6 +38,10 @@ class Player extends EventEmitter {
     return RNTrackPlayer.getPosition();
   }
 
+  public getCurrentTrackId(): Promise<string> {
+    return RNTrackPlayer.getCurrentTrack();
+  }
+
   public seekTo(position: number): Promise<void> {
     return RNTrackPlayer.seekTo(position);
   }

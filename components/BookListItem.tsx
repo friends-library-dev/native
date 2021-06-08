@@ -2,32 +2,32 @@ import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { utf8ShortTitle } from '@friends-library/adoc-utils';
+import { EditionId } from '../types';
 import tw from '../lib/tailwind';
 import { Sans, Serif } from './Text';
-import Artwork from './Artwork';
-import { LANG } from '../env';
+import CoverImage from './CoverImage';
 
 interface Props {
-  id: string;
-  title: string;
-  friend: string;
+  editionId: EditionId;
+  title: string | (() => JSX.Element);
+  upperLeft: string;
+  upperRight: string;
   progress: number;
-  duration: string;
-  isNew?: boolean;
+  badgeText?: string;
 }
 
-const AudioListItem: React.FC<Props> = ({
-  id,
+const BookListItem: React.FC<Props> = ({
+  editionId,
   title,
-  friend,
+  upperLeft,
+  upperRight,
   progress,
-  isNew,
-  duration,
+  badgeText,
 }) => {
   return (
     <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
       <View style={tw.style({ width: 90, height: 90 })}>
-        <Artwork id={id} size={90} />
+        <CoverImage editionId={editionId} layoutWidth={90} type="square" />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>
@@ -37,30 +37,34 @@ const AudioListItem: React.FC<Props> = ({
             size={11}
             style={tw.style(`uppercase text-v1-gray-700 mb-1`, { letterSpacing: 0.75 })}
           >
-            {friend}
+            {upperLeft}
           </Sans>
           <Sans
             size={11}
             style={tw.style(`text-v1-gray-600 mb-1`, { letterSpacing: 0.5 })}
           >
-            {duration}
+            {upperRight}
           </Sans>
         </View>
         <Serif size={22} style={tw`pb-1`} numberOfLines={2}>
-          {utf8ShortTitle(title)}
+          {typeof title === `function` ? title() : utf8ShortTitle(title)}
         </Serif>
-        {isNew && (
+        {badgeText && (
           <View
             style={tw.style(
-              LANG === `es` ? `w-12` : `w-10`,
               `mt-px mb-0 h-4 rounded-full bg-v1-green-500 text-center items-center justify-center`,
+              {
+                'w-10': badgeText.length < 5,
+                'w-12': badgeText.length === 5,
+                'w-24': badgeText.length > 5,
+              },
             )}
           >
             <Sans
               style={tw`uppercase text-white text-center font-bold android:-mt-px`}
               size={9.5}
             >
-              {LANG === `es` ? `Nuevo` : `New`}
+              {badgeText}
             </Sans>
           </View>
         )}
@@ -69,7 +73,7 @@ const AudioListItem: React.FC<Props> = ({
   );
 };
 
-export default AudioListItem;
+export default React.memo(BookListItem);
 
 const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
   <View style={tw.style(`absolute bottom-0 rounded-full m-2`, { width: 75, height: 4 })}>

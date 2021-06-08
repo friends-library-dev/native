@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
 import { ScrollView, Dimensions, View, Alert } from 'react-native';
-import { AudioResource, StackParamList } from '../types';
+import {
+  EditionResource,
+  Audio as AudioResource,
+  StackParamList,
+  EditionId,
+} from '../types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { t } from '@friends-library/locale';
-import { utf8ShortTitle } from '@friends-library/adoc-utils';
-import { Serif, Sans } from '../components/Text';
+import { Sans } from '../components/Text';
 import IconButton from '../components/IconButton';
-import Artwork from '../components/Artwork';
+import { ByLine, JustifiedDescription, MainTitle } from '../components/BookParts';
+import CoverImage from '../components/CoverImage';
 import {
   AudioControls,
   Props as AudioControlsProps,
@@ -27,13 +32,14 @@ import {
   isDownloaded,
   downloadAllAudios,
   deleteAllAudioParts,
-} from '../state/filesystem';
-import * as select from '../state/selectors';
+} from '../state/audio/filesystem';
+import * as select from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
 import { Audio } from '@friends-library/friends';
 
 interface Props {
+  edition: EditionResource;
   audio: AudioResource;
   duration: string;
   unDownloaded: number;
@@ -50,6 +56,7 @@ interface Props {
 }
 
 export const AudioScreen: React.FC<Props> = ({
+  edition,
   audio,
   downloaded,
   unDownloaded,
@@ -76,9 +83,10 @@ export const AudioScreen: React.FC<Props> = ({
 
   return (
     <ScrollView>
-      <Artwork
-        id={audio.id}
-        size={ARTWORK_WIDTH}
+      <CoverImage
+        editionId={edition.id}
+        layoutWidth={ARTWORK_WIDTH}
+        type="square"
         style={{
           marginTop: `8%`,
           alignSelf: `center`,
@@ -101,14 +109,8 @@ export const AudioScreen: React.FC<Props> = ({
           </View>
         )}
       </View>
-      <Serif size={30} style={tw`text-center py-4 px-8`}>
-        {utf8ShortTitle(audio.title)}
-      </Serif>
-      {!audio.title.includes(audio.friend) && !audio.friend.startsWith(`Compila`) && (
-        <Serif size={22} style={tw`text-center italic text-v1-gray-700 mb-6 -mt-2`}>
-          {t`by`} {audio.friend}
-        </Serif>
-      )}
+      <MainTitle title={edition.document.utf8ShortTitle} />
+      <ByLine title={edition.document.title} friend={edition.friend.name} />
       {showDownloadAll && (
         <IconButton
           onPress={downloadAllParts}
@@ -126,18 +128,11 @@ export const AudioScreen: React.FC<Props> = ({
           <Sans style={tw`text-center text-v1-gray-700 py-3`}>{duration}</Sans>
         </View>
       )}
-      <Serif
-        style={tw.style(`px-6 pt-2 pb-4 text-justify text-v1-gray-800`, {
-          lineHeight: 26,
-        })}
-        size={18}
-      >
-        {audio.shortDescription}
-      </Serif>
+      <JustifiedDescription description={edition.document.shortDescription} />
       {isMultipart && (
         <View style={tw`mb-16`}>
           {downloadablePartProps.map((props, idx) => (
-            <DownloadablePart key={`${audio.id}--${idx}`} {...props} />
+            <DownloadablePart key={`${edition.id}--${idx}`} {...props} />
           ))}
         </View>
       )}
@@ -149,7 +144,7 @@ export const AudioScreen: React.FC<Props> = ({
           secondaryText={`(${humansize(downloaded)})`}
           textTailwindClass="text-v1-gray-700"
           bgTailwindClass="bg-red-200"
-          style={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
+          tailwindClass={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
         />
       )}
     </ScrollView>
@@ -163,21 +158,24 @@ interface OwnProps {
   route: RouteProp<StackParamList, 'Listen'>;
 }
 
-const propSelector: PropSelector<{ audioId: string }, Props> = (
-  { audioId },
+const propSelector: PropSelector<{ editionId: EditionId }, Props> = (
+  { editionId },
   dispatch,
 ) => (state) => {
   const quality = state.preferences.audioQuality;
-  const audioPart = select.activeAudioPart(audioId, state);
-  const files = select.audioFiles(audioId, state);
-  if (!audioPart || !files) return null;
-  const [part, audio] = audioPart;
-  const controlsProps = audioControlsPropSelector({ audioId: audio.id }, dispatch)(state);
+  const found = select.activeAudioPart(editionId, state);
+  const files = select.audioFiles(editionId, state);
+  if (!found || !files) return null;
+
+  const [part, edition, audio] = found;
+  const controlsProps = audioControlsPropSelector({ editionId }, dispatch)(state);
+
   if (!controlsProps) return null;
-  const activeFile = select.audioPartFile(audio.id, part.index, state);
+  const activeFile = select.audioPartFile(editionId, part.index, state);
   const size = quality === `HQ` ? `size` : `sizeLq`;
   return {
     audio,
+    edition,
     duration: Audio.humanDuration(
       audio.parts.map((p) => p.duration),
       `abbrev`,
@@ -186,12 +184,12 @@ const propSelector: PropSelector<{ audioId: string }, Props> = (
     controlsProps,
     downloadablePartProps: audio.parts
       .map((part, partIndex) =>
-        downloadablePartPropSelector({ audioId: audio.id, partIndex }, dispatch)(state),
+        downloadablePartPropSelector({ editionId, partIndex }, dispatch)(state),
       )
       .filter(isNotNull),
     showNetworkFail: state.network.recentFailedAttempt,
-    deleteAllParts: () => dispatch(deleteAllAudioParts(audio.id)),
-    downloadAllParts: () => dispatch(downloadAllAudios(audio.id)),
+    deleteAllParts: () => dispatch(deleteAllAudioParts(editionId)),
+    downloadAllParts: () => dispatch(downloadAllAudios(editionId)),
     unDownloaded: audio.parts.reduce((acc, part, idx) => {
       const file = files[idx];
       if (file && !isDownloaded(file)) {
@@ -217,7 +215,9 @@ const propSelector: PropSelector<{ audioId: string }, Props> = (
 
 const AudioScreenContainer: React.FC<OwnProps> = ({ route }) => {
   const dispatch = useDispatch();
-  const props = useSelector(propSelector({ audioId: route.params.audioId }, dispatch));
+  const props = useSelector(
+    propSelector({ editionId: route.params.editionId }, dispatch),
+  );
   if (!props) return null;
   return <AudioScreen {...props} />;
 };

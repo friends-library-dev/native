@@ -6,17 +6,16 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { State, INITIAL_STATE } from '../state';
-import audioResources from './audio-resources';
+import Editions from '../lib/Editions';
+import resources from './edition-resources';
 import './rn-addons';
 
 const store = createStore(() => {
-  const state: State = {
-    ...INITIAL_STATE,
-    audioResources,
-  };
+  const state: State = { ...INITIAL_STATE };
   return state;
 }, applyMiddleware(thunk));
 
+Editions.setResources(resources);
 SplashScreen.hide();
 
 addDecorator((Story: any) => (
@@ -28,6 +27,7 @@ addDecorator((Story: any) => (
 // import stories
 configure(() => {
   require(`./stories`);
+  require(`./stories/stories.ebook-settings`);
   require(`./stories/stories.audio-screen`);
   require(`./stories/stories.scrubber`);
   require(`./stories/stories.downloadable-part`);

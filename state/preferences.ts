@@ -1,37 +1,47 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AudioQuality } from '@friends-library/types';
-
-export type AudioSortCriteria = 'duration' | 'published' | 'author' | 'title';
+import { BookSortMethod, EbookColorScheme } from '../types';
 
 export interface PreferencesState {
   audioQuality: AudioQuality;
-  sortAudiosBy: AudioSortCriteria;
-  searchQuery: string;
-  audioSortHeaderHeight: number;
+  sortAudiosBy: BookSortMethod;
+  audioSearchQuery: string;
+  sortEbooksBy: BookSortMethod;
+  ebookSearchQuery: string;
+  ebookColorScheme: EbookColorScheme;
+  ebookFontSize: number;
+  ebookJustify: boolean;
 }
 
 export const initialState: PreferencesState = {
+  // audio prefs
   audioQuality: `HQ`,
   sortAudiosBy: `published`,
-  searchQuery: ``,
+  audioSearchQuery: ``,
 
-  // maybe not technically a "preference", but is in essence
-  // derived at runtime from their font-size, which sort of is a pref.
-  audioSortHeaderHeight: 113.5,
+  // edition/ebook prefs
+  sortEbooksBy: `published`,
+  ebookSearchQuery: ``,
+  ebookColorScheme: `white`,
+  ebookFontSize: 5,
+  ebookJustify: true,
 };
 
 const preferences = createSlice({
   name: `preferences`,
   initialState,
   reducers: {
-    setAudioSortHeaderHeight: (state, action: PayloadAction<number>) => {
-      state.audioSortHeaderHeight = action.payload;
+    setSortEbooksBy: (state, action: PayloadAction<BookSortMethod>) => {
+      state.sortEbooksBy = action.payload;
     },
-    setSortAudiosBy: (state, action: PayloadAction<AudioSortCriteria>) => {
+    setEbookSearchQuery: (state, action: PayloadAction<string>) => {
+      state.ebookSearchQuery = action.payload;
+    },
+    setSortAudiosBy: (state, action: PayloadAction<BookSortMethod>) => {
       state.sortAudiosBy = action.payload;
     },
-    setSearchQuery: (state, action: PayloadAction<string>) => {
-      state.searchQuery = action.payload;
+    setAudioSearchQuery: (state, action: PayloadAction<string>) => {
+      state.audioSearchQuery = action.payload;
     },
     setQuality: (state, action: PayloadAction<AudioQuality>) => {
       state.audioQuality = action.payload;
@@ -39,15 +49,24 @@ const preferences = createSlice({
     toggleQuality: (state) => {
       state.audioQuality = state.audioQuality === `HQ` ? `LQ` : `HQ`;
     },
+    setEbookColorScheme: (state, action: PayloadAction<EbookColorScheme>) => {
+      state.ebookColorScheme = action.payload;
+    },
+    setEbookFontSize: (state, action: PayloadAction<number>) => {
+      state.ebookFontSize = action.payload;
+    },
   },
 });
 
 export const {
   setQuality,
   toggleQuality,
-  setSearchQuery,
+  setAudioSearchQuery,
   setSortAudiosBy,
-  setAudioSortHeaderHeight,
+  setSortEbooksBy,
+  setEbookSearchQuery,
+  setEbookColorScheme,
+  setEbookFontSize,
 } = preferences.actions;
 
 export default preferences.reducer;

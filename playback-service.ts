@@ -1,8 +1,8 @@
 import Player from './lib/player';
 import { Platform } from 'react-native';
-import { setCurrentTrackPosition } from './state/track-position';
-import { maybeDownloadNextQueuedTrack } from './state/filesystem';
-import { setState as setPlaybackState, maybeAdvanceQueue } from './state/playback';
+import { setCurrentTrackPosition } from './state/audio/track-position';
+import { maybeDownloadNextQueuedTrack } from './state/audio/filesystem';
+import { setState as setPlaybackState, maybeAdvanceQueue } from './state/audio/playback';
 
 module.exports = async function () {
   Player.addEventListener(`remote-play`, () => {
@@ -61,7 +61,7 @@ module.exports = async function () {
       Player.getPosition(),
       Player.getState(),
     ]);
-    if (state !== `PLAYING`) {
+    if (state !== `PLAYING` || position < 0) {
       return;
     }
     Player.dispatch(setCurrentTrackPosition(position));

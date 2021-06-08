@@ -9,12 +9,13 @@ import {
   isDownloaded,
   downloadProgress,
   downloadAudio,
-} from '../state/filesystem';
-import { togglePartPlayback } from '../state/playback';
-import { AudioPart } from '../types';
+} from '../state/audio/filesystem';
+import { togglePartPlayback } from '../state/audio/playback';
+import { AudioPart, EditionId } from '../types';
 import { Sans } from './Text';
-import { isAudioPartPlaying, audioPartFile } from '../state/selectors';
+import { isAudioPartPlaying, audioPartFile } from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
+import Editions from '../lib/Editions';
 
 type CommonProps = {
   part: Pick<AudioPart, 'title'>;
@@ -85,17 +86,15 @@ export const DownloadablePart: React.FC<Props> = (props) => {
 export const propSelector: (
   ownProps: ContainerProps,
   dispatch: Dispatch,
-) => (state: State) => null | Props = ({ audioId, partIndex }, dispatch) => {
+) => (state: State) => null | Props = ({ editionId, partIndex }, dispatch) => {
   return (state) => {
-    const audio = state.audioResources[audioId];
-    if (!audio) return null;
-    const part = audio.parts[partIndex];
-    if (!part) return null;
-
-    const file = audioPartFile(audioId, partIndex, state);
+    const found = Editions.getAudioPart(editionId, partIndex);
+    if (!found) return null;
+    const [part] = found;
+    const file = audioPartFile(editionId, partIndex, state);
     const common = {
-      play: () => dispatch(togglePartPlayback(audioId, partIndex)),
-      download: () => dispatch(downloadAudio(audioId, partIndex)),
+      play: () => dispatch(togglePartPlayback(editionId, partIndex)),
+      download: () => dispatch(downloadAudio(editionId, partIndex)),
       part,
     };
 
@@ -103,7 +102,7 @@ export const propSelector: (
       return { ...common, state: `downloading`, progress: downloadProgress(file) };
     }
 
-    if (isAudioPartPlaying(audioId, partIndex, state)) {
+    if (isAudioPartPlaying(editionId, partIndex, state)) {
       return { ...common, state: `playing` };
     }
 
@@ -118,7 +117,7 @@ export const propSelector: (
 };
 
 interface ContainerProps {
-  audioId: string;
+  editionId: EditionId;
   partIndex: number;
 }
 
