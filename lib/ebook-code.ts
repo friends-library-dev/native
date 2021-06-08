@@ -2,7 +2,6 @@ import css from 'x-syntax';
 import { EbookColorScheme } from '../types';
 import { Element, Document, Window } from './dom-stubs';
 import tw from '../lib/tailwind';
-import devCss from './dev-css';
 
 export type Message =
   | { type: 'update_position'; position: number }
@@ -172,8 +171,10 @@ const cssVars = css`
   :root {
     --ebook-colorscheme-black-bg: ${tw.color(`ebook-colorscheme-black-bg`) ?? ``};
     --ebook-colorscheme-black-fg: ${tw.color(`ebook-colorscheme-black-fg`) ?? ``};
+    --ebook-colorscheme-black-accent: ${tw.color(`ebook-colorscheme-black-accent`) ?? ``};
     --ebook-colorscheme-white-bg: ${tw.color(`ebook-colorscheme-white-bg`) ?? ``};
     --ebook-colorscheme-white-fg: ${tw.color(`ebook-colorscheme-white-fg`) ?? ``};
+    --ebook-colorscheme-white-accent: ${tw.color(`ebook-colorscheme-white-accent`) ?? ``};
     --ebook-colorscheme-sepia-bg: ${tw.color(`ebook-colorscheme-sepia-bg`) ?? ``};
     --ebook-colorscheme-sepia-fg: ${tw.color(`ebook-colorscheme-sepia-fg`) ?? ``};
     --ebook-colorscheme-sepia-accent: ${tw.color(`ebook-colorscheme-sepia-accent`) ?? ``};
@@ -197,7 +198,6 @@ export function wrapHtml(
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars}</style>
        ${css}
-       <style>${devCss}</style>
     </head>
     <body>
       <div id="fn-overlay">

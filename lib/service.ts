@@ -100,8 +100,7 @@ export default class Service {
 
   public static async networkFetchEditions(): Promise<any> {
     try {
-      // @TODO fake url
-      const res = await fetch(`http://10.0.1.251:8888/app-editions/v1/${LANG}`);
+      const res = await fetch(`https://api.friendslibrary.com/app-editions/v1/${LANG}`);
       return await res.json();
     } catch (err) {
       // ¯\_(ツ)_/¯

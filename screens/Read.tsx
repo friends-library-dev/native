@@ -81,6 +81,9 @@ class Read extends PureComponent<Props, State> {
     this.htmlRef = React.createRef();
     this.intervalRef = React.createRef();
     this.intervalRef.current = setInterval(() => {
+      if (this.state.showingFootnote) {
+        return;
+      }
       this.injectJs(
         `window.requestPositionUpdateIfChanged && window.requestPositionUpdateIfChanged()`,
       );
@@ -305,7 +308,7 @@ class Read extends PureComponent<Props, State> {
         />
         {/* @TODO - this whole scrubber position area should be extracted into its own component */}
         <View style={tw`flex-grow relative`}>
-          {showingHeader && percentComplete >= 0 && (
+          {showingHeader && percentComplete >= 0 && !this.state.showingFootnote && (
             <View
               style={tw.style(
                 `absolute bottom-0 right-0 w-full z-10 px-10`,
@@ -329,7 +332,9 @@ class Read extends PureComponent<Props, State> {
                     this.setState({ position: newPosition });
                     this.injectJs(`window.updatePosition(${newPosition})`);
                   }}
+                  // necessary to prevent error ¯\_(ツ)_/¯
                   onSlidingStart={() => {}}
+                  trackBackgroundColor={colorScheme === `black` ? `#222` : `#ddd`}
                   value={percentComplete}
                   totalDuration={100}
                   displayValues={false}

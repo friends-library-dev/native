@@ -54,7 +54,7 @@ const App: React.FC = () => {
           <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
           <Stack.Screen
             name="EBookList"
-            options={{ title: t`Ebooks` }}
+            options={{ title: t`Read` }}
             component={BookList}
             initialParams={{ listType: `ebook` }}
           />
@@ -69,7 +69,7 @@ const App: React.FC = () => {
           />
           <Stack.Screen
             name="AudioBookList"
-            options={{ title: t`Audiobooks` }}
+            options={{ title: t`Listen` }}
             component={BookList}
             initialParams={{ listType: `audio` }}
           />

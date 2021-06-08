@@ -6,8 +6,10 @@ const config = { ...getTailwindConfig(`en`) };
 config.theme.extend.colors[`ebook-colorscheme`] = {
   'black-bg': `rgb(0, 0, 0)`,
   'black-fg': `rgb(169, 169, 169)`,
+  'black-accent': `rgb(110, 141, 234)`,
   'white-bg': `rgb(253, 253, 253)`,
   'white-fg': `rgb(3, 3, 3)`,
+  'white-accent': `rgb(0, 0, 255)`,
   'sepia-bg': `rgb(250, 242, 231)`,
   'sepia-fg': `rgb(50, 50, 50)`,
   'sepia-accent': `rgb(201, 154, 61)`,

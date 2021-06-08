@@ -49,7 +49,7 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
       ListEmptyComponent={() => (
         <Sans size={16} style={tw`text-center p-4 italic`}>
           {LANG === `en`
-            ? `No audiobooks matched your search.` // @TODO - alter for resource type
+            ? `No ${type === `audio` ? `audio` : ``}books matched your search.` // @TODO TRANSLATION
             : `Ningún audiolibro corresponde a tu búsqueda.`}
         </Sans>
       )}

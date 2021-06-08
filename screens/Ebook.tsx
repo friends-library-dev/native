@@ -204,4 +204,4 @@ const EbookContainer: React.FC<OwnProps> = ({ route, navigation }) => {
 
 export default EbookContainer;
 
-const COVER_IMG_WIDTH = Dimensions.get(`window`).width * 0.8; // @TODO
+const COVER_IMG_WIDTH = Dimensions.get(`window`).width * 0.8;

@@ -35,7 +35,7 @@ export default function selectAudioBooklist({
         case `title`:
           return sortable(a.document.title) < sortable(b.document.title) ? -1 : 1;
         case `duration`:
-          return a.numTotalPaperbackPages < b.numTotalPaperbackPages ? -1 : 1;
+          return a.ebook.numPages < b.ebook.numPages ? -1 : 1;
         default:
           return Number(new Date(a.publishedDate)) > Number(new Date(b.publishedDate))
             ? -1
@@ -48,7 +48,7 @@ export default function selectAudioBooklist({
         editionId: edition.id,
         title: edition.document.utf8ShortTitle,
         navigateTo: `Ebook` as const,
-        duration: `${edition.numTotalPaperbackPages} pages`,
+        duration: `${edition.ebook.numPages} pages`,
         progress,
         isNew: isNew(edition.publishedDate, progress),
         name: edition.friend.name,
