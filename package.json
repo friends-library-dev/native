@@ -40,10 +40,10 @@
   "dependencies": {
     "@babel/plugin-syntax-nullish-coalescing-operator": "^7.8.3",
     "@friends-library/adoc-utils": "^1.3.1",
-    "@friends-library/friends": "^3.29.0",
+    "@friends-library/friends": "^4.0.0",
     "@friends-library/locale": "^1.7.0",
     "@friends-library/theme": "^1.1.0",
-    "@friends-library/types": "^4.2.0-beta.3",
+    "@friends-library/types": "^5.0.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.5",
     "@react-navigation/native": "^5.7.2",
@@ -81,8 +81,8 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
-    "@friends-library/api": "^1.1.0-beta.14",
-    "@friends-library/dev": "^4.1.19",
+    "@friends-library/api": "^1.2.0",
+    "@friends-library/dev": "~4.1.20",
     "@react-native-community/eslint-config": "^1.1.0",
     "@storybook/addon-actions": "^6.0.16",
     "@storybook/addon-essentials": "^6.0.16",
