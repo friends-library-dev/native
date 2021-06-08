@@ -116,7 +116,7 @@ export const propSelector: PropSelector<OwnProps, Props> = ({ editionId }, dispa
   return (state) => {
     const activePart = select.activeAudioPart(editionId, state);
     if (!activePart) return null;
-    const [part, edition, audio] = activePart;
+    const [part, , audio] = activePart;
     const file = select.audioPartFile(editionId, part.index, state);
     const multipart = audio.parts.length > 1;
     const canSkipNext = multipart && part.index < audio.parts.length - 1;

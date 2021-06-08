@@ -62,7 +62,7 @@ function injectIntoWebView(
   let showingFootnote = false;
   let lastScroll = window.scrollY;
 
-  function setHtmlClassList() {
+  function setHtmlClassList(): void {
     document.documentElement.classList.value = window.htmlClassList(
       colorScheme,
       showingHeader,

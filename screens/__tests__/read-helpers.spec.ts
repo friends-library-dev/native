@@ -1,6 +1,5 @@
 import { beforeEach, it, describe, expect } from '@jest/globals';
 import { readScreenProps } from '../read-helpers';
-import { SyncProps, Props } from '../Read';
 import Service from '../../lib/service';
 import { EbookData, EditionResource } from 'types';
 

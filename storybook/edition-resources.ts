@@ -9,17 +9,13 @@ const resources: EditionResource[] = [
       title: `A Letter of Elizabeth Webb`,
       utf8ShortTitle: `A Letter of Elizabeth Webb`,
       trimmedUtf8ShortTitle: `Letter of Elizabeth Webb`,
-      description:
-        `Elizabeth Webb (1663-1726) was an early minister in the Society of Friends who travelled extensively in her service for the gospel. In the year 1712, while ministering in London, she became acquainted with Anthony William Boehm, then chaplain to Prince George of Denmark. At some point following their initial interview, Elizabeth Webb felt constrained in the love of God to write to Boehm and present him with the deeply instructive letter contained in this booklet, giving something of a summary of her spiritual pilgrimage.`,
-      shortDescription:
-        `A letter from Elizabeth Webb written to Anthony William Boehm (chaplain to Prince George of Denmark), in which she describes her own spiritual journey, and her experience of the Lord’s judgments and mercies as she gave up resolutely to follow Him.`,
+      description: `Elizabeth Webb (1663-1726) was an early minister in the Society of Friends who travelled extensively in her service for the gospel. In the year 1712, while ministering in London, she became acquainted with Anthony William Boehm, then chaplain to Prince George of Denmark. At some point following their initial interview, Elizabeth Webb felt constrained in the love of God to write to Boehm and present him with the deeply instructive letter contained in this booklet, giving something of a summary of her spiritual pilgrimage.`,
+      shortDescription: `A letter from Elizabeth Webb written to Anthony William Boehm (chaplain to Prince George of Denmark), in which she describes her own spiritual journey, and her experience of the Lord’s judgments and mercies as she gave up resolutely to follow Him.`,
     },
     type: `updated`,
     ebook: {
-      loggedDownloadUrl:
-        `https://www.friendslibrary.com/.netlify/functions/site/log/download/webb/en/elizabeth-webb/letter/updated/app-ebook/Letter_of_Elizabeth_Webb--updated--(app-ebook).html`,
-      directDownloadUrl:
-        `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb--updated--(app-ebook).html`,
+      loggedDownloadUrl: `https://www.friendslibrary.com/.netlify/functions/site/log/download/webb/en/elizabeth-webb/letter/updated/app-ebook/Letter_of_Elizabeth_Webb--updated--(app-ebook).html`,
+      directDownloadUrl: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb--updated--(app-ebook).html`,
       numPages: 26,
     },
     publishedDate: `2018-09-10T15:54:31.000Z`,
@@ -43,10 +39,8 @@ const resources: EditionResource[] = [
           duration: 2843.5,
           size: 26854763,
           sizeLq: 14290634,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/Letter_of_Elizabeth_Webb--lq.mp3`,
         },
       ],
     },
@@ -68,106 +62,89 @@ const resources: EditionResource[] = [
         {
           width: 90,
           height: 90,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--90x90.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--90x90.png`,
         },
         {
           width: 180,
           height: 180,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--180x180.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--180x180.png`,
         },
         {
           width: 270,
           height: 270,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--270x270.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--270x270.png`,
         },
         {
           width: 300,
           height: 300,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--300x300.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--300x300.png`,
         },
         {
           width: 450,
           height: 450,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--450x450.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--450x450.png`,
         },
         {
           width: 600,
           height: 600,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--600x600.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--600x600.png`,
         },
         {
           width: 750,
           height: 750,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--750x750.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--750x750.png`,
         },
         {
           width: 900,
           height: 900,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--900x900.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--900x900.png`,
         },
         {
           width: 1150,
           height: 1150,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--1150x1150.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--1150x1150.png`,
         },
         {
           width: 1400,
           height: 1400,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--1400x1400.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover--1400x1400.png`,
         },
       ],
       threeD: [
         {
           width: 250,
           height: 366,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w250.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w250.png`,
         },
         {
           width: 400,
           height: 585,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w400.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w400.png`,
         },
         {
           width: 550,
           height: 805,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w550.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w550.png`,
         },
         {
           width: 700,
           height: 1025,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w700.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w700.png`,
         },
         {
           width: 850,
           height: 1244,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w850.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w850.png`,
         },
         {
           width: 1000,
           height: 1464,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w1000.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w1000.png`,
         },
         {
           width: 1120,
           height: 1639,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w1120.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/elizabeth-webb/letter/updated/images/cover-3d--w1120.png`,
         },
       ],
     },
@@ -180,17 +157,13 @@ const resources: EditionResource[] = [
       title: `The Writings of Isaac Penington -- Volume 1`,
       utf8ShortTitle: `The Writings of Isaac Penington – Vol. I`,
       trimmedUtf8ShortTitle: `Writings of Isaac Penington – Vol. I`,
-      description:
-        `Isaac Penington (1616-1679) was the son of a prominent English politician, and the father-in-law of William Penn, founder of Pennsylvania. Though born into a family of wealth and reputation, Penington’s heart was set upon things above from his earliest days. Even as a child, he recognized that the religion of his day stood in the will and understanding of man, in outward practices, duties, and scriptural truths that were professed but not truly possessed. Isaac Penington longed for more. Motivated by an insatiable hunger for truth, he sought the Lord with all his heart and discovered a Christianity that stood in, and flowed out from, the light and life of Jesus Christ reigning in the inner man.`,
-      shortDescription:
-        `Volume One of The Writings of Isaac Penington, a conscientiously abridged, and slightly modernized and annotated edition of his four volume complete works (which can also be found on this site.)`,
+      description: `Isaac Penington (1616-1679) was the son of a prominent English politician, and the father-in-law of William Penn, founder of Pennsylvania. Though born into a family of wealth and reputation, Penington’s heart was set upon things above from his earliest days. Even as a child, he recognized that the religion of his day stood in the will and understanding of man, in outward practices, duties, and scriptural truths that were professed but not truly possessed. Isaac Penington longed for more. Motivated by an insatiable hunger for truth, he sought the Lord with all his heart and discovered a Christianity that stood in, and flowed out from, the light and life of Jesus Christ reigning in the inner man.`,
+      shortDescription: `Volume One of The Writings of Isaac Penington, a conscientiously abridged, and slightly modernized and annotated edition of his four volume complete works (which can also be found on this site.)`,
     },
     type: `updated`,
     ebook: {
-      loggedDownloadUrl:
-        `https://www.friendslibrary.com/.netlify/functions/site/log/download/c248c2e7-947b-4629-8296-0cdff67a6d99/en/isaac-penington/writings-volume-1/updated/app-ebook/Writings_of_Isaac_Penington_vol_1--updated--(app-ebook).html`,
-      directDownloadUrl:
-        `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--updated--(app-ebook).html`,
+      loggedDownloadUrl: `https://www.friendslibrary.com/.netlify/functions/site/log/download/c248c2e7-947b-4629-8296-0cdff67a6d99/en/isaac-penington/writings-volume-1/updated/app-ebook/Writings_of_Isaac_Penington_vol_1--updated--(app-ebook).html`,
+      directDownloadUrl: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--updated--(app-ebook).html`,
       numPages: 401,
     },
     publishedDate: `2018-09-25T19:17:54.000Z`,
@@ -214,10 +187,8 @@ const resources: EditionResource[] = [
           duration: 2892.55,
           size: 29616809,
           sizeLq: 14529636,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt1.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt1--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt1.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt1--lq.mp3`,
         },
         {
           index: 1,
@@ -227,10 +198,8 @@ const resources: EditionResource[] = [
           duration: 4377.85,
           size: 41822426,
           sizeLq: 21956118,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt2.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt2--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt2.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt2--lq.mp3`,
         },
         {
           index: 2,
@@ -240,10 +209,8 @@ const resources: EditionResource[] = [
           duration: 2269.96,
           size: 22042711,
           sizeLq: 11416624,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt3.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt3--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt3.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt3--lq.mp3`,
         },
         {
           index: 3,
@@ -253,10 +220,8 @@ const resources: EditionResource[] = [
           duration: 3474.55,
           size: 35346288,
           sizeLq: 17439677,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt4.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt4--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt4.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt4--lq.mp3`,
         },
         {
           index: 4,
@@ -266,10 +231,8 @@ const resources: EditionResource[] = [
           duration: 3301.65,
           size: 31674351,
           sizeLq: 16575154,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt5.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt5--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt5.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt5--lq.mp3`,
         },
         {
           index: 5,
@@ -279,10 +242,8 @@ const resources: EditionResource[] = [
           duration: 1673.88,
           size: 19336319,
           sizeLq: 8436314,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt6.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt6--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt6.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt6--lq.mp3`,
         },
         {
           index: 6,
@@ -292,10 +253,8 @@ const resources: EditionResource[] = [
           duration: 1204.57,
           size: 11846093,
           sizeLq: 6089734,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt7.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt7--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt7.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt7--lq.mp3`,
         },
         {
           index: 7,
@@ -305,10 +264,8 @@ const resources: EditionResource[] = [
           duration: 2134.69,
           size: 21203165,
           sizeLq: 10740314,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt8.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt8--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt8.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt8--lq.mp3`,
         },
         {
           index: 8,
@@ -318,10 +275,8 @@ const resources: EditionResource[] = [
           duration: 3828.22,
           size: 34071061,
           sizeLq: 19207879,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt9.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt9--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt9.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt9--lq.mp3`,
         },
         {
           index: 9,
@@ -331,10 +286,8 @@ const resources: EditionResource[] = [
           duration: 2292.08,
           size: 19958098,
           sizeLq: 11527231,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt10.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt10--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt10.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt10--lq.mp3`,
         },
         {
           index: 10,
@@ -344,10 +297,8 @@ const resources: EditionResource[] = [
           duration: 2554.25,
           size: 21779167,
           sizeLq: 12838056,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt11.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt11--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt11.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt11--lq.mp3`,
         },
         {
           index: 11,
@@ -357,10 +308,8 @@ const resources: EditionResource[] = [
           duration: 4525.32,
           size: 40025780,
           sizeLq: 22693403,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt12.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt12--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt12.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt12--lq.mp3`,
         },
         {
           index: 12,
@@ -370,10 +319,8 @@ const resources: EditionResource[] = [
           duration: 3034.6,
           size: 26475602,
           sizeLq: 15239884,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt13.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt13--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt13.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt13--lq.mp3`,
         },
         {
           index: 13,
@@ -383,10 +330,8 @@ const resources: EditionResource[] = [
           duration: 3038.82,
           size: 27130906,
           sizeLq: 15260913,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt14.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt14--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt14.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt14--lq.mp3`,
         },
         {
           index: 14,
@@ -396,10 +341,8 @@ const resources: EditionResource[] = [
           duration: 1538.7,
           size: 13606683,
           sizeLq: 7760374,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt15.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt15--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt15.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt15--lq.mp3`,
         },
         {
           index: 15,
@@ -409,10 +352,8 @@ const resources: EditionResource[] = [
           duration: 2498.58,
           size: 21138992,
           sizeLq: 12559526,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt16.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt16--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt16.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt16--lq.mp3`,
         },
         {
           index: 16,
@@ -422,10 +363,8 @@ const resources: EditionResource[] = [
           duration: 3053.63,
           size: 25860418,
           sizeLq: 15334775,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt17.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt17--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt17.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt17--lq.mp3`,
         },
         {
           index: 17,
@@ -435,10 +374,8 @@ const resources: EditionResource[] = [
           duration: 3097.91,
           size: 25829968,
           sizeLq: 15556163,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt18.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt18--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt18.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt18--lq.mp3`,
         },
         {
           index: 18,
@@ -448,10 +385,8 @@ const resources: EditionResource[] = [
           duration: 2503.61,
           size: 19766204,
           sizeLq: 12584734,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt19.mp3`,
-          urlLq:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt19--lq.mp3`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt19.mp3`,
+          urlLq: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/Writings_of_Isaac_Penington_vol_1--pt19--lq.mp3`,
         },
       ],
     },
@@ -498,8 +433,7 @@ const resources: EditionResource[] = [
         isSequenced: true,
         hasNonSequenceTitle: true,
         sequenceNumber: 3,
-        nonSequenceTitle:
-          `Some Principles Guiding Out of the Apostasy and Into the True Christian Spirit and Life`,
+        nonSequenceTitle: `Some Principles Guiding Out of the Apostasy and Into the True Christian Spirit and Life`,
       },
       {
         index: 4,
@@ -554,8 +488,7 @@ const resources: EditionResource[] = [
         isSequenced: true,
         hasNonSequenceTitle: true,
         sequenceNumber: 8,
-        nonSequenceTitle:
-          `The Authority and Government which Christ Excluded from His Church`,
+        nonSequenceTitle: `The Authority and Government which Christ Excluded from His Church`,
       },
       {
         index: 9,
@@ -651,106 +584,89 @@ const resources: EditionResource[] = [
         {
           width: 90,
           height: 90,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--90x90.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--90x90.png`,
         },
         {
           width: 180,
           height: 180,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--180x180.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--180x180.png`,
         },
         {
           width: 270,
           height: 270,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--270x270.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--270x270.png`,
         },
         {
           width: 300,
           height: 300,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--300x300.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--300x300.png`,
         },
         {
           width: 450,
           height: 450,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--450x450.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--450x450.png`,
         },
         {
           width: 600,
           height: 600,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--600x600.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--600x600.png`,
         },
         {
           width: 750,
           height: 750,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--750x750.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--750x750.png`,
         },
         {
           width: 900,
           height: 900,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--900x900.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--900x900.png`,
         },
         {
           width: 1150,
           height: 1150,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--1150x1150.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--1150x1150.png`,
         },
         {
           width: 1400,
           height: 1400,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--1400x1400.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover--1400x1400.png`,
         },
       ],
       threeD: [
         {
           width: 250,
           height: 366,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w250.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w250.png`,
         },
         {
           width: 400,
           height: 585,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w400.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w400.png`,
         },
         {
           width: 550,
           height: 805,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w550.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w550.png`,
         },
         {
           width: 700,
           height: 1025,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w700.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w700.png`,
         },
         {
           width: 850,
           height: 1244,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w850.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w850.png`,
         },
         {
           width: 1000,
           height: 1464,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w1000.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w1000.png`,
         },
         {
           width: 1120,
           height: 1639,
-          url:
-            `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w1120.png`,
+          url: `https://flp-assets.nyc3.digitaloceanspaces.com/en/isaac-penington/writings-volume-1/updated/images/cover-3d--w1120.png`,
         },
       ],
     },

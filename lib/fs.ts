@@ -242,7 +242,7 @@ export class FileSystem {
     }`;
   }
 
-  private async removeLegacyV1Artwork() {
+  private async removeLegacyV1Artwork(): Promise<void> {
     if (await RNFS.exists(this.abspath(`artwork/`))) {
       const legacyArtworkFiles = await RNFS.readDir(this.abspath(`artwork/`));
       legacyArtworkFiles

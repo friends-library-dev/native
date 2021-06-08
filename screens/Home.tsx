@@ -23,7 +23,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
   useEffect(() => {
     Editions.addChangeListener(() => setEditionChanges(editionChanges + 1));
     return () => Editions.removeAllChangeListeners();
-  }, [Editions, setEditionChanges, editionChanges]);
+  }, [setEditionChanges, editionChanges]);
 
   const { connected, lastAudio, lastEbook } = useSelector((s) => {
     return {

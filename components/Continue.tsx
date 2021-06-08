@@ -69,10 +69,6 @@ interface OwnProps {
 }
 
 const ContinueContainer: React.FC<OwnProps> = ({ type, editionId, onPress }) => {
-  const resource = Editions.get(editionId);
-  if (!resource) {
-    return null;
-  }
   const percentComplete = useSelector((state) => {
     if (type === `ebook`) {
       return Math.round((state.ebook.position[editionId] ?? 0) * 100);
@@ -81,6 +77,11 @@ const ContinueContainer: React.FC<OwnProps> = ({ type, editionId, onPress }) => 
   });
 
   if (percentComplete >= 99) {
+    return null;
+  }
+
+  const resource = Editions.get(editionId);
+  if (!resource) {
     return null;
   }
 

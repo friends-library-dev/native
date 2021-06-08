@@ -63,7 +63,7 @@ export const Ebook: React.FC<Props> = ({
         </TouchableOpacity>
         <MainTitle title={documentTitle} />
         <ByLine title={documentTitle} friend={friendName} />
-        <IconButton onPress={read} icon="book" text="Read →" style="mb-2" />
+        <IconButton onPress={read} icon="book" text="Read →" tailwindClass="mb-2" />
         <JustifiedDescription description={description} />
         {chapters.length > 2 && (
           <View
@@ -93,7 +93,7 @@ export const Ebook: React.FC<Props> = ({
       {editions.length > 1 && (
         <View style={tw.style(`mb-6`, { 'mt-4': chapters.length <= 2 })}>
           <Sans size={16} style={tw`p-2 italic text-white text-center bg-gray-500`}>
-            Choose from {editions.length == 3 ? `three` : `two`} editions:
+            Choose from {editions.length === 3 ? `three` : `two`} editions:
           </Sans>
           {editions.map((edition) => (
             <TouchableOpacity
@@ -172,7 +172,7 @@ const propSelector: PropSelector<
   const editions = editionResources.map((edition) => ({
     id: edition.id,
     type: edition.type,
-    isSelected: edition.id == selectedResource.id,
+    isSelected: edition.id === selectedResource.id,
     isMostModernized: edition.isMostModernized,
   }));
 

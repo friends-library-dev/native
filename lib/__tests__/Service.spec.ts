@@ -1,4 +1,4 @@
-import { test, it, expect, describe } from '@jest/globals';
+import { it, expect, describe } from '@jest/globals';
 import Service from '../service';
 import FS from '../fs';
 import { EbookEntity, EbookRevisionEntity } from '../../lib/models';

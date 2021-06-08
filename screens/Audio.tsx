@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ScrollView, Dimensions, View, Alert, PixelRatio } from 'react-native';
+import { ScrollView, Dimensions, View, Alert } from 'react-native';
 import {
   EditionResource,
   Audio as AudioResource,
@@ -144,7 +144,7 @@ export const AudioScreen: React.FC<Props> = ({
           secondaryText={`(${humansize(downloaded)})`}
           textTailwindClass="text-v1-gray-700"
           bgTailwindClass="bg-red-200"
-          style={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
+          tailwindClass={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
         />
       )}
     </ScrollView>

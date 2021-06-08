@@ -1,5 +1,5 @@
 import { State } from '../';
-import { BookListItem, EditionResource } from '../../types';
+import { BookListItem } from '../../types';
 import { isNew, sortable } from './audio-booklist';
 import Editions from '../../lib/Editions';
 

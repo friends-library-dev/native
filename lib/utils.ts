@@ -1,5 +1,5 @@
 import filesize from 'filesize';
-import { EbookColorScheme, EditionResource } from '../types';
+import { EbookColorScheme } from '../types';
 
 export const humansize = filesize.partial({ round: 0, spacer: `` });
 

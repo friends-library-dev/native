@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Audio } from '@friends-library/friends';
 import { State } from '../';
 import { BookListItem } from '../../types';

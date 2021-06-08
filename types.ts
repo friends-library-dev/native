@@ -61,10 +61,12 @@ export interface TrackData {
   duration: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deriveAudioType(edition: EditionResource) {
   return edition.audio!;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deriveAudioPartType(edition: EditionResource) {
   return edition.audio!.parts[0]!;
 }

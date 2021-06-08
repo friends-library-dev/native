@@ -54,7 +54,7 @@ const BookListItem: React.FC<Props> = ({
               `mt-px mb-0 h-4 rounded-full bg-v1-green-500 text-center items-center justify-center`,
               {
                 'w-10': badgeText.length < 5,
-                'w-12': badgeText.length == 5,
+                'w-12': badgeText.length === 5,
                 'w-24': badgeText.length > 5,
               },
             )}

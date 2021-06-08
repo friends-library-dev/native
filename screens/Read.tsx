@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { PureComponent, useEffect, useState } from 'react';
 import { View, StatusBar, GestureResponderEvent, Platform } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
@@ -14,7 +15,6 @@ import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
 import Editions from '../lib/Editions';
 import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
-import * as select from '../state/selectors/ebook';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
 import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
@@ -438,7 +438,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
 
   useEffect(() => {
     dispatch(setLastEbookEditionId(ownProps.route.params.editionId));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!props) {

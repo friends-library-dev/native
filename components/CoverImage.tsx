@@ -23,10 +23,11 @@ const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type 
   const image = coverImage(type, editionId, layoutWidth);
 
   useEffect(() => {
-    if (image && !image.downloaded && !connected) {
+    if (image && !image.downloaded && connected) {
       Service.fsDownloadFile(image.entity, image.networkUrl);
     }
-  }, [image?.downloaded, image?.entity?.fsPath, image?.networkUrl, connected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected, !!image, image?.downloaded, image?.entity, image?.networkUrl]);
 
   const dims = {
     width: layoutWidth,
@@ -61,7 +62,7 @@ function bgStyle(type: 'square' | 'threeD', editionId: EditionId): Record<string
       {
         original: `flgreen`,
         modernized: `flblue`,
-        updated: LANG == `es` ? `flgold` : `flmaroon`,
+        updated: LANG === `es` ? `flgold` : `flmaroon`,
       }[new EditionEntity(editionId).editionType],
     ),
   };

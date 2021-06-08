@@ -1,5 +1,5 @@
-import { Html, Sha } from '@friends-library/types';
-import { EbookData, EditionId, EditionResource, TrackData } from '../types';
+import { Html } from '@friends-library/types';
+import { EbookData, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
 import { LANG } from '../env';
