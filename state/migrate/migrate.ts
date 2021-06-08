@@ -70,6 +70,7 @@ function migrate1to2(v1: Record<string, any>): State {
       `playback`,
       `activePart`,
       `trackPosition`,
+      `filesystem`,
     ]),
   } as State;
 

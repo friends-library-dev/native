@@ -55,6 +55,12 @@ describe(`migrate()`, () => {
     expect(migrated.trackPosition).toBeUndefined();
   });
 
+  it(`deletes old top-level .filesystem sub-object`, () => {
+    const v1 = getV1State();
+    const migrated: any = migrate(v1);
+    expect(migrated.filesystem).toBeUndefined();
+  });
+
   it(`adds new .ebook state slice`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
