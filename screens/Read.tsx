@@ -143,10 +143,11 @@ class Read extends PureComponent<Props, State> {
     const msg: Message = JSON.parse(event.nativeEvent.data);
 
     switch (msg.type) {
-      case `update_position`:
+      case `update_position`: {
         const position = clamp(msg.position, 0, 1);
         this.setState({ position: Math.ceil(position * 100) / 100 });
         return dispatch(setEbookPosition({ editionId, position }));
+      }
       case `toggle_header_visibility`:
         return dispatch(toggleShowingEbookHeader());
       case `debug`:
@@ -256,7 +257,7 @@ class Read extends PureComponent<Props, State> {
     }
   };
 
-  render(): JSX.Element {
+  public render(): JSX.Element {
     if (this.props.state === `loading`) {
       return <EbookLoading colorScheme={this.props.colorScheme} />;
     }
@@ -503,6 +504,6 @@ export default ReadContainer;
  * Because of ios scroll physics/bounce things, you can get negative
  * numbers, or numbers greater than 100% for window locations
  */
-function clamp(num: number, lower: number, upper: number) {
+function clamp(num: number, lower: number, upper: number): number {
   return Math.max(lower, Math.min(upper, num));
 }
