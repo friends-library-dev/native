@@ -59,7 +59,7 @@ interface State {
   touchStartLocationX: number;
   touchStartLocationY: number;
   touchStartTimestamp: number;
-  position: number;
+  position?: number;
 }
 
 class Read extends PureComponent<Props, State> {
@@ -68,7 +68,7 @@ class Read extends PureComponent<Props, State> {
   private webViewRef: React.RefObject<WebView>;
 
   public state: State = {
-    position: 0,
+    position: undefined,
     showingFootnote: false,
     touchStartLocationX: -999,
     touchStartLocationY: -999,
@@ -144,8 +144,9 @@ class Read extends PureComponent<Props, State> {
 
     switch (msg.type) {
       case `update_position`:
-        this.setState({ position: Math.ceil(msg.position * 100) / 100 });
-        return dispatch(setEbookPosition({ editionId, position: msg.position }));
+        const position = clamp(msg.position, 0, 1);
+        this.setState({ position: Math.ceil(position * 100) / 100 });
+        return dispatch(setEbookPosition({ editionId, position }));
       case `toggle_header_visibility`:
         return dispatch(toggleShowingEbookHeader());
       case `debug`:
@@ -294,7 +295,8 @@ class Read extends PureComponent<Props, State> {
       );
     }
 
-    const percentComplete = Math.round((this.state.position || position) * 100);
+    const percentPos = clamp(Math.round((this.state.position ?? position) * 100), 0, 100);
+
     return (
       <View style={tw`flex-grow bg-ebook-colorscheme-${colorScheme}-bg`}>
         <PrefersHomeIndicatorAutoHidden />
@@ -308,7 +310,7 @@ class Read extends PureComponent<Props, State> {
         />
         {/* @TODO - this whole scrubber position area should be extracted into its own component */}
         <View style={tw`flex-grow relative`}>
-          {showingHeader && percentComplete >= 0 && !this.state.showingFootnote && (
+          {showingHeader && percentPos >= 0 && !this.state.showingFootnote && (
             <View
               style={tw.style(
                 `absolute bottom-0 right-0 w-full z-10 px-10`,
@@ -335,7 +337,7 @@ class Read extends PureComponent<Props, State> {
                   // necessary to prevent error ¯\_(ツ)_/¯
                   onSlidingStart={() => {}}
                   trackBackgroundColor={colorScheme === `black` ? `#222` : `#ddd`}
-                  value={percentComplete}
+                  value={percentPos}
                   totalDuration={100}
                   displayValues={false}
                   scrubbedColor={
@@ -354,7 +356,7 @@ class Read extends PureComponent<Props, State> {
                     { right: -16, top: 4 },
                   )}
                 >
-                  {percentComplete}%
+                  {percentPos}%
                 </Sans>
               </View>
             </View>
@@ -496,3 +498,11 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
 };
 
 export default ReadContainer;
+
+/**
+ * Because of ios scroll physics/bounce things, you can get negative
+ * numbers, or numbers greater than 100% for window locations
+ */
+function clamp(num: number, lower: number, upper: number) {
+  return Math.max(lower, Math.min(upper, num));
+}

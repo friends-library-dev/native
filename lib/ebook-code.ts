@@ -34,22 +34,49 @@ function injectIntoWebView(
   initialHeaderHeight: number,
   safeAreaVerticalOffset: number,
 ): void {
+  function docHeight(): number {
+    return document.documentElement.scrollHeight;
+  }
+
   function scrollPercent(pixelOffsetY: number): number {
-    return pixelOffsetY / document.documentElement.scrollHeight;
+    // subtracting the `window.innerHeight` makes it so we can actually get to 100%
+    return pixelOffsetY / (docHeight() - window.innerHeight);
   }
 
   function scrollPixelOffsetY(percent: number): number {
-    return percent * document.documentElement.scrollHeight;
+    return percent * (docHeight() - window.innerHeight);
   }
 
+  function setHtmlClassList(): void {
+    document.documentElement.classList.value = window.htmlClassList(
+      colorScheme,
+      showingHeader,
+      fontSize,
+      showingFootnote,
+    );
+  }
+
+  // in this section, we're RESTORING the user's saved position, which involves
+  // calculating a new Y offset based on the full document height. but due to
+  // css rendering things (i think) the document height CHANGES after a few milleseconds
+  // so we have to wait just a bit to ensure that we're calculating our percentage against
+  // the final, fully-rendered document.  the text will be opacity: 0 during this time
+  // and the setHtmlClassList() call will restore opacity once we're done
   let chapter: Element | null = null;
   if (chapterId && (chapter = document.getElementById(chapterId))) {
-    const rect = chapter.getBoundingClientRect();
-    const chapterOffset = rect.top + 75;
-    window.scrollTo(0, chapterOffset);
-    sendMsg({ type: `update_position`, position: scrollPercent(chapterOffset) });
+    window.setTimeout(() => {
+      if (!chapter) return;
+      const rect = chapter.getBoundingClientRect();
+      const chapterOffset = rect.top + 75;
+      window.scrollTo(0, chapterOffset);
+      setHtmlClassList();
+      sendMsg({ type: `update_position`, position: scrollPercent(chapterOffset) });
+    }, 100);
   } else if (position > 0) {
-    window.scrollTo(0, scrollPixelOffsetY(position));
+    window.setTimeout(() => {
+      window.scrollTo(0, scrollPixelOffsetY(position));
+      setHtmlClassList();
+    }, 100);
   }
 
   const fnOverlay = document.getElementById(`fn-overlay`);
@@ -62,26 +89,15 @@ function injectIntoWebView(
   let showingFootnote = false;
   let lastScroll = window.scrollY;
 
-  function setHtmlClassList(): void {
-    document.documentElement.classList.value = window.htmlClassList(
-      colorScheme,
-      showingHeader,
-      fontSize,
-      showingFootnote,
-    );
-  }
-
   function sendMsg(msg: Message): void {
     window.ReactNativeWebView.postMessage(JSON.stringify(msg));
   }
 
   function setFootnotePadding(): void {
-    if (!fnOverlay) {
-      return;
+    if (fnOverlay) {
+      const paddingTop = showingHeader ? headerHeight : safeAreaVerticalOffset;
+      fnOverlay.style.paddingTop = `${paddingTop}px`;
     }
-    fnOverlay.style.paddingTop = `${
-      showingHeader ? headerHeight : safeAreaVerticalOffset
-    }px`;
   }
   setFootnotePadding();
 
@@ -104,6 +120,9 @@ function injectIntoWebView(
     const before = scrollPercent(window.scrollY);
     setHtmlClassList();
     window.scrollTo(0, scrollPixelOffsetY(before));
+    window.setTimeout(() => {
+      window.scrollTo(0, scrollPixelOffsetY(before));
+    }, 150);
   };
 
   window.setColorScheme = (newColorScheme) => {
@@ -192,12 +211,14 @@ export function wrapHtml(
   headerHeight: number,
   safeAreaVerticalOffset: number,
 ): string {
+  const classList = htmlClassList(colorScheme, showingHeader, fontSize, false);
   return `
-  <html class="${htmlClassList(colorScheme, showingHeader, fontSize, false)}"> 
+  <html class="${classList}${position > 0 ? ` await-init-position` : ``}"> 
     <head>
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars}</style>
        ${css}
+       <style>.await-init-position * { opacity: 0 !important }</style>
     </head>
     <body>
       <div id="fn-overlay">
