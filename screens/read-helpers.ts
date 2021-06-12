@@ -2,6 +2,7 @@ import { Result } from 'x-ts-utils';
 import Service from '../lib/service';
 import { EditionResource } from '../types';
 import { EbookEntity, EbookRevisionEntity } from '../lib/models';
+import { INSTALL } from '../env';
 
 export async function readScreenProps(
   edition: EditionResource,
@@ -32,11 +33,8 @@ export async function readScreenProps(
     return { success: false, error: `no_internet` };
   }
 
-  const urlKey =
-    // don't log for re-download of fresh version (or dev)
-    process.env.NODE_ENV === `development` || fsData
-      ? `directDownloadUrl`
-      : `loggedDownloadUrl`;
+  // don't log for re-download of fresh version (or dev)
+  const urlKey = fsData || INSTALL === `dev` ? `directDownloadUrl` : `loggedDownloadUrl`;
   const networkUrl = edition.ebook[urlKey];
   const entity = EbookRevisionEntity.fromResource(edition);
 

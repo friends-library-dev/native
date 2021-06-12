@@ -13,16 +13,29 @@ const LANG: Lang = process.argv[2] === `es` ? `es` : `en`;
 const APP_NAME = LANG === `en` ? `Friends Library` : `Biblioteca de los Amigos`;
 const PRIMARY_COLOR_HEX = LANG === `en` ? MAROON_HEX : GOLD_HEX;
 const GIT_BRANCH = exec.exit(`git branch --show-current`).trim();
-const INSTALL_TYPE = GIT_BRANCH === `master` ? `release` : IS_RELEASE ? `beta` : `dev`;
+const INSTALL = GIT_BRANCH === `master` ? `release` : IS_RELEASE ? `beta` : `dev`;
 const APP_IDENTIFIER = getAppIdentifier();
 
 function main(): void {
   exec.exit(`printf "import { Lang } from '@friends-library/types';\n\n" > ${ENV}`);
-  exec.exit(`echo "export const LANG: Lang = '${LANG}';" >> ${ENV}`);
   exec.exit(`cat ${ENV_DIR}/build-constants.ts >> ${ENV}`);
-  exec.exit(`echo "export const PRIMARY_COLOR_HEX = '${PRIMARY_COLOR_HEX}';" >> ${ENV}`);
-  exec.exit(`echo "export const APP_NAME = '${APP_NAME}';" >> ${ENV}`);
-  exec(`npm run lint:fix`, APP_DIR);
+
+  const API_URL =
+    INSTALL === `dev` ? `http://10.0.1.251:8888` : `https://api.friendslibrary.com`;
+
+  // @see https://xkcd.com/1638/
+  const constants = [
+    `export const LANG: Lang = \\\`${LANG}\\\`;`,
+    `export const PRIMARY_COLOR_HEX = \\\`${PRIMARY_COLOR_HEX}\\\`;`,
+    `export const APP_NAME = \\\`${APP_NAME}\\\`;`,
+    `export const INSTALL: 'release' | 'beta' | 'dev' = \\\`${INSTALL}\\\`;`,
+    `export const API_URL = \\\`${API_URL}\\\`;`,
+  ];
+
+  exec.exit(`printf "${constants.join(`\n`)}" >> ${ENV}`);
+
+  // compile ./env/index.ts -> ./env/index.js
+  exec.exit(`npx tsc --project ./env`);
 
   copyFileWithEnv(`android/build.gradle`, `android/app/build.gradle`);
   copyFileWithEnv(`android/colors.xml`, `android/app/src/main/res/values/colors.xml`);
@@ -34,7 +47,7 @@ function main(): void {
   );
 
   copyDir(
-    `ios/${LANG}/${INSTALL_TYPE}/AppIcon.appiconset`,
+    `ios/${LANG}/${INSTALL}/AppIcon.appiconset`,
     `ios/FriendsLibrary/Images.xcassets`,
   );
   copyDir(`ios/${LANG}/SplashIcon.imageset`, `ios/FriendsLibrary/Images.xcassets`);
@@ -98,10 +111,10 @@ function copyFileWithEnv(src: string, dest: string): void {
 
 function getAppIdentifier(): string {
   const base = `com.friendslibrary.FriendsLibrary`;
-  if (INSTALL_TYPE === `beta` && LANG === `en`) {
+  if (INSTALL === `beta` && LANG === `en`) {
     return base; // match original bundle id for ios english test flight
   }
-  return `${base}.${LANG}.${INSTALL_TYPE}`;
+  return `${base}.${LANG}.${INSTALL}`;
 }
 
 const ALLOW_INSECURE_LOCALHOST = IS_RELEASE
