@@ -2,7 +2,7 @@ import { Html } from '@friends-library/types';
 import { EbookData, TrackData } from '../types';
 import FS from './fs';
 import Player from './player';
-import { LANG } from '../env';
+import { API_URL, LANG } from '../env';
 import { FsPath, EbookCss, EbookRevisionEntity, EbookEntity } from './models';
 
 export default class Service {
@@ -100,7 +100,7 @@ export default class Service {
 
   public static async networkFetchEditions(): Promise<any> {
     try {
-      const res = await fetch(`https://api.friendslibrary.com/app-editions/v1/${LANG}`);
+      const res = await fetch(`${API_URL}/app-editions/v1/${LANG}`);
       return await res.json();
     } catch (err) {
       // ¯\_(ツ)_/¯
