@@ -143,6 +143,15 @@ export class FileSystem {
     await Promise.all(promises);
   }
 
+  public deleteableAudioBytes(): number {
+    return Object.entries(this.manifest).reduce((acc, [path, numBytes]) => {
+      if (!path.endsWith(`.mp3`) || !numBytes) {
+        return acc;
+      }
+      return acc + numBytes;
+    }, 0);
+  }
+
   public async delete({ fsPath: relPath }: FsPath): Promise<boolean> {
     delete this.manifest[relPath];
     try {

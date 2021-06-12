@@ -1,9 +1,9 @@
-import React from 'react';
-import { isDefined } from 'x-ts-utils';
+import React, { useState } from 'react';
 import { View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { t } from '@friends-library/locale';
+import FS from '../lib/fs';
 import tw from '../lib/tailwind';
 import { StackParamList } from '../types';
 import { Sans } from '../components/Text';
@@ -18,15 +18,11 @@ interface Props {
   route: RouteProp<StackParamList, 'Settings'>;
 }
 
-const Home: React.FC<Props> = () => {
+const Settings: React.FC<Props> = () => {
   const dispatch = useDispatch();
-  const { quality, deletableBytes } = useSelector((state) => ({
-    quality: state.preferences.audioQuality,
-    deletableBytes: Object.values(state.audio.filesystem)
-      .filter(isDefined)
-      .reduce((acc, file) => acc + file.bytesOnDisk, 0),
-  }));
+  const quality = useSelector((state) => state.preferences.audioQuality);
   const hqEnabled = quality === `HQ`;
+  const [deletableBytes, setDeletableBytes] = useState(FS.deleteableAudioBytes());
 
   return (
     <View>
@@ -48,7 +44,12 @@ const Home: React.FC<Props> = () => {
         <Sans size={18}>
           {t`Downloaded audio`}: {humansize(deletableBytes)}
         </Sans>
-        <TouchableOpacity onPress={() => dispatch(deleteAllAudios())}>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(deleteAllAudios());
+            setDeletableBytes(0);
+          }}
+        >
           <Sans size={18} style={tw`text-red-600`}>
             {deletableBytes === 0 ? `` : t`Delete`}
           </Sans>
@@ -61,4 +62,4 @@ const Home: React.FC<Props> = () => {
   );
 };
 
-export default Home;
+export default Settings;
