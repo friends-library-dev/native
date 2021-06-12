@@ -1,6 +1,7 @@
 import { EbookColorScheme } from '../types';
 
 export interface Window {
+  innerHeight: number;
   scrollY: number;
   scrollTo(x: number, y: number): unknown;
   scrollTo(opts: { top: number; left: number; behavior: `smooth` }): unknown;
@@ -11,6 +12,7 @@ export interface Window {
   requestPositionUpdateIfChanged(): void;
   updatePosition(newPercent: number): void;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
+  setTimeout(fn: () => unknown, timeout: number): number;
   ReactNativeWebView: {
     postMessage(event: string): unknown;
   };
