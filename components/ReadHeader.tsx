@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -18,8 +18,7 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
     const editionId = params?.editionId ?? ``;
     const edition = Editions.get(editionId);
     let title = edition?.document.utf8ShortTitle ?? ``;
-    // @TODO: maybe measure screen dims instead of hardcoding?
-    const shouldShorten = title.length > 35;
+    const shouldShorten = title.length > MAX_CHARS;
     if (shouldShorten) {
       title = edition?.document.trimmedUtf8ShortTitle ?? title;
     }
@@ -86,3 +85,8 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
 };
 
 export default ReadHeader;
+
+// from testing on only two devices, normal font size, but good enough to be useful
+const CHAR_WIDTH = 0.106666666;
+const BTNS_WIDTH = 75;
+const MAX_CHARS = Math.floor((Dimensions.get(`window`).width - BTNS_WIDTH) * CHAR_WIDTH);
