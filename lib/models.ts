@@ -73,7 +73,8 @@ export class DocumentEntity implements DocumentEntityInterface, StateKey {
 }
 
 export class EditionEntity
-  implements EditionEntityInterface, DocumentEntityInterface, StateKey {
+  implements EditionEntityInterface, DocumentEntityInterface, StateKey
+{
   public static fromDocumentIdAndEditionType(
     documentId: DocumentId,
     editionType: EditionType,
@@ -106,7 +107,8 @@ export class EditionEntity
 
 export class AudioPartEntity
   extends EditionEntity
-  implements StateKey, TrackId, EditionEntityInterface {
+  implements StateKey, TrackId, EditionEntityInterface
+{
   public constructor(editionId: EditionId, private partIndex: number) {
     super(editionId);
   }
@@ -123,7 +125,8 @@ export class AudioPartEntity
 
 export class AudioPartQualityEntity
   extends AudioPartEntity
-  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface {
+  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface
+{
   public constructor(
     editionId: EditionId,
     partIndex: number,
@@ -147,7 +150,8 @@ export class AudioPartQualityEntity
 
 export class SquareCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface {
+  implements FsPath, FsFilename, EditionEntityInterface
+{
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -173,7 +177,8 @@ export class SquareCoverImageEntity
 
 export class ThreeDCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface {
+  implements FsPath, FsFilename, EditionEntityInterface
+{
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -199,7 +204,8 @@ export class ThreeDCoverImageEntity
 
 export class EbookEntity
   extends EditionEntity
-  implements EbookEntityInterface, FsPathPrefix {
+  implements EbookEntityInterface, FsPathPrefix
+{
   public static fromResource(resource: EditionResource): EbookEntity {
     return new EbookEntity(resource.id);
   }
@@ -219,7 +225,8 @@ export class EbookEntity
 
 export class EbookRevisionEntity
   extends EbookEntity
-  implements EbookRevisionEntityInterface, FsPath, FsFilename {
+  implements EbookRevisionEntityInterface, FsPath, FsFilename
+{
   public static fromResource(resource: EditionResource): EbookRevisionEntity {
     return new EbookRevisionEntity(resource.id, resource.revision);
   }
