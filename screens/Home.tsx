@@ -10,6 +10,8 @@ import Continue from '../components/Continue';
 import tw from '../lib/tailwind';
 import Editions from '../lib/Editions';
 import { useSelector } from '../state';
+import FullscreenError from '../components/FullscreenError';
+import FullscreenLoading from '../components/FullscreenLoading';
 
 interface Props {
   navigation: StackNavigationProp<StackParamList, 'Home'>;
@@ -32,6 +34,14 @@ const Home: React.FC<Props> = ({ navigation }) => {
       lastEbook: s.resume.lastEbookEditionId,
     };
   });
+
+  if (Editions.getEditions().length === 0) {
+    return connected ? (
+      <FullscreenLoading />
+    ) : (
+      <FullscreenError errorMsg="Unable to download book data, no internet connection" />
+    );
+  }
 
   return (
     <SafeAreaView
