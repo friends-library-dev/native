@@ -10,7 +10,7 @@ import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RNScrubber from 'react-native-scrubber';
 import { EditionResource, StackParamList, EbookColorScheme, EditionId } from '../types';
-import EbookLoading from '../components/EbookLoading';
+import FullscreenLoading from '../components/FullscreenLoading';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
 import Editions from '../lib/Editions';
@@ -179,9 +179,7 @@ class Read extends PureComponent<Props, State> {
     });
   };
 
-  public analyzeGesture(
-    gestureEvent: GestureResponderEvent,
-  ): {
+  public analyzeGesture(gestureEvent: GestureResponderEvent): {
     isSwipe: boolean;
     isHorizontalSwipe: boolean;
     isVerticalSwipe: boolean;
@@ -259,7 +257,7 @@ class Read extends PureComponent<Props, State> {
 
   public render(): JSX.Element {
     if (this.props.state === `loading`) {
-      return <EbookLoading colorScheme={this.props.colorScheme} />;
+      return <FullscreenLoading colorScheme={this.props.colorScheme} />;
     }
 
     if (this.props.state === `error`) {

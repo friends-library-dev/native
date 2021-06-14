@@ -40,10 +40,13 @@ const App: React.FC = () => {
     if (networkConnected && !fetchedResources) {
       setFetchedResources(true);
       Service.downloadLatestEbookCss();
-      Service.networkFetchEditions().then((resources) => {
-        Editions.setResourcesIfValid(resources);
-        FS.writeJson(FileSystem.paths.editions, resources);
-      });
+      Service.networkFetchEditions()
+        .then((resources) => {
+          if (Editions.setResourcesIfValid(resources)) {
+            FS.writeJson(FileSystem.paths.editions, resources);
+          }
+        })
+        .catch(() => {});
     }
   }, [networkConnected, fetchedResources, setFetchedResources]);
 

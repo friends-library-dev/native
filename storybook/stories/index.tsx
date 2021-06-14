@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import BookListItem from '../../components/BookListItem';
-import EbookLoading from '../../components/EbookLoading';
+import FullscreenLoading from '../../components/FullscreenLoading';
 import EbookError from '../../components/EbookError';
 import { AudioControls } from '../../components/AudioControls';
 import tw from '../../lib/tailwind';
@@ -16,10 +16,10 @@ storiesOf(`EbookError`, module)
   .add(`sepia (no internet)`, () => <EbookError colorScheme="sepia" reason="no_internet" />)
   .add(`white (no internet)`, () => <EbookError colorScheme="white" reason="no_internet" />);
 
-storiesOf(`EbookLoading`, module)
-  .add(`black`, () => <EbookLoading colorScheme="black" />)
-  .add(`sepia`, () => <EbookLoading colorScheme="sepia" />)
-  .add(`white`, () => <EbookLoading colorScheme="white" />);
+storiesOf(`FullscreenLoading`, module)
+  .add(`black`, () => <FullscreenLoading colorScheme="black" />)
+  .add(`sepia`, () => <FullscreenLoading colorScheme="sepia" />)
+  .add(`white`, () => <FullscreenLoading colorScheme="white" />);
 
 storiesOf(`BookListItem`, module).add(`default`, () => (
   <View style={{ backgroundColor: `#f2f2f2` }}>
