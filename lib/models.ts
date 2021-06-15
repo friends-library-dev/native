@@ -14,7 +14,6 @@ import {
   SQUARE_COVER_IMAGE_SIZES,
   THREE_D_COVER_IMAGE_WIDTHS,
   EditionType,
-  Sha,
 } from '@friends-library/types';
 import { PixelRatio } from 'react-native';
 import { EditionId, DocumentId, EditionResource } from '../types';
@@ -31,29 +30,12 @@ interface EditionEntityInterface {
   readonly editionType: EditionType;
 }
 
-export interface EbookRevisionEntityInterface {
-  readonly fsFilenamePrefix: string;
-  readonly revisionFilenameSuffix: string;
-  readonly fsPathPrefix: string;
-  readonly fsFilename: string;
-  readonly fsPath: string;
-}
-
-export interface EbookEntityInterface {
-  readonly fsFilenamePrefix: string;
-  readonly fsPathPrefix: string;
-}
-
 export interface FsFilename {
   readonly fsFilename: string;
 }
 
 export interface FsPath {
   readonly fsPath: string;
-}
-
-export interface FsPathPrefix {
-  readonly fsPathPrefix: string;
 }
 
 export interface StateKey {
@@ -73,8 +55,7 @@ export class DocumentEntity implements DocumentEntityInterface, StateKey {
 }
 
 export class EditionEntity
-  implements EditionEntityInterface, DocumentEntityInterface, StateKey
-{
+  implements EditionEntityInterface, DocumentEntityInterface, StateKey {
   public static fromDocumentIdAndEditionType(
     documentId: DocumentId,
     editionType: EditionType,
@@ -107,8 +88,7 @@ export class EditionEntity
 
 export class AudioPartEntity
   extends EditionEntity
-  implements StateKey, TrackId, EditionEntityInterface
-{
+  implements StateKey, TrackId, EditionEntityInterface {
   public constructor(editionId: EditionId, private partIndex: number) {
     super(editionId);
   }
@@ -125,8 +105,7 @@ export class AudioPartEntity
 
 export class AudioPartQualityEntity
   extends AudioPartEntity
-  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface
-{
+  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface {
   public constructor(
     editionId: EditionId,
     partIndex: number,
@@ -150,8 +129,7 @@ export class AudioPartQualityEntity
 
 export class SquareCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface
-{
+  implements FsPath, FsFilename, EditionEntityInterface {
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -177,8 +155,7 @@ export class SquareCoverImageEntity
 
 export class ThreeDCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface
-{
+  implements FsPath, FsFilename, EditionEntityInterface {
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -202,10 +179,7 @@ export class ThreeDCoverImageEntity
   }
 }
 
-export class EbookEntity
-  extends EditionEntity
-  implements EbookEntityInterface, FsPathPrefix
-{
+export class EbookEntity extends EditionEntity implements FsPath, FsFilename {
   public static fromResource(resource: EditionResource): EbookEntity {
     return new EbookEntity(resource.id);
   }
@@ -214,46 +188,12 @@ export class EbookEntity
     super(editionId);
   }
 
-  public get fsFilenamePrefix(): string {
-    return `${this.editionId}--`;
-  }
-
-  public get fsPathPrefix(): string {
-    return `${FileSystem.dirs.ebooks}/${this.fsFilenamePrefix}`;
-  }
-}
-
-export class EbookRevisionEntity
-  extends EbookEntity
-  implements EbookRevisionEntityInterface, FsPath, FsFilename
-{
-  public static fromResource(resource: EditionResource): EbookRevisionEntity {
-    return new EbookRevisionEntity(resource.id, resource.revision);
-  }
-
-  public constructor(editionId: EditionId, private readonly revision: Sha) {
-    super(editionId);
-  }
-
   public get fsFilename(): string {
-    return `${this.fsFilenamePrefix}${this.revisionFilenameSuffix}`;
-  }
-
-  public get revisionFilenameSuffix(): string {
-    return `${this.revision}.html`;
+    return `${this.editionId}.html`;
   }
 
   public get fsPath(): string {
     return `${FileSystem.dirs.ebooks}/${this.fsFilename}`;
-  }
-
-  public static extractRevisionFromFilename(filename: string): Sha {
-    return (
-      filename
-        .replace(/\.html$/, ``)
-        .split(`--`)
-        .pop() || ``
-    );
   }
 }
 

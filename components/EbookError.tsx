@@ -1,7 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
 import { EbookColorScheme } from '../types';
-import { Serif } from './Text';
 import tw from '../lib/tailwind';
 import FullscreenError from './FullscreenError';
 

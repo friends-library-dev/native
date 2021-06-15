@@ -25,6 +25,8 @@ const CoverImage: React.FC<Props> = ({ editionId, layoutWidth, style = {}, type 
   useEffect(() => {
     if (image && !image.downloaded && connected) {
       Service.fsDownloadFile(image.entity, image.networkUrl);
+    } else if (image && image.downloaded && connected) {
+      Service.refreshNetworkFileIfChanged(`background`, image.entity, image.networkUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connected, !!image, image?.downloaded, image?.entity, image?.networkUrl]);

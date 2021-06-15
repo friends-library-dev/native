@@ -5,13 +5,15 @@ import { Serif } from './Text';
 import tw from '../lib/tailwind';
 
 const FullscreenLoading: React.FC<{ colorScheme?: EbookColorScheme | 'transparent' }> = ({
-  colorScheme = 'transparent',
+  colorScheme = `transparent`,
 }) => {
   const [opacity, setOpacity] = useState(`0`);
   const timer = useRef<any>(0);
 
+  // this prevents the loading screen from flashing on for just a few ms
+  // but will allow it to show for longer first-time loads and network delays
   useEffect(() => {
-    timer.current = setTimeout(() => setOpacity(`100`), 100);
+    timer.current = setTimeout(() => setOpacity(`100`), 500);
     return () => {
       clearTimeout(timer.current);
     };
