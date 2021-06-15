@@ -2295,6 +2295,15 @@
   "flex-shrink": {
     "flexShrink": 1
   },
+  "font-sans": {
+    "fontFamily": "Cabin"
+  },
+  "font-serif": {
+    "fontFamily": "Baskerville"
+  },
+  "font-mono": {
+    "fontFamily": "Menlo"
+  },
   "font-thin": {
     "fontWeight": "100"
   },
