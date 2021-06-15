@@ -89,7 +89,7 @@ const ContinueContainer: React.FC<OwnProps> = ({ type, editionId, onPress }) => 
 
   return (
     <Continue
-      title={resource.document.utf8ShortTitle}
+      title={resource.document.trimmedUtf8ShortTitle}
       editionId={editionId}
       type={type}
       onPress={onPress}
