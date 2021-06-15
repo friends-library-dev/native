@@ -54,7 +54,15 @@ const App: React.FC = () => {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator headerMode="screen" initialRouteName="Home">
-          <Stack.Screen name="Home" options={{ title: t`Home` }} component={Home} />
+          <Stack.Screen
+            options={{
+              // bg color matches the "matte" of the 3d cover style for <Continue />
+              cardStyle: { backgroundColor: `rgb(239, 239, 239)` },
+              title: t`Home`,
+            }}
+            name="Home"
+            component={Home}
+          />
           <Stack.Screen
             name="EBookList"
             options={{ title: t`Read` }}

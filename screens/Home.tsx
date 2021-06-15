@@ -44,11 +44,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView
-      style={tw.style(`flex-grow items-center justify-between`, {
-        background: `#efefef`,
-      })}
-    >
+    <SafeAreaView style={tw`flex-grow items-center justify-between`}>
       <View
         style={tw.style(`self-stretch`, {
           height: lastEbook && lastAudio ? `15%` : `25%`,
