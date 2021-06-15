@@ -75,6 +75,11 @@ const Home: React.FC<Props> = ({ navigation }) => {
           onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}
           backgroundColor={`flblue`}
         />
+        {!connected && (
+          <Sans style={tw.style(`text-center mt-2`, { color: `rgb(163, 7, 7)` })}>
+            {t`No internet connection`}.
+          </Sans>
+        )}
       </View>
       <View style={tw.style(`self-stretch justify-end pb-6 px-6`, { height: `25%` })}>
         {lastEbook && (
@@ -92,7 +97,6 @@ const Home: React.FC<Props> = ({ navigation }) => {
           />
         )}
       </View>
-      {!connected && <Sans>{t`No internet connection`}.</Sans>}
     </SafeAreaView>
   );
 };
