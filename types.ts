@@ -1,5 +1,5 @@
 import { AppEditionResourceV1 } from '@friends-library/api';
-import { Html, Sha } from '@friends-library/types';
+import { Html, Uuid } from '@friends-library/types';
 
 export type PlayerState = 'STOPPED' | 'PLAYING' | 'PAUSED' | 'DUCKED';
 
@@ -17,7 +17,7 @@ export type EditionId = string;
  * Document UUID
  * eg `"f413cec8-c609-4d58-9721-4ad552cb27ae"`
  */
-export type DocumentId = string;
+export type DocumentId = Uuid;
 
 export type EditionResource = AppEditionResourceV1;
 
@@ -26,7 +26,7 @@ export type Audio = ReturnType<typeof deriveAudioType>;
 export type AudioPart = ReturnType<typeof deriveAudioPartType>;
 
 export interface EbookData {
-  sha: Sha;
+  md5: string;
   innerHtml: Html;
 }
 

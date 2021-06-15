@@ -1,7 +1,9 @@
 import RNFS from 'react-native-fs';
 import { Platform } from 'react-native';
 import { ValuesOf } from 'x-ts-utils';
-import { FsPath, FsPathPrefix } from './models';
+import base64 from 'react-native-base64';
+import SparkMD5 from 'spark-md5';
+import { FsPath } from './models';
 
 export class FileSystem {
   private manifest: Record<string, number | undefined> = {};
@@ -44,6 +46,24 @@ export class FileSystem {
     }
   }
 
+  public async md5File(file: FsPath): Promise<null | { md5: string; contents: string }> {
+    if (!this.hasFile(file)) {
+      return null;
+    }
+    try {
+      if (file.fsPath.endsWith(`.png`)) {
+        const encoded = await RNFS.readFile(this.abspath(file.fsPath), `base64`);
+        const decoded = base64.decode(encoded);
+        return { md5: SparkMD5.hashBinary(decoded, false), contents: encoded };
+      } else {
+        const contents = await RNFS.readFile(this.abspath(file.fsPath));
+        return { md5: SparkMD5.hash(contents), contents };
+      }
+    } catch {
+      return null;
+    }
+  }
+
   public download(
     { fsPath: relPath }: FsPath,
     networkUrl: string,
@@ -80,17 +100,6 @@ export class FileSystem {
 
   public bytesOnDisk(entity: FsPath): number {
     return this.manifest[entity.fsPath] ?? 0;
-  }
-
-  public filesWithPrefix({
-    fsPathPrefix: prefix,
-  }: FsPathPrefix): Array<{ filename: string; path: FsPath }> {
-    return Object.keys(this.manifest)
-      .filter((relPath) => relPath.startsWith(prefix))
-      .map((relPath) => ({
-        filename: basename(relPath),
-        path: { fsPath: relPath },
-      }));
   }
 
   public async eventedDownload(
