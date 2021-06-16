@@ -34,7 +34,7 @@ export const EbookSettings: React.FC<Props> = ({
           <Icon name="times" style={tw`text-lg`} />
         </TouchableOpacity>
         <Sans style={tw`flex-grow text-center text-${fgColor}`} size={14}>
-          Ebook Prefs
+          Preferences
         </Sans>
         <TouchableOpacity onPress={onPressClose} style={tw`px-2`}>
           <Icon name="times" style={tw`text-lg text-gray-400`} />
