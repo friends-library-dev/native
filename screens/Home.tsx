@@ -56,7 +56,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
         >
           <Icon name="gear" style={tw`pr-2 text-gray-500 mt-px text-sm`} />
           <Sans size={16} style={tw`text-gray-500`}>
-            Settings
+            {t`Settings`}
           </Sans>
         </TouchableOpacity>
       </View>
