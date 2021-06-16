@@ -62,13 +62,15 @@ const Home: React.FC<Props> = ({ navigation }) => {
       </View>
       <View style={tw`self-stretch`}>
         <HomeButton
-          title={`${t`Listen`} (${Editions.numAudios()})`}
+          title={t`Listen`}
           onPress={() => navigation.navigate(`AudioBookList`, { listType: `audio` })}
           backgroundColor={`flprimary`}
+          numEditions={Editions.numAudios()}
         />
         <HomeButton
-          title={`Read (${Editions.numDocuments()})`}
+          title={t`Read`}
           onPress={() => navigation.navigate(`EBookList`, { listType: `ebook` })}
+          numEditions={Editions.numDocuments()}
           backgroundColor={`flblue`}
         />
         {!connected && (
@@ -101,17 +103,31 @@ const HomeButton: React.FC<{
   onPress: () => unknown;
   title: string;
   backgroundColor: string;
-}> = ({ onPress, title, backgroundColor }) => (
+  numEditions: number;
+}> = ({ onPress, title, backgroundColor, numEditions }) => (
   <TouchableOpacity
     style={tw.style(
-      `self-stretch mx-12 my-2 px-8 py-4 rounded-full`,
+      `flex-row justify-center self-stretch`,
+      `mx-12 my-2 px-8 py-3 rounded-2xl`,
       `bg-${backgroundColor}`,
     )}
     onPress={onPress}
   >
-    <Sans size={20} style={tw`text-white text-center`}>
+    <Sans size={20} style={tw`text-white text-center ml-4 py-1`}>
       {title}
     </Sans>
+    <View
+      style={tw.style(`text-white self-start pt-px ml-1 rounded-full`, {
+        // color is halfway between v1-green-{500,600}
+        backgroundColor: `rgb(64, 174, 112)`,
+        paddingBottom: 2,
+        paddingHorizontal: 5,
+      })}
+    >
+      <Sans size={12} style={tw`text-white`}>
+        {numEditions}
+      </Sans>
+    </View>
   </TouchableOpacity>
 );
 
