@@ -112,7 +112,7 @@ const ColorButton: React.FC<{
           'border border-ebook-colorscheme-black-fg':
             colorScheme === `black` && active === `black`,
         })}
-      ></View>
+      />
       <View
         style={tw.style(
           `rounded-full`,
