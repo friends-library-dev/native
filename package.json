@@ -28,6 +28,7 @@
     "build:android:aab:es": "npm run env:es -- --release && cd ./android && ./gradlew clean && npm run android:prep-release && ./gradlew bundleRelease -x bundleReleaseJsAndAssets && npm run open-aab-dir",
     "open-apk-dir": "open ./android/app/build/outputs/apk/release",
     "open-aab-dir": "open ./android/app/build/outputs/bundle/release",
+    "tailwind-regen": "npx trnc-create-styles",
     "storybook": "cp -f ./index.storybook.js ./index.js && react-native start",
     "test": "jest --forceExit",
     "test:watch": "jest --watch -w=1",
@@ -40,8 +41,8 @@
   "dependencies": {
     "@babel/plugin-syntax-nullish-coalescing-operator": "^7.8.3",
     "@friends-library/adoc-utils": "^1.3.2",
-    "@friends-library/friends": "^4.1.1",
-    "@friends-library/locale": "^1.7.1",
+    "@friends-library/friends": "^4.2.0",
+    "@friends-library/locale": "^1.8.0",
     "@friends-library/theme": "^1.1.1",
     "@friends-library/types": "^5.1.0",
     "@react-native-community/masked-view": "^0.1.10",
@@ -84,7 +85,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
-    "@friends-library/api": "^1.2.0",
+    "@friends-library/api": "^1.2.2",
     "@friends-library/dev": "~4.3.1",
     "@react-native-community/eslint-config": "^1.1.0",
     "@storybook/addon-actions": "^6.0.16",
@@ -112,7 +113,7 @@
     "react-dom": "16.10.1",
     "react-is": "16.10.1",
     "tailwindcss": "^2.0.2",
-    "x-exec": "^1.1.0"
+    "x-exec": "^1.2.0"
   },
   "husky": {
     "hooks": {

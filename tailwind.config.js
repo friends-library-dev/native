@@ -1,6 +1,9 @@
 // @ts-check
 const { getTailwindConfig } = require(`@friends-library/theme`);
 
+// hardcode `en` so we don't have to regen tailwind styles
+// when switching languages.  the `flprimary` is barely used
+// in the app, so we can just manually switch on languages then
 const config = { ...getTailwindConfig(`en`) };
 
 config.theme.extend.colors[`ebook-colorscheme`] = {
@@ -45,6 +48,7 @@ config.theme.extend.colors[`v1-green`] = {
   300: `#9AE6B4`,
   400: `#68D391`,
   500: `#48BB78`,
+  550: `#40AE70`,
   600: `#38A169`,
   700: `#2F855A`,
   800: `#276749`,

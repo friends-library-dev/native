@@ -4,6 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { EditionType } from '@friends-library/types';
+import { t } from '@friends-library/locale';
 import { Sans, Serif } from '../components/Text';
 import { EditionId, StackParamList } from '../types';
 import { EditionEntity } from '../lib/models';
@@ -16,6 +17,7 @@ import tw from '../lib/tailwind';
 import { ByLine, JustifiedDescription, MainTitle } from '../components/BookParts';
 import IconButton from '../components/IconButton';
 import { selectEdition } from '../state/ebook/selected-edition';
+import { LANG } from '../env';
 
 interface Props {
   documentTitle: string;
@@ -63,7 +65,12 @@ export const Ebook: React.FC<Props> = ({
         </TouchableOpacity>
         <MainTitle title={documentTitle} />
         <ByLine title={documentTitle} friend={friendName} />
-        <IconButton onPress={read} icon="book" text="Read →" tailwindClass="mb-2" />
+        <IconButton
+          onPress={read}
+          icon="book"
+          text={`${t`Read`} →`}
+          tailwindClass="mb-2"
+        />
         <JustifiedDescription description={description} />
         {chapters.length > 2 && (
           <View
@@ -74,7 +81,7 @@ export const Ebook: React.FC<Props> = ({
             )}
           >
             <Serif size={20} style={tw`mb-4 text-center`}>
-              Contents:
+              {LANG === `en` ? `Contents:` : `Contenido:`}
             </Serif>
             {chapters.map((ch) => (
               <TouchableOpacity

@@ -12,6 +12,7 @@ import Editions from '../lib/Editions';
 import { useSelector } from '../state';
 import FullscreenError from '../components/FullscreenError';
 import FullscreenLoading from '../components/FullscreenLoading';
+import { LANG } from '../env';
 
 interface Props {
   navigation: StackNavigationProp<StackParamList, 'Home'>;
@@ -39,7 +40,13 @@ const Home: React.FC<Props> = ({ navigation }) => {
     return connected ? (
       <FullscreenLoading />
     ) : (
-      <FullscreenError errorMsg="Unable to download book data, no internet connection" />
+      <FullscreenError
+        errorMsg={
+          LANG === `en`
+            ? `Unable to download book data, no internet connection`
+            : `No es posible descargar el contenido del libro, no hay conexión de internet.`
+        }
+      />
     );
   }
 
@@ -64,7 +71,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
         <HomeButton
           title={t`Listen`}
           onPress={() => navigation.navigate(`AudioBookList`, { listType: `audio` })}
-          backgroundColor={`flprimary`}
+          backgroundColor={LANG === `en` ? `flmaroon` : `flgold`}
           numEditions={Editions.numAudios()}
         />
         <HomeButton
@@ -113,13 +120,15 @@ const HomeButton: React.FC<{
     )}
     onPress={onPress}
   >
-    <Sans size={20} style={tw`text-white text-center ml-4 py-1`}>
+    <Sans
+      size={20}
+      style={tw.style(`text-white text-center ml-4 py-1`, { letterSpacing: 1 })}
+    >
       {title}
     </Sans>
     <View
       style={tw.style(`text-white self-start pt-px ml-1 rounded-full`, {
-        // color is halfway between v1-green-{500,600}
-        backgroundColor: `rgb(64, 174, 112)`,
+        backgroundColor: tw.color(LANG === `en` ? `v1-green-550` : `flmaroon-500`) || ``,
         paddingBottom: 2,
         paddingHorizontal: 5,
       })}
