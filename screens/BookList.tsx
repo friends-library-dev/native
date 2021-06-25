@@ -48,9 +48,7 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
       data={resources}
       ListEmptyComponent={() => (
         <Sans size={16} style={tw`text-center p-4 italic`}>
-          {LANG === `en`
-            ? `No ${type === `audio` ? `audio` : ``}books matched your search.` // @TODO TRANSLATION
-            : `Ningún audiolibro corresponde a tu búsqueda.`}
+          {emptyMsg(type)}
         </Sans>
       )}
       ListHeaderComponent={<ListControls listType={type} />}
@@ -61,3 +59,13 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
 };
 
 export default BookList;
+
+function emptyMsg(type: 'audio' | 'ebook'): string {
+  if (LANG === `en`) {
+    return `No ${type === `audio` ? `audio` : ``}books matched your search.`;
+  }
+
+  return type === `audio`
+    ? `Ningún audiolibro corresponde a tu búsqueda.`
+    : `Tu búsqueda no tiene coincidencias.`;
+}

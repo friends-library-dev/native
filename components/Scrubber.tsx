@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import RNScrubber from 'react-native-scrubber';
+import { t } from '@friends-library/locale';
 import tw from '../lib/tailwind';
 import { Sans } from './Text';
 
@@ -43,7 +44,7 @@ const Scrubber: React.FC<Props> = ({
             />
           </View>
           <View style={tw`flex-row justify-center`}>
-            <Sans size={13}>Downloading...</Sans>
+            <Sans size={13}>{`${t`Downloading`}...`}</Sans>
           </View>
         </>
       )}

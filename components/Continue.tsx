@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { t } from '@friends-library/locale';
 import { EditionId } from '../types';
 import { Sans, Serif } from './Text';
 import CoverImage from './CoverImage';
@@ -40,7 +41,7 @@ export const Continue: React.FC<Props> = ({
       })}
     >
       <Sans size={10} style={tw`uppercase text-gray-500`}>
-        Continue {type === `audio` ? `listening` : `reading`}:
+        {type === `audio` ? t`Continue listening` : t`Continue reading`}:
       </Sans>
       <Serif size={17} style={tw`pt-1 text-gray-600`} numberOfLines={1}>
         {title}

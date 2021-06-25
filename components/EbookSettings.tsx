@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { t } from '@friends-library/locale';
 import { EbookColorScheme } from '../types';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from '../state';
 import { setEbookColorScheme, setEbookFontSize } from '../state/preferences';
 import { toggleShowingEbookSettings } from '../state/ephemeral';
@@ -34,7 +35,7 @@ export const EbookSettings: React.FC<Props> = ({
           <Icon name="times" style={tw`text-lg`} />
         </TouchableOpacity>
         <Sans style={tw`flex-grow text-center text-${fgColor}`} size={14}>
-          Preferences
+          {t`Preferences`}
         </Sans>
         <TouchableOpacity onPress={onPressClose} style={tw`px-2`}>
           <Icon name="times" style={tw`text-lg text-gray-400`} />

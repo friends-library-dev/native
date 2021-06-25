@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Image } from 'react-native';
+import { t } from '@friends-library/locale';
 import { EbookColorScheme } from '../types';
 import { Serif } from './Text';
 import tw from '../lib/tailwind';
@@ -51,7 +52,7 @@ const FullscreenLoading: React.FC<{ colorScheme?: EbookColorScheme | 'transparen
           })}
         />
         <Serif style={tw`text-${textClass} mt-4 opacity-75`} size={18}>
-          Loading...
+          {t`Loading`}...
         </Serif>
       </View>
     </View>
