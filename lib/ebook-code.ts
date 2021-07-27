@@ -2,6 +2,7 @@ import css from 'x-syntax';
 import { EbookColorScheme } from '../types';
 import { Element, Document, Window } from './dom-stubs';
 import tw from '../lib/tailwind';
+import { LANG } from '../env';
 
 export type Message =
   | { type: 'update_position'; position: number }
@@ -213,7 +214,7 @@ export function wrapHtml(
 ): string {
   const classList = htmlClassList(colorScheme, showingHeader, fontSize, false);
   return `
-  <html class="${classList}${position > 0 ? ` await-init-position` : ``}"> 
+  <html class="${classList}${position > 0 ? ` await-init-position` : ``}" lang="${LANG}"> 
     <head>
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars}</style>
