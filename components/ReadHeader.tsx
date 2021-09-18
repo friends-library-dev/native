@@ -28,42 +28,33 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
     };
   });
 
-  const padTop = {
-    paddingTop: insets.top + 5,
-  };
-
-  const btnPad = {
-    ...padTop,
-    paddingBottom: 5,
-  };
+  const padTop = `pt-[${insets.top + 5}px]`;
+  const btnPad = `${padTop} pb-[5px]`;
 
   return (
     <View
       onLayout={(e) => dispatch(setEbookHeaderHeight(e.nativeEvent.layout.height))}
       style={tw.style(
-        `bg-ebook-colorscheme-${colorScheme}-bg`,
+        `bg-ebookcolorscheme-${colorScheme}bg`,
         `flex-row justify-between items-center`,
         colorSchemeSubtleDropshadowStyle(`below`, colorScheme),
       )}
     >
       <View style={tw.style(`flex-row justify-between flex-grow max-w-full`)}>
         <TouchableWithoutFeedback
-          style={tw.style(`pl-3 pr-2 items-center justify-center flex-grow`, btnPad)}
+          style={tw`pl-3 pr-2 items-center justify-center flex-grow ${btnPad}`}
           onPress={() =>
             navigation.canGoBack() ? navigation.goBack() : navigation.navigate(`Ebooks`)
           }
         >
           <Icon
-            style={tw`ios:text-xl android:text-lg font-thin text-ebook-colorscheme-${colorScheme}-fg`}
+            style={tw`ios:text-xl android:text-lg font-thin text-ebookcolorscheme-${colorScheme}fg`}
             name="chevron-left"
           />
         </TouchableWithoutFeedback>
-        <View style={tw.style(`items-center justify-center flex-shrink`)}>
+        <View style={tw`items-center justify-center flex-shrink`}>
           <Sans
-            style={tw.style(
-              `font-bold text-ebook-colorscheme-${colorScheme}-fg px-6`,
-              padTop,
-            )}
+            style={tw`font-bold text-ebookcolorscheme-${colorScheme}fg px-6 ${padTop}`}
             size={15}
             numberOfLines={1}
           >
@@ -71,13 +62,10 @@ const ReadHeader: React.FC<StackHeaderProps> = ({ insets, navigation, scene }) =
           </Sans>
         </View>
         <TouchableWithoutFeedback
-          style={tw.style(`pr-3 pl-2 items-center justify-center flex-grow`, btnPad)}
+          style={tw`pr-3 pl-2 items-center justify-center flex-grow ${btnPad}`}
           onPress={() => dispatch(toggleShowingEbookSettings())}
         >
-          <Icon
-            style={tw`text-2xl text-ebook-colorscheme-${colorScheme}-fg`}
-            name="gear"
-          />
+          <Icon style={tw`text-2xl text-ebookcolorscheme-${colorScheme}fg`} name="gear" />
         </TouchableWithoutFeedback>
       </View>
     </View>

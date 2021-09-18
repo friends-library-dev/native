@@ -48,7 +48,7 @@ export const DownloadablePart: React.FC<Props> = (props) => {
   }
   return (
     <TouchableOpacity
-      style={tw`border-b border-v1-gray-300`}
+      style={tw`border-b border-v1gray-300`}
       onPress={state === `downloaded` ? play : undefined}
     >
       <View
@@ -58,10 +58,10 @@ export const DownloadablePart: React.FC<Props> = (props) => {
       />
       <View style={tw`p-2 pl-1 pr-6 flex-row`}>
         <Icon
-          style={{
-            ...tw.style(`mt-1 ml-1 mr-1 text-blue-500`),
-            opacity: state === `playing` ? 1 : 0,
-          }}
+          style={tw.style(
+            `mt-1 ml-1 mr-1 text-blue-500`,
+            state === `playing` ? `opacity-100` : `opacity-0`,
+          )}
           name="play"
           size={9}
         />
@@ -69,13 +69,13 @@ export const DownloadablePart: React.FC<Props> = (props) => {
           {part.title}
         </Sans>
         {(state === `queued_for_download` || state === `downloading`) && (
-          <Sans size={12} style={tw`italic lowercase text-v1-gray-500 ml-4`}>
+          <Sans size={12} style={tw`italic lowercase text-v1gray-500 ml-4`}>
             {state === `downloading` ? t`Downloading` : t`queued`}
           </Sans>
         )}
         {state === `not_downloaded` && (
           <TouchableOpacity style={tw`items-center pl-2`} onPress={download}>
-            <Icon name="cloud-download" size={17} style={tw`text-v1-gray-500 p-2 -m-2`} />
+            <Icon name="cloud-download" size={17} style={tw`text-v1gray-500 p-2 -m-2`} />
           </TouchableOpacity>
         )}
       </View>

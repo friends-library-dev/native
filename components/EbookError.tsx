@@ -10,8 +10,8 @@ const EbookError: React.FC<{
 }> = ({ reason, colorScheme }) => (
   <FullscreenError
     errorMsg={message(reason)}
-    bgColor={tw.color(`ebook-colorscheme-${colorScheme}-bg`) ?? ``}
-    textColor={tw.color(`ebook-colorscheme-${colorScheme}-fg`) ?? ``}
+    bgColor={tw.color(`ebookcolorscheme-${colorScheme}bg`) ?? ``}
+    textColor={tw.color(`ebookcolorscheme-${colorScheme}fg`) ?? ``}
   />
 );
 

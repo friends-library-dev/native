@@ -25,24 +25,18 @@ const BookListItem: React.FC<Props> = ({
   badgeText,
 }) => {
   return (
-    <View style={tw`flex-row p-2 border-b border-v1-gray-400`}>
-      <View style={tw.style({ width: 90, height: 90 })}>
+    <View style={tw`flex-row p-2 border-b border-v1gray-400`}>
+      <View style={tw`w-[90px] h-[90px]`}>
         <CoverImage editionId={editionId} layoutWidth={90} type="square" />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
         {progress >= 96 && <Complete />}
       </View>
       <View style={tw`flex-col m-2 mb-0 w-full mt-0 mr-0 flex-shrink`}>
         <View style={tw`flex-row justify-between mb-px`}>
-          <Sans
-            size={11}
-            style={tw.style(`uppercase text-v1-gray-700 mb-1`, { letterSpacing: 0.75 })}
-          >
+          <Sans size={11} style={tw`uppercase text-v1gray-700 mb-1 tracking-[0.75px]`}>
             {upperLeft}
           </Sans>
-          <Sans
-            size={11}
-            style={tw.style(`text-v1-gray-600 mb-1`, { letterSpacing: 0.5 })}
-          >
+          <Sans size={11} style={tw`text-v1gray-600 mb-1 tracking-[0.5px]`}>
             {upperRight}
           </Sans>
         </View>
@@ -52,7 +46,7 @@ const BookListItem: React.FC<Props> = ({
         {badgeText && (
           <View
             style={tw.style(
-              `mt-px mb-0 h-4 rounded-full bg-v1-green-500 text-center items-center justify-center`,
+              `mt-px mb-0 h-4 rounded-full bg-v1green-500 text-center items-center justify-center`,
               {
                 'w-10': badgeText.length < 5,
                 'w-12': badgeText.length === 5,
@@ -76,23 +70,18 @@ const BookListItem: React.FC<Props> = ({
 export default React.memo(BookListItem);
 
 const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
-  <View style={tw.style(`absolute bottom-0 rounded-full m-2`, { width: 75, height: 4 })}>
+  <View style={tw`absolute bottom-0 rounded-full m-2 w-[75px] h-[4px]`}>
+    <View style={tw`absolute bg-white bottom-0 rounded-full w-full h-full opacity-40`} />
     <View
-      style={tw.style(`absolute bg-white bottom-0 rounded-full w-full h-full`, {
-        opacity: 0.4,
-      })}
-    />
-    <View
-      style={tw.style(`absolute bg-white bottom-0 rounded-full h-full`, {
+      style={tw.style(`absolute bg-white bottom-0 rounded-full h-full opacity-80`, {
         width: (progress / 100) * 75,
-        opacity: 0.8,
       })}
     />
   </View>
 );
 
 const Complete: React.FC = () => (
-  <View style={tw.style(`absolute right-0 top-0 m-1`, { opacity: 85 })}>
+  <View style={tw`absolute right-0 top-0 m-1 opacity-85`}>
     <Icon name="check-circle" color="white" size={15} />
   </View>
 );

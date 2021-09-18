@@ -27,7 +27,7 @@ const Settings: React.FC<Props> = () => {
   return (
     <View>
       <View
-        style={tw`flex-row justify-between p-4 border-b border-v1-gray-400 items-center`}
+        style={tw`flex-row justify-between p-4 border-b border-v1gray-400 items-center`}
       >
         <Sans size={18}>{t`High quality audio`}</Sans>
         <Switch
@@ -39,7 +39,7 @@ const Settings: React.FC<Props> = () => {
         />
       </View>
       <View
-        style={tw`flex-row justify-between p-4 border-b border-v1-gray-400 items-center`}
+        style={tw`flex-row justify-between p-4 border-b border-v1gray-400 items-center`}
       >
         <Sans size={18}>
           {t`Downloaded audio`}: {humansize(deletableBytes)}

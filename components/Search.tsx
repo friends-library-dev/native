@@ -12,9 +12,7 @@ interface Props {
 
 const Search: React.FC<Props> = ({ query, setQuery }) => (
   <View
-    style={tw.style(`rounded-md pl-2 flex flex-row items-center android:py-1 ios:py-2`, {
-      backgroundColor: `#ddd`,
-    })}
+    style={tw`rounded-md pl-2 flex flex-row items-center android:py-1 ios:py-2 bg-[#ddd]`}
   >
     <Icon name="search" size={18} color="#bbb" style={tw`ml-1`} />
     <TextInput
@@ -30,8 +28,8 @@ const Search: React.FC<Props> = ({ query, setQuery }) => (
       })}
       onPress={() => setQuery(``)}
     >
-      <View style={tw`rounded-full w-4 h-4 bg-v1-gray-700 items-center justify-center`}>
-        <Sans size={15} style={tw.style(`pt-px text-white`, { marginTop: -3 })}>
+      <View style={tw`rounded-full w-4 h-4 bg-v1gray-700 items-center justify-center`}>
+        <Sans size={15} style={tw`pt-px text-white mt-[-3px]`}>
           &times;
         </Sans>
       </View>

@@ -32,7 +32,7 @@ export const ListControls: React.FC<Props> = ({
   <View style={tw`p-2 pt-4`} onLayout={(e) => setHeight(e.nativeEvent.layout.height)}>
     <Search query={query} setQuery={setQuery} />
     <View
-      style={tw`flex-row justify-center mt-4 -mb-1 pb-2 flex-wrap border-b border-v1-gray-300`}
+      style={tw`flex-row justify-center mt-4 -mb-1 pb-2 flex-wrap border-b border-v1gray-300`}
     >
       <SortButton
         active={sort === `published`}
@@ -68,16 +68,14 @@ const SortButton: React.FC<{
   <TouchableOpacity
     onPress={onPress}
     style={tw.style(
-      `py-1 px-4 flex-grow justify-center rounded-md mb-2`,
+      `py-1 px-4 flex-grow justify-center rounded-md mb-2 max-w-[150px]`,
       !last && `mr-2`,
-      { maxWidth: 150 },
-      !active && { backgroundColor: `#ddd` },
-      active && { backgroundColor: tw.color(`flblue`) || `` },
+      active ? `bg-flblue` : `bg-[#ddd]`,
     )}
   >
     <Sans
       style={tw.style(`text-center uppercase`, {
-        'text-v1-gray-700': !active,
+        'text-v1gray-700': !active,
         'text-white font-bold': active,
       })}
       size={10}

@@ -299,7 +299,7 @@ class Read extends PureComponent<Props, State> {
     const percentPos = clamp(Math.round((this.state.position ?? position) * 100), 0, 100);
 
     return (
-      <View style={tw`flex-grow bg-ebook-colorscheme-${colorScheme}-bg`}>
+      <View style={tw`flex-grow bg-ebookcolorscheme-${colorScheme}bg`}>
         <PrefersHomeIndicatorAutoHidden />
         <StatusBar
           hidden={!showingHeader}
@@ -315,12 +315,9 @@ class Read extends PureComponent<Props, State> {
             <View
               style={tw.style(
                 `absolute bottom-0 right-0 w-full z-10 px-10`,
-                `bg-ebook-colorscheme-${colorScheme}-bg`,
+                `pt-[24px] pb-[${safeAreaBottomOffset * 1.2 || 24}px]`,
+                `bg-ebookcolorscheme-${colorScheme}bg`,
                 colorSchemeSubtleDropshadowStyle(`above`, colorScheme),
-                {
-                  paddingTop: 24,
-                  paddingBottom: safeAreaBottomOffset * 1.2 || 24,
-                },
               )}
             >
               <View style={tw`pr-6 mb-1 relative`}>
@@ -345,17 +342,13 @@ class Read extends PureComponent<Props, State> {
                     colorScheme === `white`
                       ? tw.color(`flmaroon`)
                       : colorScheme === `sepia`
-                      ? tw.color(`ebook-colorscheme-sepia-accent`)
-                      : `rgba(110, 141, 234, 1)` // TODO, make black-accent
+                      ? tw.color(`ebookcolorscheme-sepiaaccent`)
+                      : tw.color(`ebookcolorscheme-blackaccent`) // `rgba(110, 141, 234, 1)` // TODO, make black-accent
                   }
                 />
                 <Sans
                   size={11}
-                  style={tw.style(
-                    `opacity-75 absolute`,
-                    `text-ebook-colorscheme-${colorScheme}-fg`,
-                    { right: -16, top: 4 },
-                  )}
+                  style={tw`opacity-75 absolute right-[-16px] top-[4px] text-ebookcolorscheme-${colorScheme}fg`}
                 >
                   {percentPos}%
                 </Sans>

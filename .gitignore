@@ -11,6 +11,7 @@ android/app/src/main/res/drawable*
 android/app/src/main/res/mipmap*
 android/app/src/main/res/raw
 env/index.ts
+ios/assets/
 ios/FriendsLibrary/Info.plist
 ios/FriendsLibrary/LaunchScreen.storyboard
 ios/FriendsLibrary/Images.xcassets/AppIcon.appiconset/
