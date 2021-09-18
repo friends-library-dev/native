@@ -36,9 +36,9 @@ const Scrubber: React.FC<Props> = ({
       {downloading && (
         <>
           <View style={tw`mt-3 h-2`}>
-            <View style={tw`w-full border-b border-2 border-v1-gray-300 absolute`} />
+            <View style={tw`w-full border-b border-2 border-v1gray-300 absolute`} />
             <View
-              style={tw.style(`border-b border-2 border-v1-gray-500 absolute`, {
+              style={tw.style(`border-b border-2 border-v1gray-500 absolute`, {
                 width: `${downloadingProgress}%`,
               })}
             />

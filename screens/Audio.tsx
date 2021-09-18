@@ -101,7 +101,7 @@ export const AudioScreen: React.FC<Props> = ({
         <AudioControls {...controlsProps} />
         {isMultipart && !downloadingActivePart && (
           <View style={tw`flex-row justify-center -mt-4`}>
-            <Sans size={13} style={tw`text-v1-gray-600`}>
+            <Sans size={13} style={tw`text-v1gray-600`}>
               Part{LANG === `es` ? `e` : ``} {activePartIndex + 1}
               {` `}
               {LANG === `es` ? `de` : `of`} {audio.parts.length}
@@ -121,11 +121,11 @@ export const AudioScreen: React.FC<Props> = ({
       )}
       {isMultipart && (
         <View style={tw`flex-row items-center justify-center`}>
-          <Sans style={tw`text-center text-v1-gray-700 py-3`}>
+          <Sans style={tw`text-center text-v1gray-700 py-3`}>
             {audio.parts.length} {LANG === `en` ? `parts` : `partes`}
           </Sans>
           <Sans style={tw`mx-3 text-blue-300`}>|</Sans>
-          <Sans style={tw`text-center text-v1-gray-700 py-3`}>{duration}</Sans>
+          <Sans style={tw`text-center text-v1gray-700 py-3`}>{duration}</Sans>
         </View>
       )}
       <JustifiedDescription description={edition.document.shortDescription} />
@@ -142,7 +142,7 @@ export const AudioScreen: React.FC<Props> = ({
           icon="trash"
           text={isMultipart ? t`Delete all` : t`Delete`}
           secondaryText={`(${humansize(downloaded)})`}
-          textTailwindClass="text-v1-gray-700"
+          textTailwindClass="text-v1gray-700"
           bgTailwindClass="bg-red-200"
           tailwindClass={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
         />

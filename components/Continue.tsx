@@ -26,7 +26,12 @@ export const Continue: React.FC<Props> = ({
   percentComplete,
 }) => (
   <TouchableOpacity style={tw`flex-row mt-3 mr-2 justify-start`} onPress={onPress}>
-    <View style={tw.style({ 'pt-1 pb-3': type === `audio`, 'pr-px': type === `ebook` })}>
+    <View
+      style={tw.style({
+        'pt-1 pb-3': type === `audio`,
+        'pr-px': type === `ebook`,
+      })}
+    >
       <CoverImage
         key={editionId}
         type={type === `audio` ? `square` : `threeD`}
@@ -48,10 +53,7 @@ export const Continue: React.FC<Props> = ({
       </Serif>
       {percentComplete > 0 && (
         <View
-          style={tw.style(
-            `bg-flblue rounded-full opacity-75 mt-1 self-start items-center justify-center`,
-            { height: 14, width: 30 },
-          )}
+          style={tw`bg-flblue rounded-full opacity-75 mt-1 self-start items-center justify-center h-[14px] w-[30px]`}
         >
           <Sans size={10} style={tw`uppercase text-white px-1`}>
             {percentComplete}%
@@ -59,7 +61,7 @@ export const Continue: React.FC<Props> = ({
         </View>
       )}
     </View>
-    <View style={tw.style(`justify-center pl-3 flex-grow items-end`)}>
+    <View style={tw`justify-center pl-3 flex-grow items-end`}>
       <Icon name="chevron-right" style={tw`text-flblue pb-2`} />
     </View>
   </TouchableOpacity>

@@ -19,19 +19,14 @@ const IconButton: React.FC<Props> = ({
   icon,
   text,
   secondaryText,
-  bgTailwindClass = `bg-v1-blue-200`,
-  textTailwindClass = `text-v1-blue-800`,
+  bgTailwindClass = `bg-v1blue-200`,
+  textTailwindClass = `text-v1blue-800`,
   onPress,
 }) => (
   <View style={tw.style(`pb-2 px-4 flex-row justify-center`, tailwindClass)}>
     <TouchableOpacity
       onPress={onPress}
-      style={tw.style(
-        `${bgTailwindClass} justify-center flex-row px-6 py-2 rounded-full`,
-        {
-          minWidth: 160,
-        },
-      )}
+      style={tw`${bgTailwindClass} justify-center flex-row px-6 py-2 rounded-full min-w-[160px]`}
     >
       <Icon name={icon} size={21} style={tw`pr-2 ${textTailwindClass}`} />
       <View style={tw`flex-row`}>
@@ -39,10 +34,7 @@ const IconButton: React.FC<Props> = ({
           {text}
         </Sans>
         {secondaryText && (
-          <Sans
-            size={11}
-            style={tw.style(textTailwindClass, { marginTop: 3, marginLeft: 5 })}
-          >
+          <Sans size={11} style={tw.style(`mt-[3px] ml-[5px]`, textTailwindClass)}>
             {secondaryText}
           </Sans>
         )}

@@ -127,10 +127,8 @@ const HomeButton: React.FC<{
       {title}
     </Sans>
     <View
-      style={tw.style(`text-white self-start pt-px ml-1 rounded-full`, {
-        backgroundColor: tw.color(LANG === `en` ? `v1-green-550` : `flmaroon-500`) || ``,
-        paddingBottom: 2,
-        paddingHorizontal: 5,
+      style={tw.style(`text-white self-start pt-px ml-1 rounded-full px-[5px] pb-[2px]`, {
+        backgroundColor: tw.color(LANG === `en` ? `v1green-550` : `flmaroon-500`) || ``,
       })}
     >
       <Sans size={12} style={tw`text-white`}>

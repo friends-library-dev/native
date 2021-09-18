@@ -22,8 +22,8 @@ const FullscreenLoading: React.FC<{ colorScheme?: EbookColorScheme | 'transparen
 
   let iconOpacity: number;
   let icon: any;
-  let bgClass = `ebook-colorscheme-${colorScheme}-bg`;
-  let textClass = `ebook-colorscheme-${colorScheme}-fg`;
+  let bgClass = `ebookcolorscheme-${colorScheme}bg`;
+  let textClass = `ebookcolorscheme-${colorScheme}fg`;
   if (colorScheme === `black`) {
     iconOpacity = 0.5;
     icon = require(`./icon-white.png`);
@@ -33,7 +33,7 @@ const FullscreenLoading: React.FC<{ colorScheme?: EbookColorScheme | 'transparen
   } else if (colorScheme === `transparent`) {
     bgClass = `transparent`;
     iconOpacity = 0.7;
-    textClass = `ebook-colorscheme-white-fg`;
+    textClass = `ebookcolorscheme-whitefg`;
     icon = require(`./icon-black.png`);
   } else {
     iconOpacity = 0.7;

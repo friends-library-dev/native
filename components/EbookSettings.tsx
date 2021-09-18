@@ -26,8 +26,9 @@ export const EbookSettings: React.FC<Props> = ({
   onPressClose,
 }) => {
   const borderColor = `border-gray-${colorScheme === `black` ? `700` : `200`}`;
-  const fgColor = `ebook-colorscheme-${colorScheme}-fg`;
-  const bgColor = `ebook-colorscheme-${colorScheme}-bg`;
+  const fgColor = `ebookcolorscheme-${colorScheme}fg`;
+  const bgColor = `ebookcolorscheme-${colorScheme}bg`;
+  console.log(`bg-${bgColor}`);
   return (
     <View style={tw.style(`rounded-md bg-${bgColor} shadow-lg`, { maxWidth: 220 })}>
       <View style={tw.style(`flex-row py-1 border-b items-center ${borderColor}`)}>
@@ -104,22 +105,21 @@ const ColorButton: React.FC<{
   onPress: () => unknown;
 }> = ({ colorScheme, active, onPress }) => {
   const isSelected = colorScheme === active;
-  const bg = colorScheme === `sepia` ? `sepia-accent` : `${colorScheme}-bg`;
+  const bg = colorScheme === `sepia` ? `sepiaaccent` : `${colorScheme}bg`;
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        style={tw.style(`bg-ebook-colorscheme-${bg}`, `w-8 h-8 rounded-full`, {
+        style={tw.style(`bg-ebookcolorscheme-${bg} w-8 h-8 rounded-full`, {
           'border border-gray-400': colorScheme === `white` && active !== `black`,
-          'border border-ebook-colorscheme-black-fg':
+          'border border-ebookcolorscheme-blackfg':
             colorScheme === `black` && active === `black`,
         })}
       />
       <View
         style={tw.style(
-          `rounded-full`,
+          `rounded-full h-[2px] m-[3px] mt-[5px]`,
           `bg-${colorScheme === `black` ? `gray-300` : `gray-600`}`,
           { 'opacity-0': !isSelected },
-          { height: 2, marginTop: 5, marginBottom: 3, marginLeft: 3, marginRight: 3 },
         )}
       />
     </TouchableOpacity>
@@ -144,14 +144,13 @@ const FontSizeButton: React.FC<FontSizeButtonProps> = ({
   <TouchableOpacity
     onPress={onPress}
     style={tw.style(
-      `items-center justify-center`,
+      `items-center justify-center h-[44px] min-w-1/2`,
       isRight && `border-r`,
       `border-gray-${colorScheme === `black` ? `700` : `200`}`,
-      { height: 44, minWidth: `50%` },
     )}
   >
     <Sans
-      style={tw.style(`font-bold text-ebook-colorscheme-${colorScheme}-fg`, {
+      style={tw.style(`font-bold text-ebookcolorscheme-${colorScheme}fg`, {
         opacity: disabled ? (colorScheme === `black` ? 0.3 : 0.1) : 0.85,
       })}
       size={letterSize}

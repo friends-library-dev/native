@@ -86,7 +86,7 @@ export const Ebook: React.FC<Props> = ({
             {chapters.map((ch) => (
               <TouchableOpacity
                 key={ch.id}
-                style={tw.style(`pl-5 pr-2`, { height: 30 })}
+                style={tw`pl-5 pr-2 h-[30px]`}
                 onPress={() => readChapter(ch.id)}
               >
                 <Sans size={15} numberOfLines={1} style={tw`text-flblue-700`}>

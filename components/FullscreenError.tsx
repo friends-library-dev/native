@@ -14,8 +14,7 @@ const FullscreenError: React.FC<{
     })}
   >
     <Serif
-      style={tw.style(`mt-4 opacity-75 px-12 text-center`, {
-        lineHeight: 29,
+      style={tw.style(`mt-4 opacity-75 px-12 text-center leading-[29px]`, {
         color: textColor,
       })}
       size={19}

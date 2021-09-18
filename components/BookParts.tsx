@@ -16,7 +16,7 @@ export const ByLine: React.FC<{ title: string; friend: string }> = ({
 }) => {
   if (title.includes(friend) || friend.startsWith(`Compila`)) return null;
   return (
-    <Serif size={22} style={tw`text-center italic text-v1-gray-700 mb-6 -mt-2`}>
+    <Serif size={22} style={tw`text-center italic text-v1gray-700 mb-6 -mt-2`}>
       {t`by`} {friend}
     </Serif>
   );
@@ -25,12 +25,7 @@ export const ByLine: React.FC<{ title: string; friend: string }> = ({
 export const JustifiedDescription: React.FC<{ description: string }> = ({
   description,
 }) => (
-  <Serif
-    style={tw.style(`px-6 pt-2 pb-4 text-justify text-v1-gray-800`, {
-      lineHeight: 26,
-    })}
-    size={18}
-  >
+  <Serif style={tw`px-6 pt-2 pb-4 text-justify text-v1gray-800 leading-[26px]`} size={18}>
     {description}
   </Serif>
 );

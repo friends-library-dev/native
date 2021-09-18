@@ -1,6 +1,6 @@
-import { create } from 'tailwind-react-native-classnames';
+import { create } from 'twrnc';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const customTailwind = create(require(`../tw-rn-styles.json`));
+const customTailwind = create(require(`../tailwind.config`));
 
 export default customTailwind;

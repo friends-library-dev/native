@@ -189,15 +189,15 @@ function injectIntoWebView(
 
 const cssVars = css`
   :root {
-    --ebook-colorscheme-black-bg: ${tw.color(`ebook-colorscheme-black-bg`) ?? ``};
-    --ebook-colorscheme-black-fg: ${tw.color(`ebook-colorscheme-black-fg`) ?? ``};
-    --ebook-colorscheme-black-accent: ${tw.color(`ebook-colorscheme-black-accent`) ?? ``};
-    --ebook-colorscheme-white-bg: ${tw.color(`ebook-colorscheme-white-bg`) ?? ``};
-    --ebook-colorscheme-white-fg: ${tw.color(`ebook-colorscheme-white-fg`) ?? ``};
-    --ebook-colorscheme-white-accent: ${tw.color(`ebook-colorscheme-white-accent`) ?? ``};
-    --ebook-colorscheme-sepia-bg: ${tw.color(`ebook-colorscheme-sepia-bg`) ?? ``};
-    --ebook-colorscheme-sepia-fg: ${tw.color(`ebook-colorscheme-sepia-fg`) ?? ``};
-    --ebook-colorscheme-sepia-accent: ${tw.color(`ebook-colorscheme-sepia-accent`) ?? ``};
+    --ebook-colorscheme-black-bg: ${tw.color(`ebookcolorscheme-blackbg`) ?? ``};
+    --ebook-colorscheme-black-fg: ${tw.color(`ebookcolorscheme-blackfg`) ?? ``};
+    --ebook-colorscheme-black-accent: ${tw.color(`ebookcolorscheme-blackaccent`) ?? ``};
+    --ebook-colorscheme-white-bg: ${tw.color(`ebookcolorscheme-whitebg`) ?? ``};
+    --ebook-colorscheme-white-fg: ${tw.color(`ebookcolorscheme-whitefg`) ?? ``};
+    --ebook-colorscheme-white-accent: ${tw.color(`ebookcolorscheme-whiteaccent`) ?? ``};
+    --ebook-colorscheme-sepia-bg: ${tw.color(`ebookcolorscheme-sepiabg`) ?? ``};
+    --ebook-colorscheme-sepia-fg: ${tw.color(`ebookcolorscheme-sepiafg`) ?? ``};
+    --ebook-colorscheme-sepia-accent: ${tw.color(`ebookcolorscheme-sepiaaccent`) ?? ``};
   }
 `;
 

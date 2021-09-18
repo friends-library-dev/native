@@ -6,19 +6,19 @@ const { getTailwindConfig } = require(`@friends-library/theme`);
 // in the app, so we can just manually switch on languages then
 const config = { ...getTailwindConfig(`en`) };
 
-config.theme.extend.colors[`ebook-colorscheme`] = {
-  'black-bg': `rgb(0, 0, 0)`,
-  'black-fg': `rgb(169, 169, 169)`,
-  'black-accent': `rgb(110, 141, 234)`,
-  'white-bg': `rgb(253, 253, 253)`,
-  'white-fg': `rgb(3, 3, 3)`,
-  'white-accent': `rgb(0, 0, 255)`,
-  'sepia-bg': `rgb(250, 242, 231)`,
-  'sepia-fg': `rgb(50, 50, 50)`,
-  'sepia-accent': `rgb(201, 154, 61)`,
+config.theme.extend.colors[`ebookcolorscheme`] = {
+  blackbg: `rgb(0, 0, 0)`,
+  blackfg: `rgb(169, 169, 169)`,
+  blackaccent: `rgb(110, 141, 234)`,
+  whitebg: `rgb(253, 253, 253)`,
+  whitefg: `rgb(3, 3, 3)`,
+  whiteaccent: `rgb(0, 0, 255)`,
+  sepiabg: `rgb(250, 242, 231)`,
+  sepiafg: `rgb(50, 50, 50)`,
+  sepiaaccent: `rgb(201, 154, 61)`,
 };
 
-config.theme.extend.colors[`v1-blue`] = {
+config.theme.extend.colors[`v1blue`] = {
   100: `#EBF8FF`,
   200: `#BEE3F8`,
   300: `#90CDF4`,
@@ -30,7 +30,7 @@ config.theme.extend.colors[`v1-blue`] = {
   900: `#2A4365`,
 };
 
-config.theme.extend.colors[`v1-gray`] = {
+config.theme.extend.colors[`v1gray`] = {
   100: `#F7FAFC`,
   200: `#EDF2F7`,
   300: `#E2E8F0`,
@@ -42,7 +42,7 @@ config.theme.extend.colors[`v1-gray`] = {
   900: `#1A202C`,
 };
 
-config.theme.extend.colors[`v1-green`] = {
+config.theme.extend.colors[`v1green`] = {
   100: `#F0FFF4`,
   200: `#C6F6D5`,
   300: `#9AE6B4`,
