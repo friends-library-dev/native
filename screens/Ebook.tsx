@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Dimensions, ScrollView, Linking } from 'react-n
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { EditionType } from '@friends-library/types';
+import { EditionType, LARGEST_THREE_D_COVER_IMAGE_WIDTH } from '@friends-library/types';
 import { t } from '@friends-library/locale';
 import { Sans, Serif } from '../components/Text';
 import { EditionId, StackParamList } from '../types';
@@ -50,6 +50,13 @@ export const Ebook: React.FC<Props> = ({
 }) => {
   const selected = editions.find((e) => e.isSelected);
   if (!selected) return null;
+
+  const coverImgWidth = Math.min(
+    Dimensions.get(`window`).width * 0.8,
+    tw.prefixMatch(`retina`)
+      ? LARGEST_THREE_D_COVER_IMAGE_WIDTH / 2
+      : LARGEST_THREE_D_COVER_IMAGE_WIDTH,
+  );
   return (
     <ScrollView style={tw.style(``, { backgroundColor: `#efefef` })}>
       <View style={tw`pt-4 items-center`}>
@@ -59,7 +66,7 @@ export const Ebook: React.FC<Props> = ({
             // because of "caching" inherent in the implementation of CoverImage
             key={selected.id}
             type="threeD"
-            layoutWidth={COVER_IMG_WIDTH}
+            layoutWidth={coverImgWidth}
             editionId={selected.id}
           />
         </TouchableOpacity>
@@ -71,29 +78,40 @@ export const Ebook: React.FC<Props> = ({
           text={`${t`Read`} →`}
           tailwindClass="mb-2"
         />
-        <JustifiedDescription description={description} />
+        <View style={tw`max-w-[700px]`}>
+          <JustifiedDescription description={description} />
+        </View>
         {chapters.length > 2 && (
           <View
             style={tw.style(
-              `mt-2 px-4 self-stretch border-t pt-4`,
+              `mt-2 px-4 self-stretch border-t pt-4 items-center`,
               `pb-${editions.length === 1 ? 8 : 6}`,
               { backgroundColor: `#eaeaea`, borderColor: `#e5e5e5` },
             )}
           >
-            <Serif size={20} style={tw`mb-4 text-center`}>
+            <Serif
+              size={tw.prefixMatch(`ipad`) ? 22 : 20}
+              style={tw`mb-4 ipad:py-2 text-center`}
+            >
               {LANG === `en` ? `Contents:` : `Contenido:`}
             </Serif>
-            {chapters.map((ch) => (
-              <TouchableOpacity
-                key={ch.id}
-                style={tw`pl-5 pr-2 h-[30px]`}
-                onPress={() => readChapter(ch.id)}
-              >
-                <Sans size={15} numberOfLines={1} style={tw`text-flblue-700`}>
-                  {ch.title} <Sans style={tw`text-flblue-600 opacity-50 pl-px`}>→</Sans>
-                </Sans>
-              </TouchableOpacity>
-            ))}
+            <View>
+              {chapters.map((ch) => (
+                <TouchableOpacity
+                  key={ch.id}
+                  style={tw`pl-5 pr-2 h-[30px] ipad:h-[34px]`}
+                  onPress={() => readChapter(ch.id)}
+                >
+                  <Sans
+                    size={tw.prefixMatch(`ipad`) ? 17 : 15}
+                    numberOfLines={1}
+                    style={tw`text-flblue-700`}
+                  >
+                    {ch.title} &nbsp;<Sans style={tw`text-flblue-600 opacity-50`}>→</Sans>
+                  </Sans>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         )}
       </View>
@@ -102,41 +120,44 @@ export const Ebook: React.FC<Props> = ({
           <Sans size={16} style={tw`p-2 italic text-white text-center bg-gray-500`}>
             Choose from {editions.length === 3 ? `three` : `two`} editions:
           </Sans>
-          {editions.map((edition) => (
-            <TouchableOpacity
-              disabled={edition.type === selected.type}
-              key={edition.id}
-              onPress={() => selectEdition(edition.type)}
-            >
-              <BookListItem
-                upperLeft={`${edition.type.toLocaleUpperCase()} EDITION`}
-                title={() =>
-                  edition.isSelected ? (
-                    <Serif size={22}>
-                      <Serif size={22}>Now reading</Serif>:{` `}
-                      <Serif size={22} style={tw`italic underline`}>
-                        {edition.type} edition
+          <View style={tw`ipad-lg:flex-row`}>
+            {editions.map((edition) => (
+              <TouchableOpacity
+                style={tw`ipad-lg:w-[33.3333vw]`}
+                disabled={edition.type === selected.type}
+                key={edition.id}
+                onPress={() => selectEdition(edition.type)}
+              >
+                <BookListItem
+                  upperLeft={`${edition.type.toLocaleUpperCase()} EDITION`}
+                  title={() =>
+                    edition.isSelected ? (
+                      <Serif size={22}>
+                        <Serif size={22}>Now reading</Serif>:{` `}
+                        <Serif size={22} style={tw`italic underline`}>
+                          {edition.type} edition
+                        </Serif>
+                        {` `}
                       </Serif>
-                      {` `}
-                    </Serif>
-                  ) : (
-                    <Serif size={22} style={tw`text-gray-500`}>
-                      Switch to the{` `}
-                      <Serif size={22} style={tw`italic`}>
-                        {edition.type} edition
+                    ) : (
+                      <Serif size={22} style={tw`text-gray-500`}>
+                        Switch to the{` `}
+                        <Serif size={22} style={tw`italic`}>
+                          {edition.type} edition
+                        </Serif>
+                        {`  `}
+                        <Icon name="refresh" size={12} style={tw`ml-4 text-flblue-700`} />
                       </Serif>
-                      {`  `}
-                      <Icon name="refresh" size={12} style={tw`ml-4 text-flblue-700`} />
-                    </Serif>
-                  )
-                }
-                editionId={edition.id}
-                upperRight={edition.isSelected ? `SELECTED` : ``}
-                progress={edition.isSelected ? 100 : 0}
-                badgeText={edition.isMostModernized ? `Recommended` : undefined}
-              />
-            </TouchableOpacity>
-          ))}
+                    )
+                  }
+                  editionId={edition.id}
+                  upperRight={edition.isSelected ? `SELECTED` : ``}
+                  progress={edition.isSelected ? 100 : 0}
+                  badgeText={edition.isMostModernized ? `Recommended` : undefined}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
           <TouchableOpacity
             style={tw`pt-1 pb-6 px-4`}
             onPress={() => Linking.openURL(`https://www.friendslibrary.com/editions`)}
@@ -210,5 +231,3 @@ const EbookContainer: React.FC<OwnProps> = ({ route, navigation }) => {
 };
 
 export default EbookContainer;
-
-const COVER_IMG_WIDTH = Dimensions.get(`window`).width * 0.8;

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useDeviceContext } from 'twrnc';
+import Orientation from 'react-native-orientation-locker';
+import { useWindowDimensions } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,10 +20,14 @@ import Service from '../lib/service';
 import FS, { FileSystem } from '../lib/fs';
 import ReadHeader from './ReadHeader';
 import Editions from '../lib/Editions';
+import tw from '../lib/tailwind';
 
 const Stack = createStackNavigator<StackParamList>();
 
 const App: React.FC = () => {
+  const window = useWindowDimensions();
+  useDeviceContext(tw);
+
   const [fetchedResources, setFetchedResources] = useState(false);
   const dispatch = useDispatch();
   const { networkConnected, showingEbookHeader } = useSelector((state) => ({
@@ -31,7 +38,7 @@ const App: React.FC = () => {
   // add a listener for network connectivity events one time
   useEffect(() => {
     return NetInfo.addEventListener((state) => {
-      dispatch(setConnected(state.isConnected));
+      dispatch(setConnected(state.isConnected ?? false));
     });
   }, [dispatch]);
 
@@ -49,6 +56,14 @@ const App: React.FC = () => {
         .catch(() => {});
     }
   }, [networkConnected, fetchedResources, setFetchedResources]);
+
+  // we can't limit android phones to portrait only in static configuration
+  // iPhone simulator was not respecting Info.plist, so apply to iOS too, just in case
+  useEffect(() => {
+    if (Math.min(window.width, window.height) < 768) {
+      Orientation.lockToPortrait();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <SafeAreaProvider>

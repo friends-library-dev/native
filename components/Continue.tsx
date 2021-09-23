@@ -25,11 +25,14 @@ export const Continue: React.FC<Props> = ({
   title,
   percentComplete,
 }) => (
-  <TouchableOpacity style={tw`flex-row mt-3 mr-2 justify-start`} onPress={onPress}>
+  <TouchableOpacity
+    style={tw`flex-row mt-3 mr-2 justify-start max-w-[500px]`}
+    onPress={onPress}
+  >
     <View
       style={tw.style({
         'pt-1 pb-3': type === `audio`,
-        'pr-px': type === `ebook`,
+        'pr-[8px] -ml-2': type === `ebook`,
       })}
     >
       <CoverImage

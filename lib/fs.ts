@@ -205,13 +205,20 @@ export class FileSystem {
       await this.delete({ fsPath: path });
     }
 
-    const writePromise = RNFS.writeFile(
-      this.abspath(path),
-      contents,
-      encoding === `binary` ? `base64` : encoding,
-    );
-    writePromise.then(() => (this.manifest[path] = contents.length));
-    return writePromise;
+    try {
+      await RNFS.writeFile(
+        this.abspath(path),
+        contents,
+        encoding === `binary` ? `base64` : encoding,
+      );
+      this.manifest[path] = contents.length;
+    } catch {
+      // ¯\_(ツ)_/¯
+    }
+    // writePromise
+    //   .then(() => (this.manifest[path] = contents.length))
+    //   .catch((e) => console.log(`caught it!`, e));
+    // return writePromise;
   }
 
   public async readJson(path: ValuesOf<typeof FileSystem.paths>): Promise<any> {

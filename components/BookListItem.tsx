@@ -14,6 +14,8 @@ interface Props {
   upperRight: string;
   progress: number;
   badgeText?: string;
+  className?: string;
+  orphan?: boolean;
 }
 
 const BookListItem: React.FC<Props> = ({
@@ -23,9 +25,13 @@ const BookListItem: React.FC<Props> = ({
   upperRight,
   progress,
   badgeText,
+  className,
+  orphan,
 }) => {
   return (
-    <View style={tw`flex-row p-2 border-b border-v1gray-400`}>
+    <View
+      style={tw.style(`flex-row p-2 border-v1gray-400`, className, !orphan && `border-b`)}
+    >
       <View style={tw`w-[90px] h-[90px]`}>
         <CoverImage editionId={editionId} layoutWidth={90} type="square" />
         {progress > 4 && progress < 96 && <ProgressBar progress={progress} />}
@@ -67,7 +73,7 @@ const BookListItem: React.FC<Props> = ({
   );
 };
 
-export default React.memo(BookListItem);
+export default BookListItem;
 
 const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => (
   <View style={tw`absolute bottom-0 rounded-full m-2 w-[75px] h-[4px]`}>

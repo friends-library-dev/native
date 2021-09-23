@@ -40,6 +40,23 @@ function main(): void {
   copyFileWithEnv(`android/build.gradle`, `android/app/build.gradle`);
   copyFileWithEnv(`android/colors.xml`, `android/app/src/main/res/values/colors.xml`);
   copyFileWithEnv(`android/strings.xml`, `android/app/src/main/res/values/strings.xml`);
+  copyFileWithEnv(`android/_BUCK`, `android/app/_BUCK`);
+  copyFileWithEnv(
+    `android/MainApplication.java`,
+    `android/app/src/main/java/com/friendslibrary/MainApplication.java`,
+  );
+  copyFileWithEnv(
+    `android/SplashActivity.java`,
+    `android/app/src/main/java/com/friendslibrary/SplashActivity.java`,
+  );
+  copyFileWithEnv(
+    `android/AndroidManifest.xml`,
+    `android/app/src/main/AndroidManifest.xml`,
+  );
+  copyFileWithEnv(
+    `android/MainActivity.java`,
+    `android/app/src/main/java/com/friendslibrary/MainActivity.java`,
+  );
   copyFileWithEnv(`ios/Info.plist`, `ios/FriendsLibrary/Info.plist`);
   copyFileWithEnv(
     `ios/${LANG}/LaunchScreen.storyboard`,

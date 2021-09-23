@@ -16,6 +16,10 @@ ios/FriendsLibrary/Info.plist
 ios/FriendsLibrary/LaunchScreen.storyboard
 ios/FriendsLibrary/Images.xcassets/AppIcon.appiconset/
 ios/FriendsLibrary/Images.xcassets/SplashIcon.imageset/
+android/app/_BUCK
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/java/
+
 # OSX
 #
 .DS_Store

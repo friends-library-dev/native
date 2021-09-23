@@ -85,17 +85,9 @@ export const AudioScreen: React.FC<Props> = ({
     <ScrollView>
       <CoverImage
         editionId={edition.id}
-        layoutWidth={ARTWORK_WIDTH}
+        layoutWidth={tw.prefixMatch(`ipad`) ? 440 : ARTWORK_WIDTH}
         type="square"
-        style={{
-          marginTop: `8%`,
-          alignSelf: `center`,
-          elevation: 2,
-          shadowColor: `#000`,
-          shadowOffset: { width: 3, height: 3 },
-          shadowOpacity: 0.5,
-          shadowRadius: 5,
-        }}
+        style={tw`mt-[8%] ipad:landscape:mt-[4%] self-center elevation-2 shadow-black shadow-offset-[3px] shadow-opacity-50 shadow-radius-[5px]`}
       />
       <View style={tw`flex-grow py-4 px-8 justify-center`}>
         <AudioControls {...controlsProps} />
@@ -113,6 +105,7 @@ export const AudioScreen: React.FC<Props> = ({
       <ByLine title={edition.document.title} friend={edition.friend.name} />
       {showDownloadAll && (
         <IconButton
+          tailwindClass="ipad:my-3"
           onPress={downloadAllParts}
           icon="cloud-download"
           text={isMultipart ? t`Download all` : t`Download`}
@@ -128,25 +121,29 @@ export const AudioScreen: React.FC<Props> = ({
           <Sans style={tw`text-center text-v1gray-700 py-3`}>{duration}</Sans>
         </View>
       )}
-      <JustifiedDescription description={edition.document.shortDescription} />
-      {isMultipart && (
-        <View style={tw`mb-16`}>
-          {downloadablePartProps.map((props, idx) => (
-            <DownloadablePart key={`${edition.id}--${idx}`} {...props} />
-          ))}
+      <View style={tw`items-center`}>
+        <View style={tw`max-w-[700px]`}>
+          <JustifiedDescription description={edition.document.shortDescription} />
+          {isMultipart && (
+            <View style={tw`mb-16 ipad:mt-4`}>
+              {downloadablePartProps.map((props, idx) => (
+                <DownloadablePart key={`${edition.id}--${idx}`} {...props} />
+              ))}
+            </View>
+          )}
+          {downloaded > 0 && notDownloading && (
+            <IconButton
+              onPress={deleteAllParts}
+              icon="trash"
+              text={isMultipart ? t`Delete all` : t`Delete`}
+              secondaryText={`(${humansize(downloaded)})`}
+              textTailwindClass="text-v1gray-700"
+              bgTailwindClass="bg-red-200"
+              tailwindClass={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
+            />
+          )}
         </View>
-      )}
-      {downloaded > 0 && notDownloading && (
-        <IconButton
-          onPress={deleteAllParts}
-          icon="trash"
-          text={isMultipart ? t`Delete all` : t`Delete`}
-          secondaryText={`(${humansize(downloaded)})`}
-          textTailwindClass="text-v1gray-700"
-          bgTailwindClass="bg-red-200"
-          tailwindClass={isMultipart ? `mb-8 -mt-8` : `mb-8 mt-2`}
-        />
-      )}
+      </View>
     </ScrollView>
   );
 };

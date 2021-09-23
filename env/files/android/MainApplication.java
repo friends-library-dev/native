@@ -1,4 +1,4 @@
-package com.friendslibrary;
+package {APP_IDENTIFIER};
 
 import androidx.multidex.MultiDexApplication;
 import android.content.Context;
@@ -11,6 +11,11 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+/**
+ * Added by jared @see https://github.com/wonday/react-native-orientation-locker
+ */
+import org.wonday.orientation.OrientationActivityLifecycle;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -45,6 +50,12 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+
+    /**
+     * Added by jared @see https://github.com/wonday/react-native-orientation-locker
+     */
+    registerActivityLifecycleCallbacks(OrientationActivityLifecycle.getInstance());
+
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
@@ -63,7 +74,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.friendslibrary.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("{APP_IDENTIFIER}.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);
