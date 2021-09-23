@@ -229,7 +229,9 @@ export function wrapHtml(
           <a id="fn-close" class="fn-close increase-clickable">&#x2715;</a>
         </div>
       </div>
-      ${html}
+      <div class="chapter-wrap">
+        ${html}
+      </div>
       <script>
         window.htmlClassList = ${htmlClassList.toString()}
         ${injectIntoWebView.toString()}

@@ -130,7 +130,7 @@ class Read extends PureComponent<Props, State> {
     }
 
     if (fontSize !== prev.fontSize) {
-      this.injectJs(`window.setFontSize("${fontSize}")`);
+      this.injectJs(`window.setFontSize(${fontSize})`);
     }
   }
 

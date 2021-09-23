@@ -28,7 +28,6 @@ export const EbookSettings: React.FC<Props> = ({
   const borderColor = `border-gray-${colorScheme === `black` ? `700` : `200`}`;
   const fgColor = `ebookcolorscheme-${colorScheme}fg`;
   const bgColor = `ebookcolorscheme-${colorScheme}bg`;
-  console.log(`bg-${bgColor}`);
   return (
     <View style={tw.style(`rounded-md bg-${bgColor} shadow-lg`, { maxWidth: 220 })}>
       <View style={tw.style(`flex-row py-1 border-b items-center ${borderColor}`)}>

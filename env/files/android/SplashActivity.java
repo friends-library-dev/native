@@ -1,4 +1,4 @@
-package com.friendslibrary;
+package {APP_IDENTIFIER};
 
 import android.content.Intent;
 import android.os.Bundle;

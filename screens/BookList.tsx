@@ -18,32 +18,38 @@ interface Props {
 }
 
 const BookList: React.FC<Props> = ({ navigation, route }) => {
+  const numColumns = tw.prefixMatch(`ipad`) ? 2 : 1;
   const type = route.params.listType;
   const { resources, headerHeight } = useSelector(
     type === `audio` ? selectAudiobooks : selectEditions,
   );
 
-  const renderItem: (props: { item: BookListItemInterface }) => JSX.Element = ({
-    item,
-  }) => (
+  const renderItem: (props: {
+    item: BookListItemInterface;
+    index: number;
+  }) => JSX.Element = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate(item.navigateTo, { editionId: item.editionId })}
     >
       <BookListItem
+        className="ipad:w-[50vw]"
         editionId={item.editionId}
         title={item.title}
         upperLeft={item.nameDisplay}
         upperRight={item.duration}
         progress={item.progress}
         badgeText={item.isNew ? (LANG === `es` ? `Nuevo` : `New`) : undefined}
+        orphan={numColumns === 2 && index === resources.length - 1}
       />
     </TouchableOpacity>
   );
 
   // if you're trying to optimize the perf of this list
   // check out ideas here: https://github.com/necolas/react-native-web/issues/1337#issuecomment-720675528
+  // but be careful, React.useMemo() kills re-render on ipad orientationchange
   return (
     <FlatList
+      numColumns={numColumns}
       contentOffset={{ x: 0, y: headerHeight }}
       data={resources}
       ListEmptyComponent={() => (

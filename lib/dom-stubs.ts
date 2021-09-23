@@ -13,6 +13,7 @@ export interface Window {
   updatePosition(newPercent: number): void;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
   setTimeout(fn: () => unknown, timeout: number): number;
+  alert(msg: string): unknown;
   ReactNativeWebView: {
     postMessage(event: string): unknown;
   };

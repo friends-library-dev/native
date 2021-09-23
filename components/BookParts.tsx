@@ -25,7 +25,10 @@ export const ByLine: React.FC<{ title: string; friend: string }> = ({
 export const JustifiedDescription: React.FC<{ description: string }> = ({
   description,
 }) => (
-  <Serif style={tw`px-6 pt-2 pb-4 text-justify text-v1gray-800 leading-[26px]`} size={18}>
+  <Serif
+    style={tw`px-6 pt-2 pb-4 text-justify text-v1gray-800 leading-[26px] ipad:leading-[30px] ipad:mt-2 ipad:px-3`}
+    size={tw.prefixMatch(`ipad`) ? 20 : 18}
+  >
     {description}
   </Serif>
 );

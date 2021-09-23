@@ -5,8 +5,12 @@
 #import <React/RCTRootView.h>
 #import "RNSplashScreen.h"
 
-// react-native-home-indicator
+// react-native-home-indicator (added by jared)
 #import <RNHomeIndicator.h>
+
+// react-native-orientation-locker (added by jared)
+#import "Orientation.h"
+
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -60,6 +64,12 @@ static void InitializeFlipper(UIApplication *application) {
 
   return YES;
 }
+
+// react-native-orientation-locker (added by jared)
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [Orientation getOrientation];
+}
+
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
 #ifdef FB_SONARKIT_ENABLED

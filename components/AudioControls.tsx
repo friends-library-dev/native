@@ -40,71 +40,79 @@ export const AudioControls: React.FC<Props> = ({
   multipart,
 }) => {
   return (
-    <>
-      <View
-        style={tw.style(
-          `flex-row items-center px-2`,
-          downloading ? `justify-center` : `justify-between`,
-        )}
-      >
-        {!downloading && (
-          <TouchableOpacity onPress={skipBack}>
-            <Icon
-              style={{ opacity: multipart ? (skipBack ? 1 : 0.2) : 0 }}
-              name="step-backward"
-              size={25}
-              color={tw.color(`flblue`)}
-            />
-          </TouchableOpacity>
-        )}
-        {!downloading && (
-          <TouchableOpacity onPress={seekBackward}>
-            <Icon
-              style={{ transform: [{ scaleX: -1 }] }}
-              name="repeat"
-              size={25}
-              color={tw.color(`flblue`)}
-            />
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          style={tw`items-center justify-center mb-2`}
-          onPress={togglePlayback}
+    <View>
+      <View style={tw`ipad:items-center ipad:mt-4`}>
+        <View
+          style={tw.style(
+            `flex-row items-center px-2 ipad:max-w-[400px]`,
+            downloading ? `justify-center` : `justify-between`,
+          )}
         >
-          <Icon
-            size={80}
-            color={tw.color(`flblue`)}
-            style={{ opacity: downloading ? 0.5 : 1 }}
-            name={
-              downloading ? `cloud-download` : playing ? `pause-circle` : `play-circle`
-            }
-          />
-        </TouchableOpacity>
-        {!downloading && (
-          <TouchableOpacity onPress={seekForward}>
-            <Icon name="repeat" size={25} color={tw.color(`flblue`)} />
-          </TouchableOpacity>
-        )}
-        {!downloading && (
-          <TouchableOpacity onPress={skipNext}>
+          {!downloading && (
+            <TouchableOpacity onPress={skipBack}>
+              <Icon
+                style={tw.style(`ipad:pr-16`, {
+                  opacity: multipart ? (skipBack ? 1 : 0.2) : 0,
+                })}
+                name="step-backward"
+                size={25}
+                color={tw.color(`flblue`)}
+              />
+            </TouchableOpacity>
+          )}
+          {!downloading && (
+            <TouchableOpacity onPress={seekBackward}>
+              <Icon
+                style={{ transform: [{ scaleX: -1 }] }}
+                name="repeat"
+                size={25}
+                color={tw.color(`flblue`)}
+              />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={tw`items-center justify-center mb-2`}
+            onPress={togglePlayback}
+          >
             <Icon
-              style={{ opacity: multipart ? (skipNext ? 1 : 0.2) : 0 }}
-              name="step-forward"
-              size={25}
+              size={80}
               color={tw.color(`flblue`)}
+              style={tw`opacity-${downloading ? 50 : 100} ipad:px-16`}
+              name={
+                downloading ? `cloud-download` : playing ? `pause-circle` : `play-circle`
+              }
             />
           </TouchableOpacity>
-        )}
+          {!downloading && (
+            <TouchableOpacity onPress={seekForward}>
+              <Icon name="repeat" size={25} color={tw.color(`flblue`)} />
+            </TouchableOpacity>
+          )}
+          {!downloading && (
+            <TouchableOpacity onPress={skipNext}>
+              <Icon
+                style={tw.style(`ipad:pl-16`, {
+                  opacity: multipart ? (skipNext ? 1 : 0.2) : 0,
+                })}
+                name="step-forward"
+                size={25}
+                color={tw.color(`flblue`)}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-      <Scrubber
-        downloading={downloading}
-        downloadingProgress={progress}
-        playing={playing}
-        partDuration={duration}
-        position={position}
-        seekTo={seekTo}
-      />
-    </>
+      <View style={tw`ipad:mt-4 ipad:px-6 ipad-lg:px-[10%]`}>
+        <Scrubber
+          downloading={downloading}
+          downloadingProgress={progress}
+          playing={playing}
+          partDuration={duration}
+          position={position}
+          seekTo={seekTo}
+        />
+      </View>
+    </View>
   );
 };
 

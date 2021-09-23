@@ -6,6 +6,14 @@ const { getTailwindConfig } = require(`@friends-library/theme`);
 // in the app, so we can just manually switch on languages then
 const config = { ...getTailwindConfig(`en`) };
 
+config.theme.screens = {
+  // @see https://www.ios-resolution.com/
+  tween: `477px`, // 1px larger than largest iPhone
+  ipad: `767px`,
+  'ipad-lg': `1025px`,
+  'ipad-xl': `1195px`,
+};
+
 config.theme.extend.colors[`ebookcolorscheme`] = {
   blackbg: `rgb(0, 0, 0)`,
   blackfg: `rgb(169, 169, 169)`,

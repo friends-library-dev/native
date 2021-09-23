@@ -65,7 +65,11 @@ export const DownloadablePart: React.FC<Props> = (props) => {
           name="play"
           size={9}
         />
-        <Sans size={14} numberOfLines={1} style={{ width: winWidth - rightColWidth }}>
+        <Sans
+          size={14}
+          numberOfLines={1}
+          style={{ width: Math.min(winWidth, 700) - rightColWidth }}
+        >
           {part.title}
         </Sans>
         {(state === `queued_for_download` || state === `downloading`) && (
