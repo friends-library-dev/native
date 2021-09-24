@@ -15,13 +15,26 @@ const htmlClassList: Window['htmlClassList'] = (
   showingHeader,
   fontSize,
   showingFootnote,
+  justify,
 ) => {
-  return [
+  const classes = [
     `colorscheme--${colorScheme}`,
     `font-size--${fontSize}`,
     `footnote--${showingFootnote ? `visible` : `hidden`}`,
     `header--${showingHeader ? `visible` : `hidden`}`,
-  ].join(` `);
+  ];
+
+  if (justify) {
+    classes.push(`justify`);
+  }
+
+  let incrementFontSize = Math.max(fontSize, 6);
+  while (incrementFontSize <= 10) {
+    classes.push(`font-size-lte--${incrementFontSize}`);
+    incrementFontSize += 1;
+  }
+
+  return classes.join(` `);
 };
 
 function injectIntoWebView(
@@ -31,6 +44,7 @@ function injectIntoWebView(
   chapterId: string | undefined,
   initialFontSize: number,
   initialColorScheme: EbookColorScheme,
+  initialJustify: boolean,
   initialShowingHeader: boolean,
   initialHeaderHeight: number,
   safeAreaVerticalOffset: number,
@@ -54,6 +68,7 @@ function injectIntoWebView(
       showingHeader,
       fontSize,
       showingFootnote,
+      justify,
     );
   }
 
@@ -86,6 +101,7 @@ function injectIntoWebView(
   let colorScheme = initialColorScheme;
   let showingHeader = initialShowingHeader;
   let fontSize = initialFontSize;
+  let justify = initialJustify;
   let headerHeight = initialHeaderHeight;
   let showingFootnote = false;
   let lastScroll = window.scrollY;
@@ -128,6 +144,11 @@ function injectIntoWebView(
 
   window.setColorScheme = (newColorScheme) => {
     colorScheme = newColorScheme;
+    setHtmlClassList();
+  };
+
+  window.setJustify = (newJustify) => {
+    justify = newJustify;
     setHtmlClassList();
   };
 
@@ -206,13 +227,20 @@ export function wrapHtml(
   css: string,
   colorScheme: EbookColorScheme,
   fontSize: number,
+  justify: boolean,
   position: number,
   chapterId: string | undefined,
   showingHeader: boolean,
   headerHeight: number,
   safeAreaVerticalOffset: number,
 ): string {
-  const classList = htmlClassList(colorScheme, showingHeader, fontSize, false);
+  const classList = htmlClassList(
+    colorScheme,
+    showingHeader,
+    fontSize,
+    /* showingFootnote= */ false,
+    justify,
+  );
   return `
   <html class="${classList}${position > 0 ? ` await-init-position` : ``}" lang="${LANG}"> 
     <head>

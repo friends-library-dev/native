@@ -12,6 +12,7 @@ export interface Window {
   requestPositionUpdateIfChanged(): void;
   updatePosition(newPercent: number): void;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
+  setJustify(justify: boolean): unknown;
   setTimeout(fn: () => unknown, timeout: number): number;
   alert(msg: string): unknown;
   ReactNativeWebView: {
@@ -22,6 +23,7 @@ export interface Window {
     showingHeader: boolean,
     fontSize: number,
     showingFootnote: boolean,
+    justify: boolean,
   ): string;
 }
 

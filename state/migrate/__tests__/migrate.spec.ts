@@ -108,4 +108,13 @@ describe(`migrate()`, () => {
       INITIAL_STATE.dimensions.ebookHeaderHeight,
     );
   });
+
+  it(`migrates v2 to v3`, () => {
+    const v2 = JSON.parse(JSON.stringify(INITIAL_STATE));
+    v2.version = 2;
+    v2.preferences.ebookJustify = true;
+    const migrated: any = migrate(v2);
+    expect(migrated.version).toBe(3);
+    expect(migrated.preferences.ebookJustify).toBe(false);
+  });
 });
