@@ -24,7 +24,7 @@ export const initialState: PreferencesState = {
   ebookSearchQuery: ``,
   ebookColorScheme: `white`,
   ebookFontSize: 5,
-  ebookJustify: true,
+  ebookJustify: false,
 };
 
 const preferences = createSlice({
@@ -55,6 +55,9 @@ const preferences = createSlice({
     setEbookFontSize: (state, action: PayloadAction<number>) => {
       state.ebookFontSize = action.payload;
     },
+    setEbookJustify: (state, action: PayloadAction<boolean>) => {
+      state.ebookJustify = action.payload;
+    },
   },
 });
 
@@ -67,6 +70,7 @@ export const {
   setEbookSearchQuery,
   setEbookColorScheme,
   setEbookFontSize,
+  setEbookJustify,
 } = preferences.actions;
 
 export default preferences.reducer;

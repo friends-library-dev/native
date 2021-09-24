@@ -8,7 +8,7 @@ import dimensions from './dimensions';
 import resume from './resume';
 
 const rootReducer = combineReducers({
-  version: (): number => 2,
+  version: (): number => 3,
   audio,
   ebook,
   preferences,

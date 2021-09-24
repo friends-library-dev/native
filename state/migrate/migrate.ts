@@ -6,12 +6,26 @@ export default function migrate(input: unknown): State {
     return { ...INIT };
   }
 
-  const obj = input as Record<string, any>;
-  if (obj.version === 2) {
-    return obj as State;
+  let state = input as Record<string, any>;
+  if (state.version === 3) {
+    return state as State;
   }
 
-  return migrate1to2(obj);
+  if (state.version === 2) {
+    return migrate2to3(state);
+  }
+  return migrate2to3(migrate1to2(state));
+}
+
+function migrate2to3(v2: Record<string, any>): State {
+  const v3 = { ...v2 };
+  v3.version = 3;
+  if (v3.preferences) {
+    v3.preferences.ebookJustify = INIT.preferences.ebookJustify;
+  } else {
+    v3.preferences = INIT.preferences;
+  }
+  return v3 as State;
 }
 
 function migrate1to2(v1: Record<string, any>): State {

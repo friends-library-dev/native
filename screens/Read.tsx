@@ -47,6 +47,7 @@ export type Props =
       headerHeight: number;
       colorScheme: EbookColorScheme;
       fontSize: number;
+      justify: boolean;
       dispatch: Dispatch;
       showingSettings: boolean;
       showingHeader: boolean;
@@ -115,7 +116,7 @@ class Read extends PureComponent<Props, State> {
       return;
     }
 
-    const { colorScheme, fontSize, headerHeight, showingHeader } = this.props;
+    const { colorScheme, justify, fontSize, headerHeight, showingHeader } = this.props;
 
     if (colorScheme !== prev.colorScheme) {
       this.injectJs(`window.setColorScheme("${colorScheme}")`);
@@ -131,6 +132,10 @@ class Read extends PureComponent<Props, State> {
 
     if (fontSize !== prev.fontSize) {
       this.injectJs(`window.setFontSize(${fontSize})`);
+    }
+
+    if (justify !== prev.justify) {
+      this.injectJs(`window.setJustify(${justify})`);
     }
   }
 
@@ -179,9 +184,7 @@ class Read extends PureComponent<Props, State> {
     });
   };
 
-  public analyzeGesture(
-    gestureEvent: GestureResponderEvent,
-  ): {
+  public analyzeGesture(gestureEvent: GestureResponderEvent): {
     isSwipe: boolean;
     isHorizontalSwipe: boolean;
     isVerticalSwipe: boolean;
@@ -276,6 +279,7 @@ class Read extends PureComponent<Props, State> {
       css,
       colorScheme,
       fontSize,
+      justify,
       position,
       chapterId,
       safeAreaTopOffset,
@@ -288,6 +292,7 @@ class Read extends PureComponent<Props, State> {
         css,
         colorScheme,
         fontSize,
+        justify,
         position,
         chapterId,
         showingHeader,
@@ -392,6 +397,7 @@ export interface SyncProps {
   networkConnected: boolean;
   position: number;
   fontSize: number;
+  justify: boolean;
   colorScheme: EbookColorScheme;
   showingSettings: boolean;
   showingHeader: boolean;
@@ -411,6 +417,7 @@ const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps) => (state) =>
     resource,
     colorScheme: state.preferences.ebookColorScheme,
     fontSize: state.preferences.ebookFontSize,
+    justify: state.preferences.ebookJustify,
     position: state.ebook.position[editionId] || 0,
     networkConnected: state.network.connected,
     showingSettings: state.ephemeral.showingEbookSettings,
@@ -480,6 +487,7 @@ const ReadContainer: React.FC<OwnProps> = (ownProps) => {
       position={containerState.initialPosition}
       colorScheme={props!.colorScheme}
       fontSize={props!.fontSize}
+      justify={props!.justify}
       showingSettings={props!.showingSettings}
       showingHeader={props!.showingHeader}
       headerHeight={props!.headerHeight}
