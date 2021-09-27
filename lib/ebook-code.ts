@@ -275,8 +275,12 @@ export function wrapHtml(
         </div>
         <div id="fn-back">
           <div id="fn-back-inner">
-            <a id="back-to-text" class="fn-close">Back to Text</a>
-            <p>or swipe right &rarr;</p>
+            <a id="back-to-text" class="fn-close">
+              ${LANG === `en` ? `Back to Text` : `Volver al Texto`}
+            </a>
+            <p>
+              ${LANG === `en` ? `or swipe right` : `o desliza a la derecha`} &rarr;
+            </p>
           </div>
         </div>
       </div>
