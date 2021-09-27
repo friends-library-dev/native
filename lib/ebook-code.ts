@@ -206,6 +206,15 @@ function injectIntoWebView(
       return window.dismissFootnote();
     }
 
+    if (target.matches(`.__xref`)) {
+      setTimeout(() => {
+        // little hack to make navigating to/from endnotes (currently only in Jaffray)
+        // nicer, padding the destination by a few pixels so it's not stuck to viewport top
+        window.scrollTo(0, window.scrollY - (showingHeader ? headerHeight + 45 : 45));
+      }, 50);
+      return;
+    }
+
     if (!showingFootnote) {
       sendMsg({ type: `toggle_header_visibility` });
     }
