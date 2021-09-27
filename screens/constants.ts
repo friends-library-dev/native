@@ -1,0 +1,1 @@
+export const EDITION_META_MAX_WIDTH = 700;

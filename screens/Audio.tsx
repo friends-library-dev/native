@@ -37,6 +37,7 @@ import * as select from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
 import { Audio } from '@friends-library/friends';
+import { EDITION_META_MAX_WIDTH } from './constants';
 
 interface Props {
   edition: EditionResource;
@@ -122,7 +123,7 @@ export const AudioScreen: React.FC<Props> = ({
         </View>
       )}
       <View style={tw`items-center`}>
-        <View style={tw`max-w-[700px]`}>
+        <View style={tw`max-w-[${EDITION_META_MAX_WIDTH}px]`}>
           <JustifiedDescription description={edition.document.shortDescription} />
           {isMultipart && (
             <View style={tw`mb-16 ipad:mt-4`}>
