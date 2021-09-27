@@ -81,7 +81,7 @@ export const EbookSettings: React.FC<Props> = ({
         <JustificationButton
           selected={justify === true}
           colorScheme={colorScheme}
-          type={'justify'}
+          type={`justify`}
           disabled={
             // corresponds to disabling-css in doc-css/src/css/app-ebook.css.ts
             (width < 767 && fontSize > 6) || (width < 819 && fontSize > 7) || false

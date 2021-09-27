@@ -18,15 +18,13 @@ const htmlClassList: Window['htmlClassList'] = (
   justify,
 ) => {
   const classes = [
+    `version--gte-2_1_0`,
     `colorscheme--${colorScheme}`,
     `font-size--${fontSize}`,
     `footnote--${showingFootnote ? `visible` : `hidden`}`,
     `header--${showingHeader ? `visible` : `hidden`}`,
+    `align--${justify ? `justify` : `ragged`}`,
   ];
-
-  if (justify) {
-    classes.push(`justify`);
-  }
 
   let incrementFontSize = Math.max(fontSize, 6);
   while (incrementFontSize <= 10) {
@@ -177,7 +175,6 @@ function injectIntoWebView(
         <sup class="footnote-marker increase-clickable">[${index + 1}]</sup>
         <span class="footnote-content">
           ${innerHtml}
-          <a class="fn-close fn-close-back increase-clickable">⏎</a>
         </span>
       `;
     node.innerHTML = innerHtml;
@@ -197,6 +194,11 @@ function injectIntoWebView(
       fnHolder.innerHTML = fnContent.innerHTML;
       showingFootnote = true;
       setHtmlClassList();
+
+      // without this, coming to another footnote after having scrolled down
+      // in a previous long footnote causes the user to already be scrolled down
+      document.getElementById(`fn-content`)?.scrollTo(0, 0);
+
       return sendMsg({ type: `set_footnote_visibility`, visible: true });
     }
 
@@ -204,23 +206,31 @@ function injectIntoWebView(
       return window.dismissFootnote();
     }
 
-    return !showingFootnote && sendMsg({ type: `toggle_header_visibility` });
+    if (!showingFootnote) {
+      sendMsg({ type: `toggle_header_visibility` });
+    }
   });
+
+  // vvv- uncomment (plus add @ts-ignore) to develop footnote view
+  // document.querySelectorAll(`.footnote-marker`)[0].click();
 }
 
-const cssVars = css`
-  :root {
-    --ebook-colorscheme-black-bg: ${tw.color(`ebookcolorscheme-blackbg`) ?? ``};
-    --ebook-colorscheme-black-fg: ${tw.color(`ebookcolorscheme-blackfg`) ?? ``};
-    --ebook-colorscheme-black-accent: ${tw.color(`ebookcolorscheme-blackaccent`) ?? ``};
-    --ebook-colorscheme-white-bg: ${tw.color(`ebookcolorscheme-whitebg`) ?? ``};
-    --ebook-colorscheme-white-fg: ${tw.color(`ebookcolorscheme-whitefg`) ?? ``};
-    --ebook-colorscheme-white-accent: ${tw.color(`ebookcolorscheme-whiteaccent`) ?? ``};
-    --ebook-colorscheme-sepia-bg: ${tw.color(`ebookcolorscheme-sepiabg`) ?? ``};
-    --ebook-colorscheme-sepia-fg: ${tw.color(`ebookcolorscheme-sepiafg`) ?? ``};
-    --ebook-colorscheme-sepia-accent: ${tw.color(`ebookcolorscheme-sepiaaccent`) ?? ``};
-  }
-`;
+function cssVars(headerHeight: number): string {
+  return css`
+    :root {
+      --header-height: ${headerHeight}px;
+      --ebook-colorscheme-black-bg: ${tw.color(`ebookcolorscheme-blackbg`) ?? ``};
+      --ebook-colorscheme-black-fg: ${tw.color(`ebookcolorscheme-blackfg`) ?? ``};
+      --ebook-colorscheme-black-accent: ${tw.color(`ebookcolorscheme-blackaccent`) ?? ``};
+      --ebook-colorscheme-white-bg: ${tw.color(`ebookcolorscheme-whitebg`) ?? ``};
+      --ebook-colorscheme-white-fg: ${tw.color(`ebookcolorscheme-whitefg`) ?? ``};
+      --ebook-colorscheme-white-accent: ${tw.color(`ebookcolorscheme-whiteaccent`) ?? ``};
+      --ebook-colorscheme-sepia-bg: ${tw.color(`ebookcolorscheme-sepiabg`) ?? ``};
+      --ebook-colorscheme-sepia-fg: ${tw.color(`ebookcolorscheme-sepiafg`) ?? ``};
+      --ebook-colorscheme-sepia-accent: ${tw.color(`ebookcolorscheme-sepiaaccent`) ?? ``};
+    }
+  `;
+}
 
 export function wrapHtml(
   html: string,
@@ -245,16 +255,20 @@ export function wrapHtml(
   <html class="${classList}${position > 0 ? ` await-init-position` : ``}" lang="${LANG}"> 
     <head>
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-       <style>${cssVars}</style>
+       <style>${cssVars(headerHeight)}</style>
        ${css}
        <style>.await-init-position * { opacity: 0 !important }</style>
     </head>
     <body>
       <div id="fn-overlay">
         <div id="fn-content">
-          <div id="fn-content-inner">
+          <div id="fn-content-inner"></div>
+        </div>
+        <div id="fn-back">
+          <div id="fn-back-inner">
+            <a id="back-to-text" class="fn-close">Back to Text</a>
+            <p>or swipe right &rarr;</p>
           </div>
-          <a id="fn-close" class="fn-close increase-clickable">&#x2715;</a>
         </div>
       </div>
       <div class="chapter-wrap">

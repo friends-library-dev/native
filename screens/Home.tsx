@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, SafeAreaView, useWindowDimensions } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RouteProp } from '@react-navigation/native';
@@ -20,7 +20,6 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-  const window = useWindowDimensions();
   // watch for (and re-render) on changes to Editions singleton
   // from app boot initial filesystem re-hydrate && network refresh
   const [editionChanges, setEditionChanges] = useState(0);
@@ -54,9 +53,6 @@ const Home: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={tw`flex-grow items-center justify-between`}>
       <View style={tw`self-stretch h-[${lastEbook && lastAudio ? 15 : 25}%]`}>
-        <Sans>
-          w{window.width} x h{window.height}
-        </Sans>
         <TouchableOpacity
           style={tw`flex-row items-center justify-center pt-6 mt-1`}
           onPress={() => navigation.navigate(`Settings`)}

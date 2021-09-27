@@ -6,7 +6,7 @@ export default function migrate(input: unknown): State {
     return { ...INIT };
   }
 
-  let state = input as Record<string, any>;
+  const state = input as Record<string, any>;
   if (state.version === 3) {
     return state as State;
   }
