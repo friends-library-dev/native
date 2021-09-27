@@ -1,10 +1,17 @@
 import { EbookColorScheme } from '../types';
 
-export interface Window {
+interface Scrollable {
+  scrollTo(x: number, y: number): unknown;
+  scrollTo(opts: {
+    top: number;
+    left: number;
+    behavior: 'smooth' | 'instant' | 'auto';
+  }): unknown;
+}
+
+export interface Window extends Scrollable {
   innerHeight: number;
   scrollY: number;
-  scrollTo(x: number, y: number): unknown;
-  scrollTo(opts: { top: number; left: number; behavior: `smooth` }): unknown;
   dismissFootnote(): void;
   setFontSize(fontSize: number): unknown;
   setHeaderHeight(headerHeight: number): unknown;
@@ -33,7 +40,7 @@ export interface ClassList {
   value: string;
 }
 
-export interface Element {
+export interface Element extends Scrollable {
   innerHTML: string;
   nextElementSibling?: Element;
   classList: ClassList;

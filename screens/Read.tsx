@@ -184,7 +184,9 @@ class Read extends PureComponent<Props, State> {
     });
   };
 
-  public analyzeGesture(gestureEvent: GestureResponderEvent): {
+  public analyzeGesture(
+    gestureEvent: GestureResponderEvent,
+  ): {
     isSwipe: boolean;
     isHorizontalSwipe: boolean;
     isVerticalSwipe: boolean;
@@ -348,7 +350,7 @@ class Read extends PureComponent<Props, State> {
                       ? tw.color(`flmaroon`)
                       : colorScheme === `sepia`
                       ? tw.color(`ebookcolorscheme-sepiaaccent`)
-                      : tw.color(`ebookcolorscheme-blackaccent`) // `rgba(110, 141, 234, 1)` // TODO, make black-accent
+                      : tw.color(`ebookcolorscheme-blackaccent`)
                   }
                 />
                 <Sans
