@@ -284,6 +284,7 @@ export function wrapHtml(
           ${chapterId ? `"${chapterId}"` : `undefined`},
           ${fontSize},
           "${colorScheme}",
+          ${justify},
           ${showingHeader},
           ${headerHeight},
           ${safeAreaVerticalOffset}
