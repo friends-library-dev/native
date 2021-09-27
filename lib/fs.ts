@@ -215,10 +215,6 @@ export class FileSystem {
     } catch {
       // ¯\_(ツ)_/¯
     }
-    // writePromise
-    //   .then(() => (this.manifest[path] = contents.length))
-    //   .catch((e) => console.log(`caught it!`, e));
-    // return writePromise;
   }
 
   public async readJson(path: ValuesOf<typeof FileSystem.paths>): Promise<any> {

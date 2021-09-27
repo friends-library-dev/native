@@ -18,6 +18,7 @@ import { ByLine, JustifiedDescription, MainTitle } from '../components/BookParts
 import IconButton from '../components/IconButton';
 import { selectEdition } from '../state/ebook/selected-edition';
 import { LANG } from '../env';
+import { EDITION_META_MAX_WIDTH } from './constants';
 
 interface Props {
   documentTitle: string;
@@ -78,7 +79,7 @@ export const Ebook: React.FC<Props> = ({
           text={`${t`Read`} →`}
           tailwindClass="mb-2"
         />
-        <View style={tw`max-w-[700px]`}>
+        <View style={tw`max-w-[${EDITION_META_MAX_WIDTH}px]`}>
           <JustifiedDescription description={description} />
         </View>
         {chapters.length > 2 && (

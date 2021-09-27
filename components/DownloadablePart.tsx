@@ -16,6 +16,7 @@ import { Sans } from './Text';
 import { isAudioPartPlaying, audioPartFile } from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import Editions from '../lib/Editions';
+import { EDITION_META_MAX_WIDTH } from '../screens/constants';
 
 type CommonProps = {
   part: Pick<AudioPart, 'title'>;
@@ -68,7 +69,7 @@ export const DownloadablePart: React.FC<Props> = (props) => {
         <Sans
           size={14}
           numberOfLines={1}
-          style={{ width: Math.min(winWidth, 700) - rightColWidth }}
+          style={{ width: Math.min(winWidth, EDITION_META_MAX_WIDTH) - rightColWidth }}
         >
           {part.title}
         </Sans>

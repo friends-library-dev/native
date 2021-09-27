@@ -1,5 +1,3 @@
-## TEMP
-
 # Friends Library Native Apps
 
 This readme isn't really for external consumption, it's just the place where I'm dumping
