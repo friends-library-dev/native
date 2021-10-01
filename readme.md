@@ -42,6 +42,7 @@ internal IP address changes, modify that according to
 - `<cmd>-3` to go to actual size
 - `<cmd>-s` to save screenshot
 - repeat with `run ios:en -- --simulator="iPhone 8 Plus"` to get 5.5" screenshots
+- for iPad, use `run ipad:large` to get both sets of screenshots
 
 ### Make new build for TestFlight
 
