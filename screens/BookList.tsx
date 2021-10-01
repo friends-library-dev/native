@@ -39,7 +39,7 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
         upperRight={item.duration}
         progress={item.progress}
         badgeText={item.isNew ? (LANG === `es` ? `Nuevo` : `New`) : undefined}
-        orphan={numColumns === 2 && index === resources.length - 1}
+        orphan={numColumns === 2 && index === resources.length - 1 && index % 2 === 0}
       />
     </TouchableOpacity>
   );
