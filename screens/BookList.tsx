@@ -50,6 +50,7 @@ const BookList: React.FC<Props> = ({ navigation, route }) => {
   return (
     <FlatList
       numColumns={numColumns}
+      initialNumToRender={tw.prefixMatch(`ipad`) ? 26 : 10}
       contentOffset={{ x: 0, y: headerHeight }}
       data={resources}
       ListEmptyComponent={() => (
