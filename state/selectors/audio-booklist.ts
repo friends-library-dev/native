@@ -1,13 +1,16 @@
-import { Audio } from '@friends-library/friends';
 import { State } from '../';
 import { BookListItem } from '../../types';
 import Editions from '../../lib/Editions';
 import * as select from './audio-selectors';
 import { LANG } from '../../env';
+import { audioHumanDuration } from '../../lib/audio-duration';
 
 export default function selectAudioBooklist(
   state: State,
-): { headerHeight: number; resources: BookListItem[] } {
+): {
+  headerHeight: number;
+  resources: BookListItem[];
+} {
   const query = state.preferences.audioSearchQuery.toLowerCase().trim();
   const sort = state.preferences.sortAudiosBy;
   const headerHeight = state.dimensions.audioSortHeaderHeight;
@@ -47,7 +50,7 @@ export default function selectAudioBooklist(
         editionId: audio.edition.id,
         title: audio.edition.document.utf8ShortTitle,
         navigateTo: `Listen` as const,
-        duration: Audio.humanDuration(
+        duration: audioHumanDuration(
           audio.parts.map((p) => p.duration),
           `abbrev`,
           LANG,

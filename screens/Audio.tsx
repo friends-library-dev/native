@@ -36,8 +36,8 @@ import {
 import * as select from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
-import { Audio } from '@friends-library/friends';
 import { EDITION_META_MAX_WIDTH } from './constants';
+import { audioHumanDuration } from '../lib/audio-duration';
 
 interface Props {
   edition: EditionResource;
@@ -174,7 +174,7 @@ const propSelector: PropSelector<{ editionId: EditionId }, Props> = (
   return {
     audio,
     edition,
-    duration: Audio.humanDuration(
+    duration: audioHumanDuration(
       audio.parts.map((p) => p.duration),
       `abbrev`,
       LANG,
