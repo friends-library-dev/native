@@ -4,7 +4,6 @@ import { View, StatusBar, GestureResponderEvent, Platform } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import Popover, { PopoverMode } from 'react-native-popover-view';
 import { AnyAction } from 'redux';
-import { Html } from '@friends-library/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -64,7 +63,7 @@ interface State {
 }
 
 class Read extends PureComponent<Props, State> {
-  private htmlRef: React.MutableRefObject<Html | null>;
+  private htmlRef: React.MutableRefObject<string | null>;
   private intervalRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
   private webViewRef: React.RefObject<WebView>;
 

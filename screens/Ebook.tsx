@@ -3,11 +3,11 @@ import { View, TouchableOpacity, Dimensions, ScrollView, Linking } from 'react-n
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { EditionType, LARGEST_THREE_D_COVER_IMAGE_WIDTH } from '@friends-library/types';
+import { EditionType } from '@friends-library/types';
 import { t } from '@friends-library/locale';
 import { Sans, Serif } from '../components/Text';
 import { EditionId, StackParamList } from '../types';
-import { EditionEntity } from '../lib/models';
+import { EditionEntity, LARGEST_THREE_D_COVER_IMAGE_WIDTH } from '../lib/models';
 import Editions from '../lib/Editions';
 import { PropSelector, useDispatch, useSelector } from '../state';
 import * as select from '../state/selectors/ebook';
