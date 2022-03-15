@@ -6,6 +6,12 @@ Xcode, App Store Connect, Android Studio, AVD, etc...
 
 ## IOS
 
+## Need to implement mutex.h error
+
+- trying to run for the first time on M1, i got:
+  `error Need to implement mutex.h for your architecture, or #define NO_THREADS`, solved
+  by following these directions: https://stackoverflow.com/a/64941230
+
 ## No bundle URL present error
 
 - Got totally stymied by this for a long time, still totally unsure why, but it happened
