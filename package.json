@@ -33,7 +33,7 @@
     "open-aab-dir": "open ./android/app/build/outputs/bundle/release",
     "tailwind-regen": "npx trnc-create-styles",
     "storybook": "cp -f ./index.storybook.js ./index.js && react-native start",
-    "test": "jest --forceExit",
+    "test": "jest",
     "test:watch": "jest --watch -w=1",
     "compile": "true",
     "lint": "fldev lint --ignore-pattern env/index.js",
