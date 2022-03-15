@@ -21,7 +21,7 @@ function main(): void {
   exec.exit(`cat ${ENV_DIR}/build-constants.ts >> ${ENV}`);
 
   const API_URL =
-    INSTALL === `dev` ? `http://10.0.1.212:8888` : `https://api.friendslibrary.com`;
+    INSTALL === `dev` ? `http://127.0.0.1:8080` : `https://api.friendslibrary.com`;
 
   // @see https://xkcd.com/1638/
   const constants = [
