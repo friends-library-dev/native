@@ -36,8 +36,8 @@ import {
 import * as select from '../state/selectors/audio-selectors';
 import { LANG } from '../env';
 import { isNotNull } from 'x-ts-utils';
-import { Audio } from '@friends-library/friends';
 import { EDITION_META_MAX_WIDTH } from './constants';
+import { audioHumanDuration } from '../lib/audio-duration';
 
 interface Props {
   edition: EditionResource;
@@ -156,60 +156,59 @@ interface OwnProps {
   route: RouteProp<StackParamList, 'Listen'>;
 }
 
-const propSelector: PropSelector<{ editionId: EditionId }, Props> = (
-  { editionId },
-  dispatch,
-) => (state) => {
-  const quality = state.preferences.audioQuality;
-  const found = select.activeAudioPart(editionId, state);
-  const files = select.audioFiles(editionId, state);
-  if (!found || !files) return null;
+const propSelector: PropSelector<{ editionId: EditionId }, Props> =
+  ({ editionId }, dispatch) =>
+  (state) => {
+    const quality = state.preferences.audioQuality;
+    const found = select.activeAudioPart(editionId, state);
+    const files = select.audioFiles(editionId, state);
+    if (!found || !files) return null;
 
-  const [part, edition, audio] = found;
-  const controlsProps = audioControlsPropSelector({ editionId }, dispatch)(state);
+    const [part, edition, audio] = found;
+    const controlsProps = audioControlsPropSelector({ editionId }, dispatch)(state);
 
-  if (!controlsProps) return null;
-  const activeFile = select.audioPartFile(editionId, part.index, state);
-  const size = quality === `HQ` ? `size` : `sizeLq`;
-  return {
-    audio,
-    edition,
-    duration: Audio.humanDuration(
-      audio.parts.map((p) => p.duration),
-      `abbrev`,
-      LANG,
-    ),
-    controlsProps,
-    downloadablePartProps: audio.parts
-      .map((part, partIndex) =>
-        downloadablePartPropSelector({ editionId, partIndex }, dispatch)(state),
-      )
-      .filter(isNotNull),
-    showNetworkFail: state.network.recentFailedAttempt,
-    deleteAllParts: () => dispatch(deleteAllAudioParts(editionId)),
-    downloadAllParts: () => dispatch(downloadAllAudios(editionId)),
-    unDownloaded: audio.parts.reduce((acc, part, idx) => {
-      const file = files[idx];
-      if (file && !isDownloaded(file)) {
-        return acc + part[size];
-      }
-      return acc;
-    }, 0),
-    downloaded: audio.parts.reduce((acc, part, idx) => {
-      const file = files[idx];
-      if (file && isDownloaded(file)) {
-        return acc + part[size];
-      }
-      return acc;
-    }, 0),
-    downloadingActivePart: isDownloading(activeFile),
-    activePartIndex: part.index,
-    notDownloading: files.filter((p) => isDownloading(p) || isQueued(p)).length === 0,
-    showDownloadAll:
-      files.filter((p) => !isDownloading(p) && !isDownloaded(p) && !isQueued(p)).length >
-      0,
+    if (!controlsProps) return null;
+    const activeFile = select.audioPartFile(editionId, part.index, state);
+    const size = quality === `HQ` ? `size` : `sizeLq`;
+    return {
+      audio,
+      edition,
+      duration: audioHumanDuration(
+        audio.parts.map((p) => p.duration),
+        `abbrev`,
+        LANG,
+      ),
+      controlsProps,
+      downloadablePartProps: audio.parts
+        .map((part, partIndex) =>
+          downloadablePartPropSelector({ editionId, partIndex }, dispatch)(state),
+        )
+        .filter(isNotNull),
+      showNetworkFail: state.network.recentFailedAttempt,
+      deleteAllParts: () => dispatch(deleteAllAudioParts(editionId)),
+      downloadAllParts: () => dispatch(downloadAllAudios(editionId)),
+      unDownloaded: audio.parts.reduce((acc, part, idx) => {
+        const file = files[idx];
+        if (file && !isDownloaded(file)) {
+          return acc + part[size];
+        }
+        return acc;
+      }, 0),
+      downloaded: audio.parts.reduce((acc, part, idx) => {
+        const file = files[idx];
+        if (file && isDownloaded(file)) {
+          return acc + part[size];
+        }
+        return acc;
+      }, 0),
+      downloadingActivePart: isDownloading(activeFile),
+      activePartIndex: part.index,
+      notDownloading: files.filter((p) => isDownloading(p) || isQueued(p)).length === 0,
+      showDownloadAll:
+        files.filter((p) => !isDownloading(p) && !isDownloaded(p) && !isQueued(p))
+          .length > 0,
+    };
   };
-};
 
 const AudioScreenContainer: React.FC<OwnProps> = ({ route }) => {
   const dispatch = useDispatch();

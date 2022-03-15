@@ -1,4 +1,3 @@
-import { Html } from '@friends-library/types';
 import { Result } from 'x-ts-utils';
 import { InteractionManager } from 'react-native';
 import { EbookData, TrackData } from '../types';
@@ -75,7 +74,7 @@ export default class Service {
   public static async downloadLatestEbookHtml(
     entity: EbookEntity,
     networkUrl: string,
-  ): Promise<Html | null> {
+  ): Promise<string | null> {
     if (!(await FS.download(entity, networkUrl))) {
       return null;
     }

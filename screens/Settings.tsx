@@ -34,6 +34,7 @@ const Settings: React.FC<Props> = () => {
           trackColor={{ true: `#3bc256`, false: Platform.OS === `ios` ? `#fff` : `#ccc` }}
           thumbColor={`white`}
           ios_backgroundColor="#eee"
+          // @ts-ignore
           onValueChange={() => dispatch(toggleQuality())}
           value={hqEnabled}
         />

@@ -11,7 +11,7 @@ describe(`migrate()`, () => {
 
   const cases = [false, null, `whoops`, [`whoops`], 33];
   test.each(cases)(`unexpected non-object %s get replaced by initial state`, (input) => {
-    expect(migrate(input)).toMatchObject(INITIAL_STATE);
+    expect(migrate(input)).toEqual(INITIAL_STATE);
   });
 
   it(`moves .trackPosition into .audio sub-object`, () => {
@@ -64,7 +64,7 @@ describe(`migrate()`, () => {
   it(`adds new .ebook state slice`, () => {
     const v1 = getV1State();
     const migrated = migrate(v1);
-    expect(migrated.ebook).toMatchObject(INITIAL_STATE.ebook);
+    expect(migrated.ebook).toEqual(INITIAL_STATE.ebook);
   });
 
   it(`adds new .resume state slice`, () => {

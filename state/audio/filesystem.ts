@@ -90,46 +90,42 @@ const filesystem = createSlice({
   },
 });
 
-export const {
-  set,
-  setQueued,
-  completeDownload,
-  resetDownload,
-  batchSet,
-} = filesystem.actions;
+export const { set, setQueued, completeDownload, resetDownload, batchSet } =
+  filesystem.actions;
 
 export default filesystem.reducer;
 
-export const downloadAudio = (editionId: EditionId, partIndex: number): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  if (!canDownloadNow(state, dispatch)) return;
-  return execDownloadAudio(editionId, partIndex, dispatch, state);
-};
+export const downloadAudio =
+  (editionId: EditionId, partIndex: number): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    if (!canDownloadNow(state, dispatch)) return;
+    return execDownloadAudio(editionId, partIndex, dispatch, state);
+  };
 
-export const deleteAllAudioParts = (editionId: EditionId): Thunk => async (dispatch) => {
-  const audio = Editions.getAudio(editionId);
-  if (!audio) return;
-  const deletedFiles: FilesystemState = {};
-  const fsPaths: FsPath[] = [];
-  audio.parts.forEach((part, index) => {
-    ([`HQ`, `LQ`] as const).forEach((quality) => {
-      const entity = new AudioPartQualityEntity(editionId, index, quality);
-      fsPaths.push(entity);
-      const key = entity.stateKey;
-      const part = { editionId, index, quality };
-      deletedFiles[key] = {
-        totalBytes: filesize(part),
-        bytesOnDisk: 0,
-        queued: false,
-      };
+export const deleteAllAudioParts =
+  (editionId: EditionId): Thunk =>
+  async (dispatch) => {
+    const audio = Editions.getAudio(editionId);
+    if (!audio) return;
+    const deletedFiles: FilesystemState = {};
+    const fsPaths: FsPath[] = [];
+    audio.parts.forEach((part, index) => {
+      ([`HQ`, `LQ`] as const).forEach((quality) => {
+        const entity = new AudioPartQualityEntity(editionId, index, quality);
+        fsPaths.push(entity);
+        const key = entity.stateKey;
+        const part = { editionId, index, quality };
+        deletedFiles[key] = {
+          totalBytes: filesize(part),
+          bytesOnDisk: 0,
+          queued: false,
+        };
+      });
     });
-  });
-  dispatch(batchSet(deletedFiles));
-  Service.fsBatchDelete(fsPaths);
-};
+    dispatch(batchSet(deletedFiles));
+    Service.fsBatchDelete(fsPaths);
+  };
 
 export const deleteAllAudios = (): Thunk => async (dispatch, getState) => {
   const filesystem = getState().audio.filesystem;
@@ -146,33 +142,32 @@ export const deleteAllAudios = (): Thunk => async (dispatch, getState) => {
 
 const limit = pLimit(3);
 
-export const downloadAllAudios = (editionId: EditionId): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  const quality = state.preferences.audioQuality;
-  const audioPartFiles = select.audioFiles(editionId, state);
-  if (!audioPartFiles || !canDownloadNow(state, dispatch)) {
-    return;
-  }
+export const downloadAllAudios =
+  (editionId: EditionId): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const quality = state.preferences.audioQuality;
+    const audioPartFiles = select.audioFiles(editionId, state);
+    if (!audioPartFiles || !canDownloadNow(state, dispatch)) {
+      return;
+    }
 
-  const undownloadedIndexes = audioPartFiles
-    .map((part, index) => ({ part, partIndex: index }))
-    .filter(({ part }) => !isDownloaded(part) && !isDownloading(part))
-    .map(({ partIndex }) => partIndex);
+    const undownloadedIndexes = audioPartFiles
+      .map((part, index) => ({ part, partIndex: index }))
+      .filter(({ part }) => !isDownloaded(part) && !isDownloading(part))
+      .map(({ partIndex }) => partIndex);
 
-  undownloadedIndexes.forEach((index) => {
-    const part = { editionId, index, quality };
-    dispatch(setQueued({ part, queued: true }));
-  });
+    undownloadedIndexes.forEach((index) => {
+      const part = { editionId, index, quality };
+      dispatch(setQueued({ part, queued: true }));
+    });
 
-  const batchedPromises = undownloadedIndexes.map((partIndex) =>
-    limit(() => execDownloadAudio(editionId, partIndex, dispatch, state)),
-  );
+    const batchedPromises = undownloadedIndexes.map((partIndex) =>
+      limit(() => execDownloadAudio(editionId, partIndex, dispatch, state)),
+    );
 
-  return Promise.all(batchedPromises);
-};
+    return Promise.all(batchedPromises);
+  };
 
 function execDownloadAudio(
   editionId: EditionId,
@@ -200,36 +195,35 @@ function execDownloadAudio(
   );
 }
 
-export const maybeDownloadNextQueuedTrack = (position: number): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  const current = select.currentlyPlayingPart(state);
-  if (!current || !state.network.connected) {
-    return;
-  }
+export const maybeDownloadNextQueuedTrack =
+  (position: number): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const current = select.currentlyPlayingPart(state);
+    if (!current || !state.network.connected) {
+      return;
+    }
 
-  const [part, edition, audio] = current;
-  if (audio.parts.length === 1 || part.index === audio.parts.length - 1) {
-    return; // no next track to download
-  }
+    const [part, edition, audio] = current;
+    if (audio.parts.length === 1 || part.index === audio.parts.length - 1) {
+      return; // no next track to download
+    }
 
-  const nextPart = audio.parts[part.index + 1];
-  if (!nextPart) {
-    return;
-  }
+    const nextPart = audio.parts[part.index + 1];
+    if (!nextPart) {
+      return;
+    }
 
-  // only pre-download when they've hit 75% of current track
-  if (position / part.duration < 0.75) {
-    return;
-  }
+    // only pre-download when they've hit 75% of current track
+    if (position / part.duration < 0.75) {
+      return;
+    }
 
-  const nextFile = select.audioPartFile(edition.id, nextPart.index, state);
-  if (!isDownloaded(nextFile) && !isDownloading(nextFile)) {
-    execDownloadAudio(edition.id, nextPart.index, dispatch, state);
-  }
-};
+    const nextFile = select.audioPartFile(edition.id, nextPart.index, state);
+    if (!isDownloaded(nextFile) && !isDownloading(nextFile)) {
+      execDownloadAudio(edition.id, nextPart.index, dispatch, state);
+    }
+  };
 
 export function isQueued({ queued }: FileState): boolean {
   return queued === true;

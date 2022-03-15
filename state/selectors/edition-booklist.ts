@@ -3,11 +3,10 @@ import { BookListItem } from '../../types';
 import { isNew, sortable } from './audio-booklist';
 import Editions from '../../lib/Editions';
 
-export default function selectAudioBooklist({
-  ebook,
-  preferences,
-  dimensions,
-}: State): { headerHeight: number; resources: BookListItem[] } {
+export default function selectAudioBooklist({ ebook, preferences, dimensions }: State): {
+  headerHeight: number;
+  resources: BookListItem[];
+} {
   const query = preferences.ebookSearchQuery.toLowerCase();
   const sort = preferences.sortEbooksBy;
   const headerHeight = dimensions.editionSortHeaderHeight;

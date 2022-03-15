@@ -73,45 +73,42 @@ export const resume = (): Thunk => async (dispatch) => {
   dispatch(setState(`PLAYING`));
 };
 
-export const play = (editionId: EditionId, partIndex: number): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const queue = select.trackQueue(editionId, getState());
-  if (queue) {
-    dispatch(setLastAudiobookEditionId(editionId));
-    dispatch(setActivePart({ editionId, partIndex }));
-    dispatch(set({ editionId, state: `PLAYING` }));
-    const trackId = new AudioPartEntity(editionId, partIndex).trackId;
-    return Service.audioPlayTrack(trackId, queue);
-  }
-  return Promise.resolve();
-};
+export const play =
+  (editionId: EditionId, partIndex: number): Thunk =>
+  async (dispatch, getState) => {
+    const queue = select.trackQueue(editionId, getState());
+    if (queue) {
+      dispatch(setLastAudiobookEditionId(editionId));
+      dispatch(setActivePart({ editionId, partIndex }));
+      dispatch(set({ editionId, state: `PLAYING` }));
+      const trackId = new AudioPartEntity(editionId, partIndex).trackId;
+      return Service.audioPlayTrack(trackId, queue);
+    }
+    return Promise.resolve();
+  };
 
 export const pause = (): Thunk => async (dispatch) => {
   Service.audioPause();
   dispatch(setState(`PAUSED`));
 };
 
-export const togglePartPlayback = (
-  editionId: EditionId,
-  partIndex: number,
-): Thunk => async (dispatch, getState) => {
-  const found = Editions.getAudioPart(editionId, partIndex);
-  if (!found) return;
-  execTogglePartPlayback(editionId, found[0], dispatch, getState());
-};
+export const togglePartPlayback =
+  (editionId: EditionId, partIndex: number): Thunk =>
+  async (dispatch, getState) => {
+    const found = Editions.getAudioPart(editionId, partIndex);
+    if (!found) return;
+    execTogglePartPlayback(editionId, found[0], dispatch, getState());
+  };
 
-export const togglePlayback = (editionId: EditionId): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  const found = select.activeAudioPart(editionId, state);
-  if (!found) return;
-  const [part] = found;
-  execTogglePartPlayback(editionId, part, dispatch, state);
-};
+export const togglePlayback =
+  (editionId: EditionId): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const found = select.activeAudioPart(editionId, state);
+    if (!found) return;
+    const [part] = found;
+    execTogglePartPlayback(editionId, part, dispatch, state);
+  };
 
 async function execTogglePartPlayback(
   editionId: EditionId,
@@ -154,43 +151,42 @@ async function execTogglePartPlayback(
  * which changes were caused by queue auto-advancing, and therefore
  * which ones we need to opt in to updating our state with.
  */
-export const maybeAdvanceQueue = (nextTrackId: string): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  const current = select.currentlyPlayingPart(state);
-  if (!current) return;
-  const [part, resource] = current;
-  const currentPartId = new AudioPartEntity(resource.id, part.index).trackId;
-  if (currentPartId === nextTrackId) {
-    // we already know we're playing this track
-    return;
-  }
+export const maybeAdvanceQueue =
+  (nextTrackId: string): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const current = select.currentlyPlayingPart(state);
+    if (!current) return;
+    const [part, resource] = current;
+    const currentPartId = new AudioPartEntity(resource.id, part.index).trackId;
+    if (currentPartId === nextTrackId) {
+      // we already know we're playing this track
+      return;
+    }
 
-  const nextIndex = part.index + 1;
-  if (nextIndex === resource.audio!.parts.length) {
-    // we just finished the last track, clear the 'last playing' state
-    dispatch(setLastAudiobookEditionId(undefined));
-    // pause, for good measure, don't leave a weird state
-    dispatch(pause());
-    return;
-  }
+    const nextIndex = part.index + 1;
+    if (nextIndex === resource.audio!.parts.length) {
+      // we just finished the last track, clear the 'last playing' state
+      dispatch(setLastAudiobookEditionId(undefined));
+      // pause, for good measure, don't leave a weird state
+      dispatch(pause());
+      return;
+    }
 
-  // should be redundant/unecessary
-  if (!resource.audio!.parts[nextIndex]) return;
+    // should be redundant/unecessary
+    if (!resource.audio!.parts[nextIndex]) return;
 
-  const nextPartId = new AudioPartEntity(resource.id, nextIndex).trackId;
-  if (nextPartId !== nextTrackId) {
-    return;
-  }
+    const nextPartId = new AudioPartEntity(resource.id, nextIndex).trackId;
+    if (nextPartId !== nextTrackId) {
+      return;
+    }
 
-  const file = select.audioPartFile(resource.id, nextIndex, state);
-  if (!state.network.connected && !isDownloaded(file)) {
-    // we can't go to the next track, because we don't have the track or internet
-    dispatch(pause());
-    return;
-  }
+    const file = select.audioPartFile(resource.id, nextIndex, state);
+    if (!state.network.connected && !isDownloaded(file)) {
+      // we can't go to the next track, because we don't have the track or internet
+      dispatch(pause());
+      return;
+    }
 
-  dispatch(setActivePart({ editionId: resource.id, partIndex: nextIndex }));
-};
+    dispatch(setActivePart({ editionId: resource.id, partIndex: nextIndex }));
+  };
