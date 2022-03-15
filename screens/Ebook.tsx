@@ -181,46 +181,48 @@ interface OwnProps {
 const propSelector: PropSelector<
   { editionId: EditionId; navigation: OwnProps['navigation'] },
   Props
-> = ({ editionId, navigation }, dispatch) => (state) => {
-  const resource = Editions.get(editionId);
-  if (!resource) {
-    return null;
-  }
-  const edition = new EditionEntity(editionId);
-  const selectedEditionType = select.documentSelectedEdition(edition.document, state);
-  if (!selectedEditionType) {
-    return null;
-  }
+> =
+  ({ editionId, navigation }, dispatch) =>
+  (state) => {
+    const resource = Editions.get(editionId);
+    if (!resource) {
+      return null;
+    }
+    const edition = new EditionEntity(editionId);
+    const selectedEditionType = select.documentSelectedEdition(edition.document, state);
+    if (!selectedEditionType) {
+      return null;
+    }
 
-  const editionResources = Editions.getDocumentEditions(edition.document);
-  const selectedResource = editionResources.find((e) => e.type === selectedEditionType);
-  if (!selectedResource) {
-    return null;
-  }
+    const editionResources = Editions.getDocumentEditions(edition.document);
+    const selectedResource = editionResources.find((e) => e.type === selectedEditionType);
+    if (!selectedResource) {
+      return null;
+    }
 
-  const editions = editionResources.map((edition) => ({
-    id: edition.id,
-    type: edition.type,
-    isSelected: edition.id === selectedResource.id,
-    isMostModernized: edition.isMostModernized,
-  }));
+    const editions = editionResources.map((edition) => ({
+      id: edition.id,
+      type: edition.type,
+      isSelected: edition.id === selectedResource.id,
+      isMostModernized: edition.isMostModernized,
+    }));
 
-  return {
-    selectEdition: (editionType: EditionType) =>
-      dispatch(selectEdition({ documentId: edition.documentId, editionType })),
-    read: () => navigation.navigate(`Read`, { editionId: selectedResource.id }),
-    readChapter: (chapterId: string) =>
-      navigation.navigate(`Read`, { editionId: selectedResource.id, chapterId }),
-    friendName: resource.friend.name,
-    documentTitle: resource.document.utf8ShortTitle,
-    description: resource.document.description,
-    chapters: selectedResource.chapters.map((ch) => ({
-      id: ch.id,
-      title: ch.shortHeading,
-    })),
-    editions,
+    return {
+      selectEdition: (editionType: EditionType) =>
+        dispatch(selectEdition({ documentId: edition.documentId, editionType })),
+      read: () => navigation.navigate(`Read`, { editionId: selectedResource.id }),
+      readChapter: (chapterId: string) =>
+        navigation.navigate(`Read`, { editionId: selectedResource.id, chapterId }),
+      friendName: resource.friend.name,
+      documentTitle: resource.document.utf8ShortTitle,
+      description: resource.document.description,
+      chapters: selectedResource.chapters.map((ch) => ({
+        id: ch.id,
+        title: ch.shortHeading,
+      })),
+      editions,
+    };
   };
-};
 
 const EbookContainer: React.FC<OwnProps> = ({ route, navigation }) => {
   const editionId = route.params.editionId;

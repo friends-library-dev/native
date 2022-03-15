@@ -48,7 +48,8 @@ export class DocumentEntity implements DocumentEntityInterface, StateKey {
 }
 
 export class EditionEntity
-  implements EditionEntityInterface, DocumentEntityInterface, StateKey {
+  implements EditionEntityInterface, DocumentEntityInterface, StateKey
+{
   public static fromDocumentIdAndEditionType(
     documentId: DocumentId,
     editionType: EditionType,
@@ -81,7 +82,8 @@ export class EditionEntity
 
 export class AudioPartEntity
   extends EditionEntity
-  implements StateKey, TrackId, EditionEntityInterface {
+  implements StateKey, TrackId, EditionEntityInterface
+{
   public constructor(editionId: EditionId, private partIndex: number) {
     super(editionId);
   }
@@ -98,7 +100,8 @@ export class AudioPartEntity
 
 export class AudioPartQualityEntity
   extends AudioPartEntity
-  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface {
+  implements FsPath, StateKey, TrackId, FsFilename, EditionEntityInterface
+{
   public constructor(
     editionId: EditionId,
     partIndex: number,
@@ -122,7 +125,8 @@ export class AudioPartQualityEntity
 
 export class SquareCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface {
+  implements FsPath, FsFilename, EditionEntityInterface
+{
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -148,7 +152,8 @@ export class SquareCoverImageEntity
 
 export class ThreeDCoverImageEntity
   extends EditionEntity
-  implements FsPath, FsFilename, EditionEntityInterface {
+  implements FsPath, FsFilename, EditionEntityInterface
+{
   public static fromLayoutWidth(
     editionId: EditionId,
     layoutWidth: number,
@@ -209,35 +214,16 @@ function bestImageSize<T extends number[]>(layoutSize: number, sizes: T): T[numb
 // when we convert to using graphql, refactor and remove
 
 const THREE_D_COVER_IMAGE_WIDTHS = [
-  55,
-  110,
-  250,
-  400,
-  550,
-  700,
-  850,
-  1000,
-  1120,
+  55, 110, 250, 400, 550, 700, 850, 1000, 1120,
 ] as const;
 
 type ThreeDCoverImageWidth = typeof THREE_D_COVER_IMAGE_WIDTHS[number];
 
 const SQUARE_COVER_IMAGE_SIZES = [
-  45,
-  90,
-  180,
-  270,
-  300,
-  450,
-  600,
-  750,
-  900,
-  1150,
-  1400,
+  45, 90, 180, 270, 300, 450, 600, 750, 900, 1150, 1400,
 ] as const;
 
 type SquareCoverImageSize = typeof SQUARE_COVER_IMAGE_SIZES[number];
 
-export const LARGEST_THREE_D_COVER_IMAGE_WIDTH: ThreeDCoverImageWidth = THREE_D_COVER_IMAGE_WIDTHS[
-  THREE_D_COVER_IMAGE_WIDTHS.length - 1
-]!;
+export const LARGEST_THREE_D_COVER_IMAGE_WIDTH: ThreeDCoverImageWidth =
+  THREE_D_COVER_IMAGE_WIDTHS[THREE_D_COVER_IMAGE_WIDTHS.length - 1]!;

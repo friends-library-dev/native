@@ -34,32 +34,27 @@ const trackPosition = createSlice({
 export const { setTrackPosition } = trackPosition.actions;
 export default trackPosition.reducer;
 
-export const setCurrentTrackPosition = (position: number): Thunk => async (
-  dispatch,
-  getState,
-) => {
-  const state = getState();
-  const { editionId } = state.audio.playback;
-  if (!editionId) return;
-  const index = select.audioActivePartIndex(editionId, state);
-  dispatch(setTrackPosition({ part: { editionId, index }, position }));
-};
+export const setCurrentTrackPosition =
+  (position: number): Thunk =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const { editionId } = state.audio.playback;
+    if (!editionId) return;
+    const index = select.audioActivePartIndex(editionId, state);
+    dispatch(setTrackPosition({ part: { editionId, index }, position }));
+  };
 
-export const seekTo = (
-  editionId: EditionId,
-  partIndex: number,
-  position: number,
-): Thunk => async (dispatch, getState) => {
-  return seek(editionId, partIndex, () => position, getState, dispatch);
-};
+export const seekTo =
+  (editionId: EditionId, partIndex: number, position: number): Thunk =>
+  async (dispatch, getState) => {
+    return seek(editionId, partIndex, () => position, getState, dispatch);
+  };
 
-export const seekRelative = (
-  editionId: EditionId,
-  partIndex: number,
-  delta: number,
-): Thunk => async (dispatch, getState) => {
-  return seek(editionId, partIndex, (current) => current + delta, getState, dispatch);
-};
+export const seekRelative =
+  (editionId: EditionId, partIndex: number, delta: number): Thunk =>
+  async (dispatch, getState) => {
+    return seek(editionId, partIndex, (current) => current + delta, getState, dispatch);
+  };
 
 function seek(
   editionId: EditionId,

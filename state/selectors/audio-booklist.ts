@@ -5,9 +5,7 @@ import * as select from './audio-selectors';
 import { LANG } from '../../env';
 import { audioHumanDuration } from '../../lib/audio-duration';
 
-export default function selectAudioBooklist(
-  state: State,
-): {
+export default function selectAudioBooklist(state: State): {
   headerHeight: number;
   resources: BookListItem[];
 } {

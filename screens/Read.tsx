@@ -183,9 +183,7 @@ class Read extends PureComponent<Props, State> {
     });
   };
 
-  public analyzeGesture(
-    gestureEvent: GestureResponderEvent,
-  ): {
+  public analyzeGesture(gestureEvent: GestureResponderEvent): {
     isSwipe: boolean;
     isHorizontalSwipe: boolean;
     isVerticalSwipe: boolean;
