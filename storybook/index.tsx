@@ -31,6 +31,7 @@ configure(() => {
   require(`./stories/stories.AudioScreen`);
   require(`./stories/stories.AudioScrubber`);
   require(`./stories/stories.DownloadablePart`);
+  require(`./stories/stories.ReadFooter`);
 }, module);
 
 // Refer to https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters
