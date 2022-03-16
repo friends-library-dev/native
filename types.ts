@@ -60,6 +60,16 @@ export interface TrackData {
   duration: number;
 }
 
+export interface Gesture {
+  isSwipe: boolean;
+  isHorizontalSwipe: boolean;
+  isVerticalSwipe: boolean;
+  isRightSwipe: boolean;
+  isLeftSwipe: boolean;
+  isBackSwipe: boolean;
+  isLong: boolean;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deriveAudioType(edition: EditionResource) {
   return edition.audio!;

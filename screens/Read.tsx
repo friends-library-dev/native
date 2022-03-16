@@ -7,7 +7,7 @@ import { AnyAction } from 'redux';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { EditionResource, StackParamList, EbookColorScheme, EditionId } from '../types';
+import * as T from '../types';
 import FullscreenLoading from '../components/FullscreenLoading';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
@@ -15,6 +15,7 @@ import Editions from '../lib/Editions';
 import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
+import * as gesture from '../lib/gesture';
 import { setEbookPosition } from '../state/ebook/position';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
@@ -27,22 +28,22 @@ import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
 export type Props =
   | {
       state: `loading`;
-      colorScheme: EbookColorScheme;
+      colorScheme: T.EbookColorScheme;
     }
   | {
       state: `error`;
-      colorScheme: EbookColorScheme;
+      colorScheme: T.EbookColorScheme;
       reason: 'no_internet' | 'unknown';
     }
   | {
       state: `ready`;
       position: number;
       chapterId?: string;
-      editionId: EditionId;
+      editionId: T.EditionId;
       html: string;
       css: string;
       headerHeight: number;
-      colorScheme: EbookColorScheme;
+      colorScheme: T.EbookColorScheme;
       fontSize: number;
       justify: boolean;
       dispatch: Dispatch;
@@ -184,64 +185,13 @@ class Read extends PureComponent<Props, State> {
     });
   };
 
-  public analyzeGesture(gestureEvent: GestureResponderEvent): {
-    isSwipe: boolean;
-    isHorizontalSwipe: boolean;
-    isVerticalSwipe: boolean;
-    isRightSwipe: boolean;
-    isLeftSwipe: boolean;
-    isBackSwipe: boolean;
-    isLong: boolean;
-  } {
-    const { locationX, locationY, timestamp } = gestureEvent.nativeEvent;
-    const {
-      touchStartLocationX: startX,
-      touchStartLocationY: startY,
-      touchStartTimestamp: startTimestamp,
-    } = this.state;
-
-    const gesture = {
-      isSwipe: false,
-      isHorizontalSwipe: false,
-      isVerticalSwipe: false,
-      isRightSwipe: false,
-      isLeftSwipe: false,
-      isBackSwipe: false,
-      isLong: false,
-    };
-
-    const SWIPE_THRESHOLD = 5;
-    const LONG_THRESHOLD_MS = 150;
-    const xDelta = locationX - startX;
-    const yDelta = locationY - startY;
-    const xAbsDelta = Math.abs(xDelta);
-    const yAbsDelta = Math.abs(yDelta);
-
-    if (timestamp - startTimestamp > LONG_THRESHOLD_MS) {
-      gesture.isLong = true;
-    }
-
-    if (xAbsDelta > SWIPE_THRESHOLD || yAbsDelta > SWIPE_THRESHOLD) {
-      gesture.isSwipe = true;
-    }
-
-    if (xAbsDelta / yAbsDelta > 4) {
-      gesture.isHorizontalSwipe = true;
-      const dir = xDelta > 0 ? `isRightSwipe` : `isLeftSwipe`;
-      gesture[dir] = true;
-    }
-
-    if (yAbsDelta / xAbsDelta > 4) {
-      gesture.isVerticalSwipe = true;
-    }
-
-    if (gesture.isRightSwipe && startX < 35) {
-      gesture.isHorizontalSwipe = true;
-      gesture.isRightSwipe = true;
-      gesture.isBackSwipe = true;
-    }
-
-    return gesture;
+  public analyzeGesture(event: GestureResponderEvent): T.Gesture {
+    return gesture.analyze(
+      event,
+      this.state.touchStartLocationX,
+      this.state.touchStartLocationY,
+      this.state.touchStartTimestamp,
+    );
   }
 
   public onWebViewTouchCancel: (e: GestureResponderEvent) => void = (e) => {
@@ -360,20 +310,20 @@ class Read extends PureComponent<Props, State> {
  * This type models the rest of the props we can get immediately from state.
  */
 export interface SyncProps {
-  resource: EditionResource;
+  resource: T.EditionResource;
   networkConnected: boolean;
   position: number;
   fontSize: number;
   justify: boolean;
-  colorScheme: EbookColorScheme;
+  colorScheme: T.EbookColorScheme;
   showingSettings: boolean;
   showingHeader: boolean;
   headerHeight: number;
 }
 
 interface OwnProps {
-  navigation: StackNavigationProp<StackParamList, 'Read'>;
-  route: RouteProp<StackParamList, 'Read'>;
+  navigation: StackNavigationProp<T.StackParamList, 'Read'>;
+  route: RouteProp<T.StackParamList, 'Read'>;
 }
 
 const propSelector: PropSelector<OwnProps, SyncProps> = (ownProps) => (state) => {
