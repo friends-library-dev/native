@@ -7,7 +7,6 @@ import { AnyAction } from 'redux';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import RNScrubber from 'react-native-scrubber';
 import { EditionResource, StackParamList, EbookColorScheme, EditionId } from '../types';
 import FullscreenLoading from '../components/FullscreenLoading';
 import EbookError from '../components/EbookError';
@@ -16,12 +15,11 @@ import Editions from '../lib/Editions';
 import { useSelector, PropSelector, useDispatch, Dispatch } from '../state';
 import { readScreenProps } from './read-helpers';
 import { wrapHtml, Message } from '../lib/ebook-code';
-import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
 import { setEbookPosition } from '../state/ebook/position';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 import { setLastEbookEditionId } from '../state/resume';
-import { Sans } from '../components/Text';
+import ReadFooter from '../components/ReadFooter';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
@@ -316,51 +314,18 @@ class Read extends PureComponent<Props, State> {
               : `dark-content`
           }
         />
-        {/* @TODO - this whole scrubber position area should be extracted into its own component */}
         <View style={tw`flex-grow relative`}>
-          {showingHeader && percentPos >= 0 && !this.state.showingFootnote && (
-            <View
-              style={tw.style(
-                `absolute bottom-0 right-0 w-full z-10 px-10`,
-                `pt-[24px] pb-[${safeAreaBottomOffset * 1.2 || 24}px]`,
-                `bg-ebookcolorscheme-${colorScheme}bg`,
-                colorSchemeSubtleDropshadowStyle(`above`, colorScheme),
-              )}
-            >
-              <View style={tw`pr-6 mb-1 relative`}>
-                <RNScrubber
-                  onSlidingComplete={(newPercentComplete) => {
-                    const newPosition = newPercentComplete / 100;
-                    this.setState({ position: newPosition });
-                    this.injectJs(`window.updatePosition(${newPosition})`);
-                  }}
-                  onSlide={(newPercentComplete) => {
-                    const newPosition = newPercentComplete / 100;
-                    this.setState({ position: newPosition });
-                    this.injectJs(`window.updatePosition(${newPosition})`);
-                  }}
-                  // necessary to prevent error ¯\_(ツ)_/¯
-                  onSlidingStart={() => {}}
-                  trackBackgroundColor={colorScheme === `black` ? `#222` : `#ddd`}
-                  value={percentPos}
-                  totalDuration={100}
-                  displayValues={false}
-                  scrubbedColor={
-                    colorScheme === `white`
-                      ? tw.color(`flmaroon`)
-                      : colorScheme === `sepia`
-                      ? tw.color(`ebookcolorscheme-sepiaaccent`)
-                      : tw.color(`ebookcolorscheme-blackaccent`)
-                  }
-                />
-                <Sans
-                  size={11}
-                  style={tw`opacity-75 absolute right-[-16px] top-[4px] text-ebookcolorscheme-${colorScheme}fg`}
-                >
-                  {percentPos}%
-                </Sans>
-              </View>
-            </View>
+          {showingHeader && !this.state.showingFootnote && (
+            <ReadFooter
+              colorScheme={colorScheme}
+              onScrub={(newPercentComplete) => {
+                const newPosition = newPercentComplete / 100;
+                this.setState({ position: newPosition });
+                this.injectJs(`window.updatePosition(${newPosition})`);
+              }}
+              safeAreaBottomOffset={safeAreaBottomOffset}
+              percentComplete={Math.max(percentPos, 0)}
+            />
           )}
           <WebView
             style={tw`bg-transparent`}
