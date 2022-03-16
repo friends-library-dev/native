@@ -3,10 +3,22 @@ import { EbookColorScheme } from '../types';
 import { Element, Document, Window } from './dom-stubs';
 import tw from '../lib/tailwind';
 import { LANG } from '../env';
+import { search } from '../lib/search';
+
+type SearchResult = {
+  before: string;
+  match: string;
+  after: string;
+  percentage: number;
+  elementId: string;
+  startIndex: number;
+  endIndex: number;
+};
 
 export type Message =
   | { type: 'update_position'; position: number }
   | { type: 'debug'; value: string }
+  | { type: 'search_results'; results: SearchResult[] }
   | { type: 'set_footnote_visibility'; visible: boolean }
   | { type: 'toggle_header_visibility' };
 
@@ -158,6 +170,61 @@ function injectIntoWebView(
     lastScroll = newScroll;
   };
 
+  let enumerateSearchableElements: () => void = () => {
+    // @TODO, get full list of "searchable" elements
+    document.querySelectorAll(`.paragraph`).forEach((el, index) => {
+      el.classList.add(`_searchable`);
+      el.classList.add(`_searchable-${index}`);
+    });
+    enumerateSearchableElements = () => {};
+  };
+
+  let enumeratedHtml = ``;
+
+  function getSearchPositionPercentage(kls: string): number | null {
+    if (enumeratedHtml === ``) {
+      enumerateSearchableElements();
+      document
+        .querySelectorAll(`.chapter-wrap`)
+        .forEach((wrap) => (enumeratedHtml = wrap.innerHTML));
+    }
+    const location = enumeratedHtml.indexOf(kls);
+    if (location === -1 || enumeratedHtml === ``) {
+      return null;
+    }
+    return Number(((location / enumeratedHtml.length) * 100).toFixed(1));
+  }
+
+  const MAX_SEARCH_RESULTS_RETURNED = 50;
+
+  window.requestSearchResults = (query) => {
+    enumerateSearchableElements();
+    const results: SearchResult[] = [];
+    document.querySelectorAll(`._searchable`).forEach((el) => {
+      // use `>` not `>=` to send the app up to MAX + 1 results, so it can
+      // differentiate between getting exactly MAX and knowing results are truncated
+      if (results.length > MAX_SEARCH_RESULTS_RETURNED) return;
+
+      const idMatch = el.classList.value.match(/_searchable-\d+/);
+      if (!idMatch) return;
+      const id = idMatch[0] ?? ``;
+      window.search(query, el.innerText).forEach((match) => {
+        const percentage = getSearchPositionPercentage(id);
+        if (percentage === null) return;
+        results.push({
+          before: match.before,
+          after: match.after,
+          match: match.match,
+          percentage,
+          elementId: id,
+          startIndex: match.start,
+          endIndex: match.end,
+        });
+      });
+    });
+    sendMsg({ type: `search_results`, results });
+  };
+
   window.dismissFootnote = () => {
     showingFootnote = false;
     setHtmlClassList();
@@ -288,6 +355,7 @@ export function wrapHtml(
         ${html}
       </div>
       <script>
+        window.search = ${search.toString()}
         window.htmlClassList = ${htmlClassList.toString()}
         ${injectIntoWebView.toString()}
         ${injectIntoWebView.name}(

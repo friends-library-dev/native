@@ -147,6 +147,9 @@ class Read extends PureComponent<Props, State> {
     const msg: Message = JSON.parse(event.nativeEvent.data);
 
     switch (msg.type) {
+      case `search_results`:
+        // @TODO
+        break;
       case `update_position`: {
         const position = clamp(msg.position, 0, 1);
         this.setState({ position: Math.ceil(position * 100) / 100 });

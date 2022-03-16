@@ -1,4 +1,5 @@
 import { EbookColorScheme } from '../types';
+import { search } from './search';
 
 interface Scrollable {
   scrollTo(x: number, y: number): unknown;
@@ -17,6 +18,7 @@ export interface Window extends Scrollable {
   setHeaderHeight(headerHeight: number): unknown;
   setShowingHeader(showingHeader: boolean): unknown;
   requestPositionUpdateIfChanged(): void;
+  requestSearchResults(query: string): void;
   updatePosition(newPercent: number): void;
   setColorScheme(colorScheme: EbookColorScheme): unknown;
   setJustify(justify: boolean): unknown;
@@ -32,6 +34,7 @@ export interface Window extends Scrollable {
     showingFootnote: boolean,
     justify: boolean,
   ): string;
+  search: typeof search;
 }
 
 export interface ClassList {
@@ -42,6 +45,7 @@ export interface ClassList {
 
 export interface Element extends Scrollable {
   innerHTML: string;
+  innerText: string;
   nextElementSibling?: Element;
   classList: ClassList;
   matches(selector: string): boolean;
@@ -54,5 +58,5 @@ export interface Document {
   documentElement: { scrollHeight: number; classList: ClassList };
   getElementById(id: string): Element | null;
   addEventListener(event: string, handler: (event: any) => unknown): unknown;
-  querySelectorAll(selector: string): Element[];
+  querySelectorAll(selectors: string): Element[];
 }
