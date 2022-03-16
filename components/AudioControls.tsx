@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Scrubber from './Scrubber';
+import AudioScrubber from './AudioScrubber';
 import tw from '../lib/tailwind';
 import { PropSelector, useSelector, useDispatch } from '../state';
 import * as select from '../state/selectors/audio-selectors';
@@ -103,7 +103,7 @@ export const AudioControls: React.FC<Props> = ({
         </View>
       </View>
       <View style={tw`ipad:mt-4 ipad:px-6 ipad-lg:px-[10%]`}>
-        <Scrubber
+        <AudioScrubber
           downloading={downloading}
           downloadingProgress={progress}
           playing={playing}

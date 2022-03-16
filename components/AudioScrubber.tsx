@@ -14,7 +14,7 @@ interface Props {
   seekTo: (newPosition: number) => any;
 }
 
-const Scrubber: React.FC<Props> = ({
+const AudioScrubber: React.FC<Props> = ({
   partDuration,
   position,
   playing,
@@ -64,4 +64,4 @@ export function formatTime(totalSeconds: number): string {
     .replace(/^0(\d:\d\d)/, `$1`);
 }
 
-export default Scrubber;
+export default AudioScrubber;

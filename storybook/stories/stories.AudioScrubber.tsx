@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
-import Scrubber from '../../components/Scrubber';
+import AudioScrubber from '../../components/AudioScrubber';
 import tw from '../../lib/tailwind';
 
-storiesOf(`Scrubber`, module)
+storiesOf(`AudioScrubber`, module)
   .add(`paused midway`, () => <TestScrubber />)
   .add(`downloading`, () => (
     <TestScrubber playing={false} downloading={true} downloadingProgress={33} />
   ));
 
-const TestScrubber: React.FC<Partial<React.ComponentProps<typeof Scrubber>>> = (
+const TestScrubber: React.FC<Partial<React.ComponentProps<typeof AudioScrubber>>> = (
   props,
 ) => {
   const [pos, setPos] = useState(1111);
   return (
     <View style={tw`p-6`}>
-      <Scrubber
+      <AudioScrubber
         playing
         downloading={false}
         downloadingProgress={0}
