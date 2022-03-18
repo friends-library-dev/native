@@ -45,7 +45,7 @@
   "dependencies": {
     "@babel/plugin-syntax-nullish-coalescing-operator": "^7.8.3",
     "@friends-library/adoc-utils": "^2.0.1",
-    "@friends-library/locale": "^2.3.0",
+    "@friends-library/locale": "^2.4.0",
     "@friends-library/theme": "^1.2.0",
     "@friends-library/types": "^7.0.0",
     "@react-native-community/masked-view": "^0.1.10",

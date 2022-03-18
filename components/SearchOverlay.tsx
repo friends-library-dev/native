@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { t } from '@friends-library/locale';
 import { EbookColorScheme, SearchResult } from '../types';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
@@ -47,7 +48,7 @@ const SearchOverlay: React.FC<Props> = ({
       {results?.length === 0 && (
         <View style={tw`items-center py-4`}>
           <Sans size={14} style={tw`italic ${c.fallbackTextClass}`}>
-            No Results
+            {t`No Results`}
           </Sans>
         </View>
       )}
@@ -56,8 +57,10 @@ const SearchOverlay: React.FC<Props> = ({
           <View style={tw`py-3 items-center border-b ${c.borderColorClass}`}>
             <Sans size={13} style={tw`uppercase text-${c.fg}`}>
               {results.length > 50
-                ? `First 50 Results`
-                : `${results.length} Result${results.length === 1 ? `` : `s`}`}
+                ? t`First ${50} Results`
+                : results.length === 1
+                ? t`1 Result`
+                : t`${results.length} Results`}
               :
             </Sans>
           </View>
