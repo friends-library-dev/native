@@ -26,7 +26,7 @@ const SearchOverlay: React.FC<Props> = ({
   const c = COLORS[colorScheme];
   return (
     <View
-      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} h-[65vh] flex-grow shadow-lg self-stretch max-w-[600px] mx-8 border ${c.borderColorClass}`}
+      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} min-h-[25vh] max-h-[65vh] flex-grow shadow-lg self-stretch max-w-[350px] mx-8 border ${c.borderColorClass}`}
     >
       <View style={tw`p-2 flex-row items-center border-b ${c.borderColorClass}`}>
         <Search

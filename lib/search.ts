@@ -51,7 +51,7 @@ export function search(query: string, source: string, offset = 0): Match[] {
   const words = query.split(/\s+/g).map((s) => s.toLowerCase());
   const text = source.substring(offset).toLowerCase();
 
-  let positions: Array<{ start: number; end: number }> = [];
+  const positions: Array<{ start: number; end: number }> = [];
 
   for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
     const prevPos = positions[wordIndex - 1];
@@ -79,7 +79,7 @@ export function search(query: string, source: string, offset = 0): Match[] {
     }
 
     let endIndex = firstCharAbsoluteIndex + word.length;
-    let nextChar = source[endIndex];
+    const nextChar = source[endIndex];
     if (isLetter(nextChar)) {
       return search(query, source, firstCharAbsoluteIndex + word.length);
     }

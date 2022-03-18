@@ -176,7 +176,7 @@ export default class Read extends PureComponent<Props, State> {
 
   public submitSearchQuery: () => void = () => {
     this.setState({ searchResults: null });
-    const sanitizedQuery = this.state.searchQuery.replace(/"/g, `\\"`);
+    const sanitizedQuery = this.state.searchQuery.trim().replace(/"/g, `\\"`);
     this.injectJs(`window.requestSearchResults("${sanitizedQuery}")`);
   };
 
