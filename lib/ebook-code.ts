@@ -161,8 +161,30 @@ function injectIntoWebView(
   };
 
   let enumerateSearchableElements: () => void = () => {
-    // @TODO, get full list of "searchable" elements
-    document.querySelectorAll(`.paragraph`).forEach((el, index) => {
+    const selectors = [
+      `h2`,
+      `h3`,
+      `h4`,
+      `.paragraph`,
+      `.offset`,
+      `.discourse-part`,
+      `.salutation`,
+      `.heading-continuation-blurb`,
+      `.verse-line`,
+      `.signed-section-signature`,
+      `.signed-section-closing`,
+      `.signed-section-context-open`,
+      `.signed-section-context-close`,
+      `.section-summary-preface`,
+      `.letter-heading`,
+      `.no-indent`,
+      `.quote-attribution`,
+      `cite`,
+      `dt`,
+      `dd`,
+      `.syllogism li`,
+    ];
+    document.querySelectorAll(selectors.join(`, `)).forEach((el, index) => {
       el.classList.add(`_searchable`);
       el.classList.add(`_searchable-${index}`);
     });
