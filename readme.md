@@ -69,10 +69,11 @@ internal IP address changes, modify that according to
 
 ### Emulator things
 
-- You have two bash aliases in `~/.bashrc`: `android` opens up the phone-size emulator,
-  and `androidtablet` opens up the tablet emulator. These shortcuts are necessary, because
-  for some reason, if I don't open with the `-dns` flag, my android emulators can't talk
-  to the external internet to download images, etc.
+- _NOTE: DOESN'T SEEM NECESSARY WITH NEW M1 MAC + ANDROID STUDIO_ You have two bash
+  aliases in `~/.bashrc`: `android` opens up the phone-size emulator, and `androidtablet`
+  opens up the tablet emulator. These shortcuts are necessary, because for some reason, if
+  I don't open with the `-dns` flag, my android emulators can't talk to the external
+  internet to download images, etc.
 - the react-native `run-android` method
   [doesn't yet support](https://github.com/react-native-community/cli/issues/1038)
   specifying an emulator. So if you need to build onto a specific emulator, the only

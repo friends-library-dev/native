@@ -1,4 +1,4 @@
-package {APP_IDENTIFIER};
+package {ANDROID_APP_IDENTIFIER};
 
 import com.facebook.react.ReactActivity;
 
