@@ -32,6 +32,7 @@ configure(() => {
   require(`./stories/stories.AudioScrubber`);
   require(`./stories/stories.DownloadablePart`);
   require(`./stories/stories.ReadFooter`);
+  require(`./stories/stories.SearchOverlay`);
 }, module);
 
 // Refer to https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters

@@ -268,6 +268,7 @@ export default class Read extends PureComponent<Props, State> {
               }}
               safeAreaBottomOffset={safeAreaBottomOffset}
               percentComplete={Math.max(percentPos, 0)}
+              onSearchClick={() => {}}
             />
           )}
           <WebView

@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import RNScrubber from 'react-native-scrubber';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorSchemeSubtleDropshadowStyle } from '../lib/utils';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
 import { EbookColorScheme } from '../types';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {
   colorScheme: EbookColorScheme;

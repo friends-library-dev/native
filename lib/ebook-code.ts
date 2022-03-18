@@ -1,19 +1,9 @@
 import css from 'x-syntax';
-import { EbookColorScheme } from '../types';
+import { EbookColorScheme, SearchResult } from '../types';
 import { Element, Document, Window } from './dom-stubs';
 import tw from '../lib/tailwind';
 import { LANG } from '../env';
 import { search } from '../lib/search';
-
-type SearchResult = {
-  before: string;
-  match: string;
-  after: string;
-  percentage: number;
-  elementId: string;
-  startIndex: number;
-  endIndex: number;
-};
 
 export type Message =
   | { type: 'update_position'; position: number }

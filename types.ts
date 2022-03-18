@@ -70,6 +70,16 @@ export interface Gesture {
   isLong: boolean;
 }
 
+export interface SearchResult {
+  before: string;
+  match: string;
+  after: string;
+  percentage: number;
+  elementId: string;
+  startIndex: number;
+  endIndex: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deriveAudioType(edition: EditionResource) {
   return edition.audio!;
