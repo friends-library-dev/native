@@ -8,15 +8,25 @@ import Search from './Search';
 
 interface Props {
   query: string;
+  setQuery(query: string): unknown;
   colorScheme: EbookColorScheme;
   results: null | SearchResult[];
+  onQuerySubmit(): unknown;
+  onSelectResult(result: SearchResult): unknown;
 }
 
-const SearchOverlay: React.FC<Props> = ({ colorScheme, results, query }) => {
+const SearchOverlay: React.FC<Props> = ({
+  colorScheme,
+  results,
+  query,
+  setQuery,
+  onQuerySubmit,
+  onSelectResult,
+}) => {
   const c = COLORS[colorScheme];
   return (
     <View
-      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} max-h-[80%] flex-grow shadow-lg self-stretch max-w-[600px] mx-8 border ${c.borderColorClass}`}
+      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} h-[65vh] flex-grow shadow-lg self-stretch max-w-[600px] mx-8 border ${c.borderColorClass}`}
     >
       <View style={tw`p-2 flex-row items-center border-b ${c.borderColorClass}`}>
         <Search
@@ -24,7 +34,13 @@ const SearchOverlay: React.FC<Props> = ({ colorScheme, results, query }) => {
           searchIconColor={c.searchIconColor}
           query={query}
           className=""
-          setQuery={() => {}}
+          setQuery={setQuery}
+          onQuerySubmit={() => {
+            if (query.trim() !== ``) {
+              onQuerySubmit();
+            }
+          }}
+          returnKeyType="search"
           autoFocus
         />
       </View>
@@ -45,28 +61,34 @@ const SearchOverlay: React.FC<Props> = ({ colorScheme, results, query }) => {
               :
             </Sans>
           </View>
-          {results.map((result) => (
+          {results.map((result, index) => (
             <View
-              style={tw`p-1.5 flex-row border-b ${c.borderColorClass}`}
-              key={result.elementId}
+              style={tw.style(
+                (index !== results.length - 1 || results.length < 5) && `border-b`,
+                `px-1.5 py-2.5 flex-row ${c.borderColorClass} min-h-19 items-center`,
+              )}
+              key={`${result.elementId}-${index}`}
             >
-              <Text style={tw`pl-1 leading-[18px] w-[70%] text-${c.fg}`}>
-                <Sans size={13} style={tw``}>
+              <Text style={tw`pl-1 leading-[20px] w-[72%] pr-2 text-${c.fg}`}>
+                <Sans size={14} style={tw``}>
                   {result.before}
                 </Sans>
-                <Sans size={13} style={tw`text-${c.accent}`}>
-                  {` `}
+                <Sans size={14} style={tw`text-${c.accent}`}>
+                  {!result.before.match(/(-|“|‘|–)$/) && ` `}
                   {result.match}
-                  {` `}
+                  {!result.after.match(/^(-|,|;|\.|”|’|–)/) && ` `}
                 </Sans>
-                <Sans size={13} style={tw``}>
+                <Sans size={14} style={tw``}>
                   {result.after}
                 </Sans>
               </Text>
-              <View style={tw`w-[15%] opacity-50 items-center justify-center`}>
+              <View style={tw`w-[14%] opacity-50 items-center justify-center`}>
                 <Sans style={tw`text-${c.fg}`}>{result.percentage}%</Sans>
               </View>
-              <TouchableOpacity style={tw`w-[15%] items-center justify-center`}>
+              <TouchableOpacity
+                style={tw`w-[14%] items-center justify-center`}
+                onPress={() => onSelectResult(result)}
+              >
                 <View
                   style={tw`bg-${c.accent}${
                     colorScheme === `white` ? `/60` : ``

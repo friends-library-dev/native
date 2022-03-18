@@ -187,6 +187,23 @@ function injectIntoWebView(
 
   const MAX_SEARCH_RESULTS_RETURNED = 50;
 
+  window.navigateToSearchResult = (result) => {
+    const element = document.querySelector(`.${result.elementId}`);
+    if (!element) return;
+    const innerText = element.innerText;
+    const before = innerText.substring(0, result.startIndex);
+    const after = innerText.substring(result.endIndex);
+    const id = `result-${Date.now()}`;
+    element.innerHTML = `${before}<span id="${id}" class="search-result">${result.match}</span>${after}`;
+    document.getElementById(id)?.scrollIntoView({ behavior: `auto`, block: `center` });
+  };
+
+  window.clearSearchResults = () => {
+    document
+      .querySelectorAll(`.search-result`)
+      .forEach((el) => el.classList.remove(`search-result`));
+  };
+
   window.requestSearchResults = (query) => {
     enumerateSearchableElements();
     const results: SearchResult[] = [];
@@ -323,6 +340,9 @@ export function wrapHtml(
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars(headerHeight)}</style>
        ${css}
+       <style>
+         .search-result { background: green; color: white !important; }
+       </style>
        <style>.await-init-position * { opacity: 0 !important }</style>
     </head>
     <body>

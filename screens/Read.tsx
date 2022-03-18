@@ -14,6 +14,7 @@ import { setEbookPosition } from '../state/ebook/position';
 import EbookSettings from '../components/EbookSettings';
 import { toggleShowingEbookHeader, toggleShowingEbookSettings } from '../state/ephemeral';
 import ReadFooter from '../components/ReadFooter';
+import SearchOverlay from '../components/SearchOverlay';
 
 // @ts-ignore
 import PrefersHomeIndicatorAutoHidden from 'react-native-home-indicator';
@@ -52,6 +53,9 @@ interface State {
   touchStartLocationY: number;
   touchStartTimestamp: number;
   position?: number;
+  searching: boolean;
+  searchQuery: string;
+  searchResults: null | T.SearchResult[];
 }
 
 export default class Read extends PureComponent<Props, State> {
@@ -65,6 +69,9 @@ export default class Read extends PureComponent<Props, State> {
     touchStartLocationX: -999,
     touchStartLocationY: -999,
     touchStartTimestamp: -999,
+    searching: false,
+    searchQuery: ``,
+    searchResults: null,
   };
 
   public constructor(props: Props) {
@@ -140,8 +147,7 @@ export default class Read extends PureComponent<Props, State> {
 
     switch (msg.type) {
       case `search_results`:
-        // @TODO
-        break;
+        return this.setState({ searchResults: msg.results });
       case `update_position`: {
         const position = clamp(msg.position, 0, 1);
         this.setState({ position: Math.ceil(position * 100) / 100 });
@@ -154,6 +160,24 @@ export default class Read extends PureComponent<Props, State> {
       case `set_footnote_visibility`:
         return this.setState({ showingFootnote: msg.visible });
     }
+  };
+
+  public toggleSearchOverlay: () => void = () => {
+    this.closeSettingsPopover();
+    if (!this.state.searching) {
+      this.injectJs(`window.clearSearchResults()`);
+    }
+    this.setState({
+      searchResults: null,
+      searching: !this.state.searching,
+      searchQuery: ``,
+    });
+  };
+
+  public submitSearchQuery: () => void = () => {
+    this.setState({ searchResults: null });
+    const sanitizedQuery = this.state.searchQuery.replace(/"/g, `\\"`);
+    this.injectJs(`window.requestSearchResults("${sanitizedQuery}")`);
   };
 
   public closeSettingsPopover: () => void = () => {
@@ -268,7 +292,7 @@ export default class Read extends PureComponent<Props, State> {
               }}
               safeAreaBottomOffset={safeAreaBottomOffset}
               percentComplete={Math.max(percentPos, 0)}
-              onSearchClick={() => {}}
+              onSearchClick={this.toggleSearchOverlay}
             />
           )}
           <WebView
@@ -292,6 +316,26 @@ export default class Read extends PureComponent<Props, State> {
           backgroundStyle={tw`bg-transparent`}
         >
           <EbookSettings />
+        </Popover>
+        <Popover
+          mode={PopoverMode.JS_MODAL}
+          onRequestClose={this.toggleSearchOverlay}
+          isVisible={this.state.searching}
+          animationConfig={{ duration: 0, delay: 0 }}
+          popoverStyle={tw`p-4 bg-transparent`}
+          backgroundStyle={tw`bg-transparent`}
+        >
+          <SearchOverlay
+            query={this.state.searchQuery}
+            setQuery={(searchQuery) => this.setState({ searchQuery })}
+            colorScheme={colorScheme}
+            results={this.state.searchResults}
+            onQuerySubmit={this.submitSearchQuery}
+            onSelectResult={(result) => {
+              this.injectJs(`window.navigateToSearchResult(${JSON.stringify(result)})`);
+              this.toggleSearchOverlay();
+            }}
+          />
         </Popover>
       </View>
     );

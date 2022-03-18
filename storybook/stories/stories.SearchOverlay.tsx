@@ -9,8 +9,11 @@ storiesOf(`SearchOverlay`, module).add(`white (null results)`, () => (
   <View style={tw`h-full items-center justify-center`}>
     <SearchOverlay
       query="light"
+      setQuery={() => {}}
       colorScheme="sepia"
       results={keys([RES_1, RES_1, RES_1, RES_1, RES_1, RES_1, RES_1, RES_1, RES_1])}
+      onQuerySubmit={() => {}}
+      onSelectResult={() => {}}
     />
   </View>
 ));

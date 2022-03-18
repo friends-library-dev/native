@@ -37,24 +37,28 @@ const ReadFooter: React.FC<Props> = ({
           name="search"
         />
       </TouchableOpacity>
-      <View style={tw`flex-grow px-1`}>
-        <RNScrubber
-          onSlidingComplete={onScrub}
-          onSlide={onScrub}
-          // necessary to prevent error ¯\_(ツ)_/¯
-          onSlidingStart={() => {}}
-          trackBackgroundColor={colorScheme === `black` ? `#222` : `#ddd`}
-          value={percentComplete}
-          totalDuration={100}
-          displayValues={false}
-          scrubbedColor={
-            colorScheme === `white`
-              ? tw.color(`flmaroon`)
-              : colorScheme === `sepia`
-              ? tw.color(`ebookcolorscheme-sepiaaccent`)
-              : tw.color(`ebookcolorscheme-blackaccent`)
-          }
-        />
+      <View style={tw`flex-grow px-1 overflow-hidden`}>
+        {/* inner view necessary to allow for overflow-hidden above */}
+        {/* which is necessary to make search icon clickable at 0% progress */}
+        <View style={tw`pl-[2px]`}>
+          <RNScrubber
+            onSlidingComplete={onScrub}
+            onSlide={onScrub}
+            // necessary to prevent error ¯\_(ツ)_/¯
+            onSlidingStart={() => {}}
+            trackBackgroundColor={colorScheme === `black` ? `#222` : `#ddd`}
+            value={percentComplete}
+            totalDuration={100}
+            displayValues={false}
+            scrubbedColor={
+              colorScheme === `white`
+                ? tw.color(`flmaroon`)
+                : colorScheme === `sepia`
+                ? tw.color(`ebookcolorscheme-sepiaaccent`)
+                : tw.color(`ebookcolorscheme-blackaccent`)
+            }
+          />
+        </View>
       </View>
       <Sans
         size={11}

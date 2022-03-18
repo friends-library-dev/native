@@ -7,7 +7,8 @@ import tw from '../lib/tailwind';
 
 interface Props {
   query: string;
-  setQuery: (query: string) => unknown;
+  setQuery(query: string): unknown;
+  onQuerySubmit?: () => unknown;
   returnKeyType?: ReturnKeyTypeOptions;
   className?: string;
   bgColor?: string;
@@ -23,6 +24,7 @@ const Search: React.FC<Props> = ({
   searchIconColor = `#bbb`,
   returnKeyType = `done`,
   autoFocus = false,
+  onQuerySubmit = () => {},
 }) => (
   <View
     style={tw.style(
@@ -39,8 +41,8 @@ const Search: React.FC<Props> = ({
       onChangeText={(text) => setQuery(text)}
       returnKeyType={returnKeyType}
       autoFocus={autoFocus}
-      // onSubmitEditing={}
-      // onKeyPress={}
+      onSubmitEditing={onQuerySubmit}
+      autoCapitalize="none"
     />
     <TouchableOpacity
       style={tw.style(`ios:hidden px-2 self-stretch justify-center`, {

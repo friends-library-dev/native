@@ -1,4 +1,4 @@
-import { EbookColorScheme } from '../types';
+import { EbookColorScheme, SearchResult } from '../types';
 import { search } from './search';
 
 interface Scrollable {
@@ -10,20 +10,35 @@ interface Scrollable {
   }): unknown;
 }
 
+// native browser window props
 export interface Window extends Scrollable {
   innerHeight: number;
   scrollY: number;
-  dismissFootnote(): void;
-  setFontSize(fontSize: number): unknown;
-  setHeaderHeight(headerHeight: number): unknown;
-  setShowingHeader(showingHeader: boolean): unknown;
-  requestPositionUpdateIfChanged(): void;
-  requestSearchResults(query: string): void;
-  updatePosition(newPercent: number): void;
-  setColorScheme(colorScheme: EbookColorScheme): unknown;
-  setJustify(justify: boolean): unknown;
   setTimeout(fn: () => unknown, timeout: number): number;
   alert(msg: string): unknown;
+}
+
+// custom additions to window
+export interface Window {
+  // header
+  setHeaderHeight(headerHeight: number): unknown;
+  setShowingHeader(showingHeader: boolean): unknown;
+
+  // position
+  requestPositionUpdateIfChanged(): void;
+  updatePosition(newPercent: number): void;
+
+  // searching
+  requestSearchResults(query: string): void;
+  navigateToSearchResult(result: SearchResult): unknown;
+  clearSearchResults(): unknown;
+  search: typeof search;
+
+  // misc
+  setColorScheme(colorScheme: EbookColorScheme): unknown;
+  setJustify(justify: boolean): unknown;
+  dismissFootnote(): void;
+  setFontSize(fontSize: number): unknown;
   ReactNativeWebView: {
     postMessage(event: string): unknown;
   };
@@ -34,7 +49,6 @@ export interface Window extends Scrollable {
     showingFootnote: boolean,
     justify: boolean,
   ): string;
-  search: typeof search;
 }
 
 export interface ClassList {
@@ -51,12 +65,22 @@ export interface Element extends Scrollable {
   matches(selector: string): boolean;
   getBoundingClientRect(): { top: number };
   style: Record<string, string | number>;
+  scrollIntoView(
+    opts?:
+      | boolean
+      | {
+          behavior?: 'auto' | 'smooth';
+          block?: 'start' | 'center' | 'end' | 'nearest';
+          inline?: 'start' | 'center' | 'end' | 'nearest';
+        },
+  ): unknown;
 }
 
 export interface Document {
   body: { classList: ClassList };
   documentElement: { scrollHeight: number; classList: ClassList };
   getElementById(id: string): Element | null;
-  addEventListener(event: string, handler: (event: any) => unknown): unknown;
+  querySelector(selectors: string): Element | null;
   querySelectorAll(selectors: string): Element[];
+  addEventListener(event: string, handler: (event: any) => unknown): unknown;
 }
