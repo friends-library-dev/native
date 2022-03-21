@@ -25,6 +25,8 @@ function keys(results: SearchResult[]): SearchResult[] {
 const COMMON = {
   startIndex: 0,
   endIndex: 0,
+  siblingIndex: 0,
+  numResultsInElement: 0,
   elementId: ``,
 };
 

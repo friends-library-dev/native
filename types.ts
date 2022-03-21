@@ -78,6 +78,8 @@ export interface SearchResult {
   elementId: string;
   startIndex: number;
   endIndex: number;
+  siblingIndex: number;
+  numResultsInElement: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
