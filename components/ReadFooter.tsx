@@ -31,7 +31,7 @@ const ReadFooter: React.FC<Props> = ({
     )}
   >
     <View style={tw`px-1 mb-1 relative flex-row items-center`}>
-      <TouchableOpacity style={tw`px-4`} onPress={onSearchClick}>
+      <TouchableOpacity style={tw`pl-4 pr-2`} onPress={onSearchClick}>
         <Icon
           style={tw`ios:text-xl android:text-lg opacity-65 top-[-1px] font-thin text-ebookcolorscheme-${colorScheme}fg`}
           name="search"
@@ -40,7 +40,7 @@ const ReadFooter: React.FC<Props> = ({
       <View style={tw`flex-grow px-1 overflow-hidden`}>
         {/* inner view necessary to allow for overflow-hidden above */}
         {/* which is necessary to make search icon clickable at 0% progress */}
-        <View style={tw`pl-[2px]`}>
+        <View style={tw`px-[6px]`}>
           <RNScrubber
             onSlidingComplete={onScrub}
             onSlide={onScrub}
@@ -62,7 +62,7 @@ const ReadFooter: React.FC<Props> = ({
       </View>
       <Sans
         size={11}
-        style={tw`px-4 opacity-75 -top-[1px] text-ebookcolorscheme-${colorScheme}fg`}
+        style={tw`pl-2 pr-4 opacity-75 -top-[1px] text-ebookcolorscheme-${colorScheme}fg`}
       >
         {percentComplete}%
       </Sans>
