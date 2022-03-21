@@ -1,10 +1,17 @@
 import React, { PureComponent } from 'react';
-import { View, StatusBar, GestureResponderEvent, Platform } from 'react-native';
+import {
+  View,
+  StatusBar,
+  GestureResponderEvent,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
-import Popover, { PopoverMode } from 'react-native-popover-view';
+import Popover, { PopoverMode, Rect, PopoverPlacement } from 'react-native-popover-view';
 import { AnyAction } from 'redux';
 import * as T from '../types';
 import FullscreenLoading from '../components/FullscreenLoading';
+import { SEARCH_OVERLAY_MAX_WIDTH } from './constants';
 import EbookError from '../components/EbookError';
 import tw from '../lib/tailwind';
 import { Dispatch } from '../state';
@@ -318,12 +325,14 @@ export default class Read extends PureComponent<Props, State> {
           <EbookSettings />
         </Popover>
         <Popover
-          mode={PopoverMode.JS_MODAL}
+          mode={PopoverMode.RN_MODAL}
           onRequestClose={this.toggleSearchOverlay}
           isVisible={this.state.searching}
           animationConfig={{ duration: 0, delay: 0 }}
           popoverStyle={tw`p-4 bg-transparent`}
-          backgroundStyle={tw`bg-transparent`}
+          backgroundStyle={tw`bg-black/30`}
+          placement={PopoverPlacement.BOTTOM}
+          from={searchPlacementRect()}
         >
           <SearchOverlay
             query={this.state.searchQuery}
@@ -340,6 +349,15 @@ export default class Read extends PureComponent<Props, State> {
       </View>
     );
   }
+}
+
+function searchPlacementRect(): Rect {
+  return new Rect(
+    (Dimensions.get(`window`).width - SEARCH_OVERLAY_MAX_WIDTH) / 2,
+    100,
+    SEARCH_OVERLAY_MAX_WIDTH,
+    0,
+  );
 }
 
 /**

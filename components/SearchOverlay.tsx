@@ -3,6 +3,7 @@ import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { t } from '@friends-library/locale';
 import { EbookColorScheme, SearchResult } from '../types';
+import { SEARCH_OVERLAY_MAX_WIDTH } from '../screens/constants';
 import { Sans } from './Text';
 import tw from '../lib/tailwind';
 import Search from './Search';
@@ -27,9 +28,14 @@ const SearchOverlay: React.FC<Props> = ({
   const c = COLORS[colorScheme];
   return (
     <View
-      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} min-h-[25vh] max-h-[65vh] flex-grow shadow-lg self-stretch max-w-[350px] mx-8 border ${c.borderColorClass}`}
+      style={tw`rounded-md overflow-hidden bg-${c.bgColorFragment} max-h-[70vh] self-stretch max-w-[${SEARCH_OVERLAY_MAX_WIDTH}px] mx-8 border ${c.borderColorClass}`}
     >
-      <View style={tw`p-2 flex-row items-center border-b ${c.borderColorClass}`}>
+      <View
+        style={tw.style(
+          `p-2 flex-row items-center ${c.borderColorClass}`,
+          results !== null && `border-b`,
+        )}
+      >
         <Search
           bgColor={c.searchBgColor}
           searchIconColor={c.searchIconColor}

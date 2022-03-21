@@ -1,1 +1,2 @@
 export const EDITION_META_MAX_WIDTH = 700;
+export const SEARCH_OVERLAY_MAX_WIDTH = 350;
