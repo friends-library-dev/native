@@ -38,7 +38,8 @@ internal IP address changes, modify that according to
 ### Submitting a new version to App Store
 
 - if skipping TestFlight, after you upload the build and it finishes "processing" press
-  the little green PLUS symbol in the main App store area to create a new release.
+  the little blue PLUS symbol in a circle in the main App store area to create a new
+  release, then add the new "store version", which is the semver string, like `2.2.0`.
 
 ### Screenshots
 
