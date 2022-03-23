@@ -103,3 +103,7 @@ internal IP address changes, modify that according to
 
 - icon helper tool: https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html
 - another icon helper tool https://apetools.webprofusion.com/#/tools/imagegorilla
+- android signing keystore file is git-ignored, but called `flp-app.keystore`, and should
+  go in the `android/app` dir. For android signing to work, there needs to be a
+  `~/.gradle/gradle.properties` file with additional info, backup stored in password
+  manager.
