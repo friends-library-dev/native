@@ -13,7 +13,7 @@ import BookList from '../screens/BookList';
 import Audio from '../screens/Audio';
 import Ebook from '../screens/Ebook';
 import Settings from '../screens/Settings';
-import Read from '../screens/Read';
+import Read from '../screens/ReadContainer';
 import { useDispatch, useSelector } from '../state';
 import { setConnected } from '../state/network';
 import Service from '../lib/service';

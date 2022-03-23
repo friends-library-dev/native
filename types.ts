@@ -60,6 +60,28 @@ export interface TrackData {
   duration: number;
 }
 
+export interface Gesture {
+  isSwipe: boolean;
+  isHorizontalSwipe: boolean;
+  isVerticalSwipe: boolean;
+  isRightSwipe: boolean;
+  isLeftSwipe: boolean;
+  isBackSwipe: boolean;
+  isLong: boolean;
+}
+
+export interface SearchResult {
+  before: string;
+  match: string;
+  after: string;
+  percentage: number;
+  elementId: string;
+  startIndex: number;
+  endIndex: number;
+  siblingIndex: number;
+  numResultsInElement: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deriveAudioType(edition: EditionResource) {
   return edition.audio!;

@@ -21,7 +21,7 @@ function main(): void {
   exec.exit(`cat ${ENV_DIR}/build-constants.ts >> ${ENV}`);
 
   const API_URL =
-    INSTALL === `dev` ? `http://10.0.1.212:8888` : `https://api.friendslibrary.com`;
+    INSTALL === `dev` ? `http://10.0.0.209:8080` : `https://api.friendslibrary.com`;
 
   // @see https://xkcd.com/1638/
   const constants = [
@@ -104,6 +104,7 @@ function copyFileWithEnv(src: string, dest: string): void {
     [`{APP_NAME}`, APP_NAME],
     [`{BUILD_NUM}`, String(BUILD_NUM)],
     [`{APP_IDENTIFIER}`, APP_IDENTIFIER],
+    [`{ANDROID_APP_IDENTIFIER}`, IS_RELEASE ? APP_IDENTIFIER : `com.friendslibrary`],
     [`{BUILD_SEMVER_STRING}`, BUILD_SEMVER_STRING],
     [`{PRIMARY_COLOR_HEX}`, PRIMARY_COLOR_HEX],
     [`{ALLOW_INSECURE_LOCALHOST}`, ALLOW_INSECURE_LOCALHOST],

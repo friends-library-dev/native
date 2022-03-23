@@ -1,12 +1,14 @@
 import css from 'x-syntax';
-import { EbookColorScheme } from '../types';
+import { EbookColorScheme, SearchResult } from '../types';
 import { Element, Document, Window } from './dom-stubs';
 import tw from '../lib/tailwind';
 import { LANG } from '../env';
+import { search } from '../lib/search';
 
 export type Message =
   | { type: 'update_position'; position: number }
   | { type: 'debug'; value: string }
+  | { type: 'search_results'; results: SearchResult[] }
   | { type: 'set_footnote_visibility'; visible: boolean }
   | { type: 'toggle_header_visibility' };
 
@@ -158,6 +160,124 @@ function injectIntoWebView(
     lastScroll = newScroll;
   };
 
+  let enumerateSearchableElements: () => void = () => {
+    const selectors = [
+      `h2`,
+      `h3`,
+      `h4`,
+      `.paragraph`,
+      `.offset`,
+      `.discourse-part`,
+      `.salutation`,
+      `.heading-continuation-blurb`,
+      `.verse-line`,
+      `.signed-section-signature`,
+      `.signed-section-closing`,
+      `.signed-section-context-open`,
+      `.signed-section-context-close`,
+      `.section-summary-preface`,
+      `.letter-heading`,
+      `.no-indent`,
+      `.quote-attribution`,
+      `cite`,
+      `dt`,
+      `dd`,
+      `.syllogism li`,
+    ];
+    document.querySelectorAll(selectors.join(`, `)).forEach((el, index) => {
+      el.classList.add(`_searchable`);
+      el.classList.add(`_searchable-${index}`);
+    });
+    enumerateSearchableElements = () => {};
+  };
+
+  let enumeratedHtml = ``;
+
+  function getSearchPositionPercentage(kls: string): number | null {
+    if (enumeratedHtml === ``) {
+      enumerateSearchableElements();
+      document
+        .querySelectorAll(`.chapter-wrap`)
+        .forEach((wrap) => (enumeratedHtml = wrap.innerHTML));
+    }
+    const location = enumeratedHtml.indexOf(kls);
+    if (location === -1 || enumeratedHtml === ``) {
+      return null;
+    }
+    return Number(((location / enumeratedHtml.length) * 100).toFixed(1));
+  }
+
+  const MAX_SEARCH_RESULTS_RETURNED = 50;
+
+  window.navigateToSearchResult = (result) => {
+    const element = document.querySelector(`.${result.elementId}`);
+    if (!element) return;
+    const innerText = element.innerText;
+    let before = innerText.substring(0, result.startIndex);
+    let after = innerText.substring(result.endIndex);
+    let match = result.match;
+
+    // the original query and search result selected came from .innerText
+    // but if possible, try to use innerHTML match, to preserve footnotes, etc.
+    const innerHtml = element.innerHTML;
+    const htmlResults = window.search(lastQuery, innerHtml);
+    const htmlResult = htmlResults[result.siblingIndex];
+    if (htmlResults.length === result.numResultsInElement && htmlResult) {
+      before = innerHtml.substring(0, htmlResult.start);
+      after = innerHtml.substring(htmlResult.end);
+      match = htmlResult.match;
+    }
+
+    const id = `result-${Date.now()}`;
+    element.innerHTML = `${before}<span id="${id}" class="search-result">${match}</span>${after}`;
+    document.getElementById(id)?.scrollIntoView({ behavior: `auto`, block: `center` });
+  };
+
+  window.clearSearchResults = () => {
+    document
+      .querySelectorAll(`.search-result`)
+      .forEach((el) => el.classList.remove(`search-result`));
+  };
+
+  let lastQuery = ``;
+
+  window.requestSearchResults = (query) => {
+    enumerateSearchableElements();
+    lastQuery = query;
+    const results: SearchResult[] = [];
+    document.querySelectorAll(`._searchable`).forEach((el) => {
+      // use `>` not `>=` to send the app up to MAX + 1 results, so it can
+      // differentiate between getting exactly MAX and knowing results are truncated
+      if (results.length > MAX_SEARCH_RESULTS_RETURNED) return;
+
+      const idMatch = el.classList.value.match(/_searchable-\d+/);
+      if (!idMatch) return;
+      const id = idMatch[0] ?? ``;
+      window.search(query, el.innerText).forEach((match) => {
+        const percentage = getSearchPositionPercentage(id);
+        if (percentage === null) return;
+        results.push({
+          before: match.before,
+          after: match.after,
+          match: match.match,
+          percentage,
+          elementId: id,
+          startIndex: match.start,
+          endIndex: match.end,
+          siblingIndex: 0,
+          numResultsInElement: 0,
+        });
+      });
+    });
+
+    results.forEach((result, index) => {
+      result.siblingIndex = index;
+      result.numResultsInElement = results.length;
+    });
+
+    sendMsg({ type: `search_results`, results });
+  };
+
   window.dismissFootnote = () => {
     showingFootnote = false;
     setHtmlClassList();
@@ -266,6 +386,9 @@ export function wrapHtml(
        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
        <style>${cssVars(headerHeight)}</style>
        ${css}
+       <style>
+         .search-result { background: green; color: white !important; }
+       </style>
        <style>.await-init-position * { opacity: 0 !important }</style>
     </head>
     <body>
@@ -288,6 +411,7 @@ export function wrapHtml(
         ${html}
       </div>
       <script>
+        window.search = ${search.toString()}
         window.htmlClassList = ${htmlClassList.toString()}
         ${injectIntoWebView.toString()}
         ${injectIntoWebView.name}(

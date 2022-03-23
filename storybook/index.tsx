@@ -27,10 +27,12 @@ addDecorator((Story: any) => (
 // import stories
 configure(() => {
   require(`./stories`);
-  require(`./stories/stories.ebook-settings`);
-  require(`./stories/stories.audio-screen`);
-  require(`./stories/stories.scrubber`);
-  require(`./stories/stories.downloadable-part`);
+  require(`./stories/stories.EbookSettings`);
+  require(`./stories/stories.AudioScreen`);
+  require(`./stories/stories.AudioScrubber`);
+  require(`./stories/stories.DownloadablePart`);
+  require(`./stories/stories.ReadFooter`);
+  require(`./stories/stories.SearchOverlay`);
 }, module);
 
 // Refer to https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters

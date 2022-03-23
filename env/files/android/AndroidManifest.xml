@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{APP_IDENTIFIER}">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{ANDROID_APP_IDENTIFIER}">
 
   <uses-permission android:name="android.permission.INTERNET" />
 
